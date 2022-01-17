@@ -57,8 +57,12 @@ public class Converter {
     
     private void dummyMethod2() {
     	System.out.println("Lol");
+    	dummyMethod21();
     }
     
     //testing push 
  
+    private void dummyMethod21() {
+    	System.out.println("I'm even more useless than the last two!");   	
+    }
 }
