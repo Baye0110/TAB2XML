@@ -65,4 +65,9 @@ public class Converter {
     private void dummyMethod21() {
     	System.out.println("I'm even more useless than the last two!");   	
     }
+    
+    private void testPush()
+    {
+    	System.out.print("Let's figure out how GIT works!");
+    }
 }
