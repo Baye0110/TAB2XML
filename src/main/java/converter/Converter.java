@@ -20,18 +20,18 @@ public class Converter {
 	}
 	
 	public void update() {
-		//dummyMethod1();
+		dummyMethod1();
 		score = new Score(mvc.mainText.getText());
 		mxlc = new MusicXMLCreator(score);
 	}
 	
 	public String getMusicXML() {
-		//dummyMethod2();
+		dummyMethod2();
 		return mxlc.generateMusicXML();
 	}
 	
 	public Score getScore() {
-		//dummyMethod1();
+		dummyMethod1();
 		return score;
 	}
 	
@@ -39,7 +39,7 @@ public class Converter {
 		return score.validate();
 	}
     public void saveMusicXMLFile(File file) {
-    	//dummyMethod1();
+    	dummyMethod1();
     	
         try {
             PrintWriter writer;
@@ -51,7 +51,7 @@ public class Converter {
         }
     }
     
-    /*private void dummyMethod1() {
+    private void dummyMethod1() {
     	System.out.println("Hello World");
     }
     
@@ -69,5 +69,5 @@ public class Converter {
     private void testPush()
     {
     	System.out.print("Let's figure out how GIT works!");
-    }*/
+    }
 }
