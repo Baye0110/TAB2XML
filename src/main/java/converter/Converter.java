@@ -24,7 +24,7 @@ public class Converter {
 		score = new Score(mvc.mainText.getText());
 		mxlc = new MusicXMLCreator(score);
 	}
-	// CONFLICT TEST 2
+	// CONFLICT TEST 2 --> Mahdiar's Version
 	public String getMusicXML() {
 		dummyMethod2();
 		return mxlc.generateMusicXML();
