@@ -14,7 +14,7 @@ public class Converter {
 	private Score score;
 	private MusicXMLCreator mxlc;
 	private MainViewController mvc;
-	
+	//TESTING CONFLICT
 	public Converter(MainViewController mvc) {
 		this.mvc = mvc;
 	}
