@@ -14,7 +14,7 @@ public class Converter {
 	private Score score;
 	private MusicXMLCreator mxlc;
 	private MainViewController mvc;
-	//TESTING CONFLICT
+	// MY COMMENT IS BETTER: CONFLICTING COMMENT
 	public Converter(MainViewController mvc) {
 		this.mvc = mvc;
 	}
@@ -24,7 +24,7 @@ public class Converter {
 		score = new Score(mvc.mainText.getText());
 		mxlc = new MusicXMLCreator(score);
 	}
-	
+	//FINAL VERSION OF TEST 2
 	public String getMusicXML() {
 		dummyMethod2();
 		return mxlc.generateMusicXML();
