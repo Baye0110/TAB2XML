@@ -1,5 +1,6 @@
 package component_data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,8 +17,10 @@ public class Measure {
 	int staffLines;
 	HashMap<Integer, StaffTuning> tunings;
 	List<Note> notes;
+	boolean percussion;
+	boolean tab;
 	
-	public Measure(Element measure) {
+	public Measure(Element measure, boolean firstMeasure) {
 		try {
 			Element attr = (Element) measure.getElementsByTagName("attributes").item(0);
 			NodeList divisionsList = attr.getElementsByTagName("divisions");
@@ -32,23 +35,43 @@ public class Measure {
 				this.fifths = Integer.valueOf( ((Element) keyList.item(0)).getElementsByTagName("fifths").item(0).getTextContent());
 			}
 			
+			if (firstMeasure) {
+				this.timeSignature = new int[2];
+				this.timeSignature[0] = 4;
+				this.timeSignature[1] = 4;
+			}
 			NodeList timeList = attr.getElementsByTagName("time");
 			if (timeList.getLength() > 0) {
 				this.timeSignature = new int[2];
-				this.timeSignature[0] = Integer.valueOf(timeList.item(0).getFirstChild().getTextContent());
-				this.timeSignature[1] = Integer.valueOf(timeList.item(0).getLastChild().getTextContent());
+				this.timeSignature[0] = Integer.valueOf(((Element)timeList.item(0)).getElementsByTagName("beats").item(0).getTextContent());
+				this.timeSignature[1] = Integer.valueOf(((Element)timeList.item(0)).getElementsByTagName("beat-type").item(0).getTextContent());
 				this.timeDisplay = true;
 			}
 			
 			NodeList clefList = attr.getElementsByTagName("clef");
 			if (clefList.getLength() > 0) {
 				Element clefEl = (Element) clefList.item(0);
-				char symbol = (clefEl.getFirstChild().getTextContent()).charAt(0);
-				int line = -1;
-				if (clefEl.getElementsByTagName("line").getLength() > 0) {
-					line = Integer.valueOf(clefEl.getElementsByTagName("line").item(0).getTextContent());
+				String clefSign = clefEl.getElementsByTagName("sign").item(0).getTextContent();
+				if (clefSign.equals("percussion")) {
+					this.percussion = true;
+					this.tab = false;
+					this.clef = new Clef('G', 2);
 				}
-				this.clef = new Clef(symbol, line);
+				else if (clefSign.equals("TAB")){
+					this.tab = true;
+					this.percussion = false;
+					this.clef = new Clef('G', 2);
+				}
+				else {
+					this.percussion = false;
+					this.tab = false;
+					char symbol = clefSign.charAt(0);
+					int line = -1;
+					if (clefEl.getElementsByTagName("line").getLength() > 0) {
+						line = Integer.valueOf(clefEl.getElementsByTagName("line").item(0).getTextContent());
+					}
+					this.clef = new Clef(symbol, line);
+				}
 			}
 			
 			
@@ -58,17 +81,21 @@ public class Measure {
 				Element staffEl = (Element) staffList.item(0);
 				this.staffLines = Integer.valueOf(staffEl.getElementsByTagName("staff-lines").item(0).getTextContent());
 				NodeList tuningList = staffEl.getElementsByTagName("staff-tuning");
+				this.tunings = new HashMap<Integer, StaffTuning>();
 				for (int i = 0; i < tuningList.getLength(); i++) {
 					this.tunedMeasure = true;
-					Character step = tuningList.item(i).getFirstChild().getTextContent().charAt(0);
-					Integer octave = Integer.valueOf(tuningList.item(i).getLastChild().getTextContent());
-					this.tunings.put(Integer.valueOf(((Element)tuningList.item(i)).getAttribute("line")), new StaffTuning(step, octave));
+					Element tuningEl = (Element) tuningList.item(0);
+					Character step = tuningEl.getElementsByTagName("tuning-step").item(0).getTextContent().charAt(0);
+					Integer octave = Integer.valueOf(tuningEl.getElementsByTagName("tuning-octave").item(0).getTextContent());
+					this.tunings.put(Integer.valueOf(tuningEl.getAttribute("line")), new StaffTuning(step, octave));
 				}
 			}
 			
 			NodeList noteList = measure.getElementsByTagName("note");
+			this.notes = new ArrayList<Note>();
 			for (int i = 0; i < noteList.getLength(); i++) {
-				this.notes.add(new Note((Element) noteList.item(i)));
+				Note toAdd = new Note((Element) noteList.item(i));
+				this.notes.add(toAdd);
 			}
 			
 		} catch (ClassCastException e) {
@@ -77,7 +104,7 @@ public class Measure {
 	}
 
 	public Measure(Element measure, Measure previous) {
-		this(measure);
+		this(measure, false);
 		if (this.divisions == -1) {
 			this.divisions = previous.divisions;
 		}
@@ -93,9 +120,11 @@ public class Measure {
 		if (this.tunedMeasure == false) {
 			this.tunedMeasure = previous.tunedMeasure;
 		}
+		
 		this.staffLines = previous.staffLines;
 		if (this.tunings == null) {
 			this.tunings = previous.tunings;
 		}
+		
 	}
 }

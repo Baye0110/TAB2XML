@@ -1,5 +1,6 @@
 package component_data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,9 +21,10 @@ public class Part {
 			this.id = instrumentsEl.getAttribute("id");
 			this.name = instrumentsEl.getElementsByTagName("part-name").item(0).getTextContent();
 			NodeList instrumentLabels = instrumentsEl.getElementsByTagName("score-instrument");
+			this.instruments = new HashMap<>();
 			for (int i = 0; i < instrumentLabels.getLength(); i++) {
 				String id = ((Element) instrumentLabels.item(i)).getAttribute("id");
-				String name = instrumentLabels.item(i).getChildNodes().item(0).getTextContent();
+				String name = ((Element) instrumentLabels.item(i)).getElementsByTagName("instrument-name").item(0).getTextContent();
 				this.instruments.put(id, new Instrument(id, name));
 			}
 			NodeList instrumentData = instrumentsEl.getElementsByTagName("midi-instrument");
@@ -53,11 +55,12 @@ public class Part {
 		
 		Element musicEl = null;
 		try {
+			this.measures = new ArrayList<Measure>();
 			musicEl = (Element) music;
 			NodeList measures = musicEl.getElementsByTagName("measure");
 			for (int i = 0; i < measures.getLength(); i++) {
 				if (i == 0) {
-					this.measures.add(new Measure((Element) measures.item(i)));
+					this.measures.add(new Measure((Element) measures.item(i), true));
 				} else {
 					this.measures.add(new Measure((Element) measures.item(i), this.measures.get(this.measures.size()-1)));				
 				}
