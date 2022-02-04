@@ -7,21 +7,36 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+/*
+ * Each Measure Object belongs to a Part Object
+ * Note: Has 2 Constructor - one if used to create the 1st measure, and the other is for all subsequent measures.
+ * 
+ * Defines the rules regarding the Notes for this section of the music and
+ * contains a list of the Notes to display
+ */
+
 public class Measure {
-	int divisions;
-	int fifths;
-	int[] timeSignature;
-	boolean timeDisplay;
-	Clef clef;
-	boolean tunedMeasure;
-	int staffLines;
-	HashMap<Integer, StaffTuning> tunings;
-	List<Note> notes;
-	boolean percussion;
-	boolean tab;
+	int divisions; // the number of divisions of beat-type which determines what "1 unit of duration" means
+	int fifths; // Represents the number of flats and sharps in the measure
+	int[] timeSignature; // Contains the fraction that you see in the beginning of sheet music: timeSignature[0]/timeSignature[1]
+	boolean timeDisplay; // Stores if this measure should explicitly state its timeSignature(fraction) on the sheet music
+	Clef clef; // Stores the Clef data for this measure (Treble Clef, Bass Clef, TAB, percussion, etc.)
+	boolean tunedMeasure; // Is this a tuned measure? (Is it a guitar/string instrument?)
+	int staffLines; // How many lines should the Measure have - Default is 5 (changes for stringed instruments depending on number of strings)
+	HashMap<Integer, StaffTuning> tunings; // Stores "staffLine" number of mappings 
+									//Integer (which string) -->  StaffTuning (tuning details for this string)
+	List<Note> notes; // List of Notes to be displayed during the Measure
+	boolean percussion; // Is this a percussion instrument?
+	boolean tab; // Is this a TAB clef (for guitar/string instruments)?
 	
+	/*
+	 * Constructor 1: Takes Element which represents data of <measure> element from musicXML and whether or not this is the first measure
+	 */
 	public Measure(Element measure, boolean firstMeasure) {
 		try {
+			// set up the non-Note related data first
+			
+			// Set up the divisions for this Measure
 			Element attr = (Element) measure.getElementsByTagName("attributes").item(0);
 			NodeList divisionsList = attr.getElementsByTagName("divisions");
 			this.divisions = -1;
@@ -29,12 +44,14 @@ public class Measure {
 				this.divisions = Integer.valueOf(divisionsList.item(0).getTextContent());
 			}
 			
+			// Set up the fifths for this Measure
 			NodeList keyList = attr.getElementsByTagName("key");
 			this.fifths = -1;
 			if (keyList.getLength() > 0) {
 				this.fifths = Integer.valueOf( ((Element) keyList.item(0)).getElementsByTagName("fifths").item(0).getTextContent());
 			}
 			
+			// Set up the time signature for this Measure: If there is none specified, default to 4/4
 			if (firstMeasure) {
 				this.timeSignature = new int[2];
 				this.timeSignature[0] = 4;
@@ -48,6 +65,7 @@ public class Measure {
 				this.timeDisplay = true;
 			}
 			
+			// Set up the clef of this measure based on if the Clef is "Tab", "percussion" or some other note-based clef such as Treble
 			NodeList clefList = attr.getElementsByTagName("clef");
 			if (clefList.getLength() > 0) {
 				Element clefEl = (Element) clefList.item(0);
@@ -75,6 +93,7 @@ public class Measure {
 			}
 			
 			
+			// Set up the staffLines and tuning for each staff line which represent the strings, if this is a string instrument like a guitar
 			this.staffLines = 5;
 			NodeList staffList = attr.getElementsByTagName("staff-details");
 			if (staffList.getLength() > 0) {
@@ -91,6 +110,7 @@ public class Measure {
 				}
 			}
 			
+			// Create the Note objects for this Measure
 			NodeList noteList = measure.getElementsByTagName("note");
 			this.notes = new ArrayList<Note>();
 			for (int i = 0; i < noteList.getLength(); i++) {
@@ -103,6 +123,10 @@ public class Measure {
 		}
 	}
 
+	/*
+	 * Constructor 2: Is used for all measures beyond the first
+	 * Main purpose is to use the value of the previous measure if they are not specified for the current one explicitly.
+	 */
 	public Measure(Element measure, Measure previous) {
 		this(measure, false);
 		if (this.divisions == -1) {

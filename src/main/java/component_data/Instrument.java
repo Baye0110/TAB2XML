@@ -1,5 +1,14 @@
 package component_data;
 
+/* (Important for playing the music, not as much for displaying music)
+ * Used usually to represent the different parts of a drum
+ * 
+ * The Part Class stores a list of all Instruments should be in the music
+ * The Note Class may have a corresponding Instrument ID stored which represents the Instrument to be played by that Note
+ * 
+ * Stores information of the Instrument id, name, and data for playing the music 
+ */
+
 public class Instrument {
 	String id;
 	String name;
