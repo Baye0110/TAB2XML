@@ -41,7 +41,8 @@ public class Score {
 	 */
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		// Extracts the data from XML file and simply puts it in a String and outputs
-		File in = new File("C://Users/pc/Desktop/demoComplex.musicxml");
+		// File in = new File("C://Users/pc/Desktop/demoComplex.musicxml");
+		File in = new File("src/test/resources/system/demoGuitarComplex1.musicxml");
 		String build = "";
 		Scanner input = new Scanner(in);
 		input.useDelimiter("\n");
@@ -101,5 +102,17 @@ public class Score {
 		long end = System.currentTimeMillis();
 		System.out.println("Parse Time: " + (end - start));
 		
+	}
+	
+	public String getTitle() {
+		return this.title;
+	}
+	
+	public String getAuthor() {
+		return this.author;
+	}
+	
+	public List<Part> getParts() {
+		return this.partList;
 	}
 }

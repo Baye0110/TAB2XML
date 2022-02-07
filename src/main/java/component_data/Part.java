@@ -25,6 +25,22 @@ public class Part {
 	HashMap<String, Instrument> instruments;
 	List<Measure> measures;
 	
+	public String getId() {
+		return this.id;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public HashMap<String, Instrument> getInstruments() {
+		return this.instruments;
+	}
+	
+	public List<Measure> getMeasures() {
+		return this.measures;
+	}
+	
 	public Part(Node instruments, Node music) {
 		Element instrumentsEl = null;
 		try {

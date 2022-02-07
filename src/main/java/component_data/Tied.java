@@ -21,4 +21,19 @@ public class Tied {
 		this.number = tied.getAttribute("number") != null ? Integer.valueOf(tied.getAttribute("number")): 0;
 		this.placement = tied.getAttribute("placement");
 	}
+	
+	public int getNumber() {
+		if (this.number == null)
+			return 0;
+		else 
+			return this.number;
+	}
+	
+	public String getType() {
+		return this.type;
+	}
+	
+	public String getPlacement() {
+		return this.placement;
+	}
 }

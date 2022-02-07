@@ -29,6 +29,50 @@ public class Measure {
 	boolean percussion; // Is this a percussion instrument?
 	boolean tab; // Is this a TAB clef (for guitar/string instruments)?
 	
+	public int getDivisions() {
+		return this.divisions;
+	}
+	
+	public int getFifths() {
+		return this.fifths;
+	}
+	
+	public int[] getTimeSignature() {
+		return this.timeSignature;
+	}
+	
+	public boolean getTimeDisplay() {
+		return this.timeDisplay;
+	}
+	
+	public Clef getClef() {
+		return this.clef;
+	}
+	
+	public boolean getTunedMeasure() {
+		return this.tunedMeasure;
+	}
+	
+	public int getStaffLines() {
+		return this.staffLines;
+	}
+	
+	public HashMap<Integer, StaffTuning> getTunings() {
+		return this.tunings;
+	}
+	
+	public List<Note> getNotes() {
+		return this.notes;
+	}
+	
+	public boolean getPercussion() {
+		return this.percussion;
+	}
+	
+	public boolean getTab() {
+		return this.tab;
+	}
+	
 	/*
 	 * Constructor 1: Takes Element which represents data of <measure> element from musicXML and whether or not this is the first measure
 	 */

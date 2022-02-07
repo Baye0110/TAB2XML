@@ -18,6 +18,7 @@ public class Instrument {
 	double volume;
 	double pan;
 	
+	
 	public Instrument(String id, String name) {
 		this.id = id;
 		this.name = name;
@@ -41,6 +42,34 @@ public class Instrument {
 	
 	public void setPan(double pan) {
 		this.pan= pan;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public int getMidiChannel() {
+		return this.midiChannel;
+	}
+	
+	public int getMidiProgram() {
+		return this.midiProgram;
+	}
+	
+	public int getMidiUnpitched() {
+		return this.midiUnpitched;
+	}
+	
+	public double getVolume() {
+		return this.volume;
+	}
+	
+	public double getPan() {
+		return this.pan;
 	}
 	
 	public String toString(){
