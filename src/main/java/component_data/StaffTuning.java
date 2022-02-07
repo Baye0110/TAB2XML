@@ -19,5 +19,13 @@ public class StaffTuning {
 		this.tuningStep = step;
 		this.tuningOctave = octave;
 	}
+	
+	public char getTuningStep() {
+		return this.tuningStep;
+	}
+	
+	public int getTuningOctave() {
+		return this.tuningOctave;
+	}
 
 }

@@ -20,4 +20,12 @@ public class Slide {
 			this.number = Integer.valueOf(slide.getAttribute("number"));
 		}
 	}
+	
+	public String getType() {
+		return this.type;
+	}
+	
+	public int getNumber() {
+		return this.number;
+	}
 }

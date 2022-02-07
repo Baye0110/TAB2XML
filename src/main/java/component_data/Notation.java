@@ -1,5 +1,6 @@
 package component_data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -52,6 +53,30 @@ public class Notation {
 			// Add the additional Technical Element data such as PullOff
 		}
 		
+	}
+	
+	public List<Slur> getSlurs() {
+		return this.slur;
+	}
+	
+	public List<Slide> getSlides() {
+		return this.slide;
+	}
+	
+	public List<Tied> getTieds() {
+		return this.tied;
+	}
+	
+	public int getString() {
+		return this.string;
+	}
+	
+	public int getFret() {
+		return this.fret;
+	}
+	
+	public Ornament getOrnament() {
+		return this.ornament;
 	}
 
 }

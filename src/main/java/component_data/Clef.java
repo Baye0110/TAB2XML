@@ -23,4 +23,12 @@ public class Clef {
 		this.symbol = symbol;
 		this.line = line;
 	}
+	
+	public char getSymbol() {
+		return this.symbol;
+	}
+	
+	public int getLine() {
+		return this.line;
+	}
 }

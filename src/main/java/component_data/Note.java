@@ -35,20 +35,6 @@ public class Note {
 	String beamType; // Go to this link to understand: https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/beam/
 	int beamNumber;
 	
-	
-	/*
-	 * toString() method for debugging purposes:
-	 */
-	public String toString() {
-		String result = "{\n";
-		result += "step: " + this.step + "\n";
-		result += "octave: " + this.octave + "\n";
-		result += "duration: " + this.duration + "\n";	
-		result += "type: " + this.type + "\n";
-		result += "}";
-		return result;
-	}
-	
 	/*
 	 * Create a Note object by passing an Element which represents the <note> element in musicXML:
 	 * Will parse the data and create a Note object with all the relevant instance variables initialized
@@ -142,7 +128,7 @@ public class Note {
 		}
 		
 		// Initializes any Notation for this Note
-		NodeList notationList = noteData.getElementsByTagName("notation");
+		NodeList notationList = noteData.getElementsByTagName("notations");
 		if (notationList.getLength() > 0) {
 			this.notation = new Notation((Element) notationList.item(0));
 		}
@@ -151,4 +137,90 @@ public class Note {
 		this.beamType = noteData.getElementsByTagName("beam").getLength() > 0 ? ((Element)noteData.getElementsByTagName("beam").item(0)).getTextContent() : null;
 		this.beamNumber = this.beamType != null ? Integer.valueOf(((Element)noteData.getElementsByTagName("beam").item(0)).getAttribute("number")): 0;
 	}
+	
+	
+	public Notation getNotation() {
+		return this.notation;
+	}
+	
+	public String getBeamType() {
+		return this.beamType;
+	}
+	
+	public int getBeamNumber() {
+		return this.beamNumber;
+	}
+	public int getVoice() {
+		return this.voice;
+	}
+	
+	public int getType() {
+		return this.type;
+	}
+	
+	public int getDot() {
+		return this.dot;
+	}
+	
+	public String getStem() {
+		return this.stem;
+	}
+	
+	public String getNotehead() {
+		return this.notehead;
+	}
+	
+	public boolean getGrace() {
+		return this.grace;
+	}
+	
+	public boolean getChord() {
+		return this.chord;
+	}
+	
+	public boolean getRest() {
+		return this.rest;
+	}
+	
+	public HashMap<String, Integer> getTimeModification() {
+		return this.timeModification;
+	}
+	
+	public boolean getPitched() {
+		return this.pitched;
+	}
+	
+	public char getStep() {
+		return this.step;
+	}
+	
+	public int getOctave() {
+		return this.octave;
+	}
+	
+	public int getAlter() {
+		return this.alter;
+	}
+	
+	public int getDuration() {
+		return this.duration;
+	}
+	
+	public String getInstrumentID() {
+		return this.instrumentID;
+	}
+	
+	/*
+	 * toString() method for debugging purposes:
+	 */
+	public String toString() {
+		String result = "{\n";
+		result += "step: " + this.step + "\n";
+		result += "octave: " + this.octave + "\n";
+		result += "duration: " + this.duration + "\n";	
+		result += "type: " + this.type + "\n";
+		result += "}";
+		return result;
+	}
+	
 }

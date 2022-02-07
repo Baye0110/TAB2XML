@@ -22,4 +22,15 @@ public class Slur {
 		this.placement = slur.getAttribute("placement");		
 	}
 
+	public int getNumber() {
+		return this.number;
+	}
+	
+	public String getType() {
+		return this.type;
+	}
+	
+	public String getPlacement() {
+		return this.placement;
+	}
 }
