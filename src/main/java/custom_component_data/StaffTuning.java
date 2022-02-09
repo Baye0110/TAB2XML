@@ -1,4 +1,4 @@
-package component_data;
+package custom_component_data;
 
 /*(Important for Playing Music - Not as much for displaying music)
  * 

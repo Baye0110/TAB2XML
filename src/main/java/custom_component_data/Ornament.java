@@ -1,4 +1,4 @@
-package component_data;
+package custom_component_data;
 
 /* !! Incomplete Class !!
  * 

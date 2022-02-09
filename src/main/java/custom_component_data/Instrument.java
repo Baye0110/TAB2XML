@@ -1,4 +1,4 @@
-package component_data;
+package custom_component_data;
 
 /* (Important for playing the music, not as much for displaying music)
  * Used usually to represent the different parts of a drum

@@ -1,4 +1,4 @@
-package component_data;
+package custom_component_data;
 
 /*
  * Each measure should specify a Clef
