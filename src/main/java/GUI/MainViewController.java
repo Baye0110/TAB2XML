@@ -25,6 +25,7 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -36,6 +37,7 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -305,16 +307,36 @@ public class MainViewController extends Application {
 	}
 
 	@FXML
-	private void previewButtonHandle() throws IOException {
+	private void previewButtonHandle() throws Exception {
 		System.out.println("Preview button clicked!");
-		Parent root;
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("GUI/tabPlayer.fxml"));
-			root = loader.load();
-			ShowMXLController controller = loader.getController();
-			controller.setMainViewController(this);
-			convertWindow = this.openNewWindow(root, "Sheet MusicXML");
-		} catch (IOException e) {
+			Button play = new Button("Play");
+			Button pause = new Button("Pause");
+			Button exit = new Button("Exit");
+			
+			play.setTranslateX(150);
+			play.setTranslateY(600);
+			
+			pause.setTranslateX(300);
+			pause.setTranslateY(600);
+			
+			exit.setTranslateX(500);
+			exit.setTranslateY(600);
+			
+			Stage window = new Stage();
+			window.setTitle("Music sheet");
+			
+			Group root = new Group(play,pause,exit);
+			Scene scene = new Scene(root,1000,700);
+			
+			
+			window.setScene(scene);
+			play.setOnAction(e -> window.setTitle("Music is Playing"));
+			pause.setOnAction(e -> window.setTitle("Music Paused"));
+			exit.setOnAction(e -> window.hide());
+			window.show();
+			
+		} catch (Exception e) {
 			Logger logger = Logger.getLogger(getClass().getName());
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);
 		}
