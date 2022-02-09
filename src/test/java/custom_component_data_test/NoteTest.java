@@ -1,4 +1,4 @@
-package component_data_test;
+package custom_component_data_test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
