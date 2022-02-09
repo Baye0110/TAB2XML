@@ -51,8 +51,4 @@ public class Converter {
         }
     }
     
-    private void testPush()
-    {
-    	System.out.print("Let's figure out how GIT works!");
-    }
 }
