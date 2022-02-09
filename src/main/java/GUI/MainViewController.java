@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -314,20 +315,24 @@ public class MainViewController extends Application {
 			Button pause = new Button("Pause");
 			Button exit = new Button("Exit");
 			
-			play.setTranslateX(150);
-			play.setTranslateY(600);
+			play.setTranslateX(800);
+			play.setTranslateY(640);
 			
-			pause.setTranslateX(300);
-			pause.setTranslateY(600);
 			
-			exit.setTranslateX(500);
-			exit.setTranslateY(600);
+			pause.setTranslateX(860);
+			pause.setTranslateY(640);
+			
+			exit.setTranslateX(930);
+			exit.setTranslateY(640);
 			
 			Stage window = new Stage();
 			window.setTitle("Music sheet");
 			
+		
+			
 			Group root = new Group(play,pause,exit);
 			Scene scene = new Scene(root,1000,700);
+		
 			
 			
 			window.setScene(scene);
