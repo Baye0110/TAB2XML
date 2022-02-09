@@ -33,7 +33,8 @@ public class Note {
 												//   2. "normal" --> integer representing the displayed time (on the sheet music) for note to be played
 	Notation notation;  // Records extra details about the appearance of the note, the fret/string, any Slur/Tied/Slide
 	String beamType; // Go to this link to understand: https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/beam/
-	int beamNumber;
+	int beamNumber;	// Above link ^
+	int position;  // Position of the Note above the bottom-most line of the staff
 	
 	/*
 	 * Create a Note object by passing an Element which represents the <note> element in musicXML:
@@ -59,7 +60,7 @@ public class Note {
 			this.alter = alterList.getLength() > 0 ? Integer.valueOf(alterList.item(0).getTextContent()) : 0;
 		}
 		
-		// Set duration fo the Note
+		// Set duration of the Note
 		NodeList duration = noteData.getElementsByTagName("duration");
 		if (duration.getLength() > 0) {
 			this.duration = Integer.valueOf(duration.item(0).getTextContent());
@@ -210,6 +211,9 @@ public class Note {
 		return this.instrumentID;
 	}
 	
+	public int getPosition() {
+		return this.position;
+	}
 	/*
 	 * toString() method for debugging purposes:
 	 */

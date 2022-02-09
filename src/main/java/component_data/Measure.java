@@ -192,7 +192,20 @@ public class Measure {
 		this.staffLines = previous.staffLines;
 		if (this.tunings == null) {
 			this.tunings = previous.tunings;
-		}
-		
+		}	
 	}
+	
+	public void generatePositions() {
+		for (Note note: this.notes) {
+			if (this.clef.symbol == 'G') {
+				int measureBottom = (this.clef.symbol - 'C') % 7 + 4*7 - (this.clef.line-1)*2;
+				int notePosition = (note.step - 'C') % 7 + note.octave*7;
+				if (note.step - 'C' < 0) 
+					notePosition += 7;
+				note.position = notePosition - measureBottom;
+			}
+		}
+			
+	}
+	
 }
