@@ -48,6 +48,7 @@ public class DrumNote extends TabNote{
         if ((noteHead.equalsIgnoreCase("x")) || ((noteHead.equalsIgnoreCase("o") && drumPiece == DrumPiece.Open_Hi_Hat)))
             noteModel.setNotehead(new Notehead("x"));
         if (drumPiece == DrumPiece.Ride_Bell) noteModel.setNotehead(new Notehead("diamond"));
+
         return noteModel;
     }
 
