@@ -20,17 +20,17 @@ public class NotePlayer extends Application{
 	 
 	 @FXML
 	    private void playButtonClicked() {
-		 
+		 System.out.println("Music is playing");
 	 }
 	 
 	 @FXML
 	    private void pauseButtonClicked() {
-		 
+		 System.out.println("Music Paused");
 	 }
 	 
 	 @FXML
 	    private void exitButtonClicked() {
-		 
+		 mvc.convertWindow.hide();
 	 }
 
 	@Override
