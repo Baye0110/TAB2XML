@@ -307,9 +307,17 @@ public class MainViewController extends Application {
 	@FXML
 	private void previewButtonHandle() throws IOException {
 		System.out.println("Preview Button Clicked!");
-		Stage newWindow = new Stage();
-		newWindow.setTitle("Test window");
-		newWindow.show();
+		Parent root;
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("GUI/tabPlayer.fxml"));
+			root = loader.load();
+			SaveMXLController controller = loader.getController();
+			controller.setMainViewController(this);
+			convertWindow = this.openNewWindow(root, "Sheet Music");
+		} catch (IOException e) {
+			Logger logger = Logger.getLogger(getClass().getName());
+			logger.log(Level.SEVERE, "Failed to create new Window.", e);
+		}
 		// converter.getMusicXML() returns the MusicXML output as a String
 	}
 
