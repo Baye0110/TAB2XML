@@ -32,6 +32,9 @@ public class Notation {
 		NodeList tiedList = notation.getElementsByTagName("tied");
 		NodeList slideList = notation.getElementsByTagName("slide");
 		
+		slur = new ArrayList<>();
+		tied = new ArrayList<>();
+		slide = new ArrayList<>();
 		for (int i = 0; i < slurList.getLength(); i++) {
 			this.slur.add(new Slur((Element) slurList.item(i)));
 		}
