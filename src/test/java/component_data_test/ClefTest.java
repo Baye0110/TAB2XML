@@ -15,10 +15,6 @@ class ClefTest {
 		assertNotNull(c1);
 	}
 	
-	@Test
-	public void clefTest2() {
-		
-	}
 	
 	}
 
