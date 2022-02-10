@@ -29,6 +29,7 @@ class InstrumentTest {
 		
 		String actual = in.toString();
 		
+		// assertEquals (expected, actual, epsilon) or without epsilon
 		assertEquals(expected, actual);
 		
 	}
