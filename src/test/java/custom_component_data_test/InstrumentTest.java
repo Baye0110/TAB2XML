@@ -7,6 +7,7 @@ import custom_component_data.Instrument;
 
 class InstrumentTest {
 
+	// Test toString method in Intrument.java
 	@Test
 	public void toStringTest()
 	{
