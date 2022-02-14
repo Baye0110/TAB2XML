@@ -12,13 +12,11 @@ import org.w3c.dom.Element;
 
 public class Slide {
 	String type;
-	int number;
+	Integer number;
 	
 	public Slide(Element slide) {
 		this.type = slide.getAttribute("type");
-		if (!slide.getAttribute("number").isEmpty()) {
-			this.number = Integer.valueOf(slide.getAttribute("number"));
-		}
+		this.number = !slide.getAttribute("number").equals("") ? Integer.valueOf(slide.getAttribute("number")): 0;
 	}
 	
 	public String getType() {

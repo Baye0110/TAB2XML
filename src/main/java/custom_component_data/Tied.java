@@ -18,7 +18,7 @@ public class Tied {
 	
 	public Tied(Element tied) {
 		this.type = tied.getAttribute("type");
-		this.number = tied.getAttribute("number") != null ? Integer.valueOf(tied.getAttribute("number")): 0;
+		this.number = !tied.getAttribute("number").equals("") ? Integer.valueOf(tied.getAttribute("number")): 0;
 		this.placement = tied.getAttribute("placement");
 	}
 	
