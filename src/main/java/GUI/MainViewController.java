@@ -25,6 +25,7 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -304,17 +305,58 @@ public class MainViewController extends Application {
 		}
 	}
 
+//	@FXML
+//	private void previewButtonHandle() throws IOException {
+//		System.out.println("Preview Button Clicked!");
+//		Parent root;
+//		try {
+//			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("GUI/tabPlayer.fxml"));
+//			root = loader.load();
+//			SaveMXLController controller = loader.getController();
+//			controller.setMainViewController(this);
+//			convertWindow = this.openNewWindow(root, "Sheet Music");
+//		} catch (IOException e) {
+//			Logger logger = Logger.getLogger(getClass().getName());
+//			logger.log(Level.SEVERE, "Failed to create new Window.", e);
+//		}
+//		// converter.getMusicXML() returns the MusicXML output as a String
+//	}
+	
 	@FXML
-	private void previewButtonHandle() throws IOException {
-		System.out.println("Preview Button Clicked!");
-		Parent root;
+	private void previewButtonHandle() throws Exception {
+		System.out.println("Preview button clicked!");
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("GUI/tabPlayer.fxml"));
-			root = loader.load();
-			SaveMXLController controller = loader.getController();
-			controller.setMainViewController(this);
-			convertWindow = this.openNewWindow(root, "Sheet Music");
-		} catch (IOException e) {
+			Button play = new Button("Play");
+			Button pause = new Button("Pause");
+			Button exit = new Button("Exit");
+			
+			play.setTranslateX(800);
+			play.setTranslateY(640);
+			
+			
+			pause.setTranslateX(860);
+			pause.setTranslateY(640);
+			
+			exit.setTranslateX(930);
+			exit.setTranslateY(640);
+			
+			Stage window = new Stage();
+			window.setTitle("Music sheet");
+			
+		
+			
+			Group root = new Group(play,pause,exit);
+			Scene scene = new Scene(root,1000,700);
+		
+			
+			
+			window.setScene(scene);
+			play.setOnAction(e -> window.setTitle("Music is Playing"));
+			pause.setOnAction(e -> window.setTitle("Music Paused"));
+			exit.setOnAction(e -> window.hide());
+			window.show();
+			
+		} catch (Exception e) {
 			Logger logger = Logger.getLogger(getClass().getName());
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);
 		}
