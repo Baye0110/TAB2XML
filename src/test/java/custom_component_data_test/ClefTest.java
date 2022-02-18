@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import org.junit.Before;
+//import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
 import custom_component_data.Clef;
@@ -23,7 +23,7 @@ class ClefTest {
 	
 	Score score = null;
 	
-	@Before
+	/*@Before
 	public void setUp() {
 		 // Get the file
         File in = new File("src/test/resources/system/demoGuitarComplex1.musicxml");
@@ -50,7 +50,7 @@ class ClefTest {
         // Test if the File was valid and that Score was built
         assertEquals(score==null, false);
         
-	}
+	}*/
 	
 	
 	@Test
