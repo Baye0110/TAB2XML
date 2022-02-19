@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,10 @@ import org.fxmisc.richtext.model.StyleSpans;
 
 import converter.Converter;
 import converter.measure.TabMeasure;
+import custom_component_data.Measure;
+import custom_component_data.Score;
+import custom_model.ScoreLine;
+import custom_model.SheetScore;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -34,8 +39,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -308,9 +315,17 @@ public class MainViewController extends Application {
 	private void previewButtonHandle() throws IOException {
 		System.out.println("Preview Button Clicked!");
 		Stage newWindow = new Stage();
-		newWindow.setTitle("Test window");
-		newWindow.show();
+		//newWindow.setTitle("Test window");
+		//newWindow.show();
 		// converter.getMusicXML() returns the MusicXML output as a String
+		Score score = new Score(converter.getMusicXML());
+		SheetScore sheet = new SheetScore(score, 25, 1100);
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(sheet);
+		Scene display = new Scene(sp, 1200, 600);
+		newWindow.setScene(display);
+		newWindow.setTitle("Testing custom_model Classes");
+		newWindow.show();
 	}
 
 	public void refresh() {
