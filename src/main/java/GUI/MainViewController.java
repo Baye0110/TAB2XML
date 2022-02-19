@@ -30,6 +30,7 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -312,20 +313,53 @@ public class MainViewController extends Application {
 	}
 
 	@FXML
-	private void previewButtonHandle() throws IOException {
+	private void previewButtonHandle() throws Exception {
 		System.out.println("Preview Button Clicked!");
 		Stage newWindow = new Stage();
-		//newWindow.setTitle("Test window");
-		//newWindow.show();
-		// converter.getMusicXML() returns the MusicXML output as a String
-		Score score = new Score(converter.getMusicXML());
-		SheetScore sheet = new SheetScore(score, 25, 1100);
-		ScrollPane sp = new ScrollPane();
-		sp.setContent(sheet);
-		Scene display = new Scene(sp, 1200, 600);
-		newWindow.setScene(display);
-		newWindow.setTitle("Testing custom_model Classes");
-		newWindow.show();
+		try {
+			Button play = new Button("Play");
+			Button pause = new Button("Pause");
+			Button exit = new Button("Exit");
+			
+			play.setTranslateX(800);
+			play.setTranslateY(640);
+			
+			
+			pause.setTranslateX(860);
+			pause.setTranslateY(640);
+			
+			exit.setTranslateX(930);
+			exit.setTranslateY(640);
+			
+			Stage window = new Stage();
+			window.setTitle("Music sheet");
+			
+		
+			
+			Group root = new Group(play,pause,exit);
+			Scene scene = new Scene(root,1000,700);
+		
+			
+			
+			window.setScene(scene);
+			play.setOnAction(e -> window.setTitle("Music is Playing"));
+			pause.setOnAction(e -> window.setTitle("Music Paused"));
+			exit.setOnAction(e -> window.hide());
+			window.show();
+			
+		} catch (Exception e) {
+			Logger logger = Logger.getLogger(getClass().getName());
+			logger.log(Level.SEVERE, "Failed to create new Window.", e);
+		}
+//		// converter.getMusicXML() returns the MusicXML output as a String
+//		Score score = new Score(converter.getMusicXML());
+//		SheetScore sheet = new SheetScore(score, 25, 1100);
+//		ScrollPane sp = new ScrollPane();
+//		sp.setContent(sheet);
+//		Scene display = new Scene(sp, 1200, 600);
+//		newWindow.setScene(display);
+//		newWindow.setTitle("Testing custom_model Classes");
+//		newWindow.show();
 	}
 
 	public void refresh() {
