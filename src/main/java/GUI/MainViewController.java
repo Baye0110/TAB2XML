@@ -1,6 +1,5 @@
 package GUI;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,7 +37,6 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -340,13 +338,14 @@ public class MainViewController extends Application {
 			pause.setOnAction(e -> window.setTitle("Music Paused"));
 			exit.setOnAction(e -> window.hide());
 			window.show();
-			// converter.getMusicXML() returns the MusicXML output as a String
+			
 		} catch (Exception e) {
 			Logger logger = Logger.getLogger(getClass().getName());
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);
 		}
-		
+		// converter.getMusicXML() returns the MusicXML output as a String
 	}
+
 	public void refresh() {
         mainText.replaceText(new IndexRange(0, mainText.getText().length()), mainText.getText()+" ");
     }
