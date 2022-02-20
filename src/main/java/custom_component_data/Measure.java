@@ -100,6 +100,7 @@ public class Measure {
 				this.timeSignature = new int[2];
 				this.timeSignature[0] = 4;
 				this.timeSignature[1] = 4;
+				this.timeDisplay = true;
 			}
 			NodeList timeList = attr.getElementsByTagName("time");
 			if (timeList.getLength() > 0) {

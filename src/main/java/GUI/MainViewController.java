@@ -43,7 +43,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -315,35 +320,46 @@ public class MainViewController extends Application {
 	@FXML
 	private void previewButtonHandle() throws Exception {
 		System.out.println("Preview Button Clicked!");
-		Stage newWindow = new Stage();
 		try {
 			Button play = new Button("Play");
 			Button pause = new Button("Pause");
 			Button exit = new Button("Exit");
 			
-			play.setTranslateX(800);
-			play.setTranslateY(640);
+			play.setTranslateX(150);
 			
+			pause.setTranslateX(300);
 			
-			pause.setTranslateX(860);
-			pause.setTranslateY(640);
-			
-			exit.setTranslateX(930);
-			exit.setTranslateY(640);
+			exit.setTranslateX(1100);
 			
 			Stage window = new Stage();
 			window.setTitle("Music sheet");
 			
-		
+			Score score = new Score(converter.getMusicXML());
+			SheetScore sheet = new SheetScore(score, 25, 1050);
+			ScrollPane sp = new ScrollPane();
+			sp.setContent(sheet);
+			sp.setTranslateX(50);
+			sp.setMaxWidth(1150);
+			sp.setMaxHeight(600);
+			sp.setMinHeight(sheet.getChildren().get(0).minHeight(0)+50);
 			
-			Group root = new Group(play,pause,exit);
-			Scene scene = new Scene(root,1000,700);
-		
 			
+			Pane musicPlay = new Pane(play,pause,exit);
+			musicPlay.setTranslateY(25);
+			VBox root = new VBox(sp, musicPlay);
+			Scene scene = new Scene(root, 1250, 700);
+			window.setScene(scene);			
 			
-			window.setScene(scene);
-			play.setOnAction(e -> window.setTitle("Music is Playing"));
-			pause.setOnAction(e -> window.setTitle("Music Paused"));
+			play.setOnAction(e -> {
+				window.setTitle("Music is Playing");
+				unImplementedFunctionOnClick("Music is Playing", "Music will be played shortly");
+			});
+			
+			pause.setOnAction(e -> {
+				window.setTitle("Music Paused");
+				unImplementedFunctionOnClick("Music Paused", "Music will be paused soon");
+			});
+			
 			exit.setOnAction(e -> window.hide());
 			window.show();
 			
@@ -351,15 +367,20 @@ public class MainViewController extends Application {
 			Logger logger = Logger.getLogger(getClass().getName());
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);
 		}
-//		// converter.getMusicXML() returns the MusicXML output as a String
-//		Score score = new Score(converter.getMusicXML());
-//		SheetScore sheet = new SheetScore(score, 25, 1100);
-//		ScrollPane sp = new ScrollPane();
-//		sp.setContent(sheet);
-//		Scene display = new Scene(sp, 1200, 600);
-//		newWindow.setScene(display);
-//		newWindow.setTitle("Testing custom_model Classes");
-//		newWindow.show();
+		// converter.getMusicXML() returns the MusicXML output as a String
+	}
+	
+	public static void unImplementedFunctionOnClick(String functionName, String functionDesc) {
+		Text lack = new Text(functionDesc + " :) ... \n\n\n\n\n **(Once this feature is developed)");
+		lack.setTranslateY(100);
+		lack.setFont(Font.font(20));
+		lack.setTextAlignment(TextAlignment.CENTER);
+		Pane lackPane = new Pane(lack);
+		Scene lackScence = new Scene(lackPane, 400, 300);
+		Stage inImplemented = new Stage();
+		inImplemented.setScene(lackScence);
+		inImplemented.show();
+		inImplemented.setTitle(functionName);
 	}
 
 	public void refresh() {
