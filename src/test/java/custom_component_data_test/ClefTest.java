@@ -17,12 +17,11 @@ import custom_component_data.Score;
 
 class ClefTest {
 	
-	//Score score = null;
+	Score score = null;
 	
-	/*@Before
-	public void setUp() {
+	private void setUp(String location) {
 		 // Get the file
-        File in = new File("src/test/resources/system/demoGuitarComplex1.musicxml");
+        File in = new File(location);
         String build = "";
 
         // Set up Scanner to use File Input (If invalid file then no Score object will be created
@@ -42,11 +41,7 @@ class ClefTest {
             e1.printStackTrace();
         }
         
-
-        // Test if the File was valid and that Score was built
-        assertEquals(score==null, false);
-        
-	}*/
+	}
 	
 	@Test
 	public void cleftTest1() {
@@ -92,6 +87,16 @@ class ClefTest {
 		Score scoreSheet = new Score("ex38.txt");
 		Clef expected = new Clef('G', 2);
 		Clef actual = scoreSheet.getParts().get(0).getMeasures().get(0).getClef();
+		Assertions.assertTrue(expected.getLine() == actual.getLine(), "The expected line of clef is " + expected.getLine() + "while the actual line is " + actual.getLine()); 
+	}
+	
+	@Test
+	public void clefTest6() {
+		setUp("src/test/resources/system/demoDrumSimple1.musicxml");
+		Clef expected = new Clef('G', 2);
+		Clef actual = score.getParts().get(0).getMeasures().get(0).getClef();
+		assertNotNull(actual);
+		assertEquals(expected, actual);
 		Assertions.assertTrue(expected.getLine() == actual.getLine(), "The expected line of clef is " + expected.getLine() + "while the actual line is " + actual.getLine()); 
 	}
 	

@@ -4,12 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import custom_component_data.Score;
+
 //Testing Measure.java in component_data
 class MeasureTest {
 
 	@Test
-	void testMeasure1() {
-		//complete
+	public void testMeasure1() {
+		
 	}
-
 }
