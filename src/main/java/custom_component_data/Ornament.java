@@ -1,5 +1,7 @@
 package custom_component_data;
 
+import org.w3c.dom.Element;
+
 /* !! Incomplete Class !!
  * 
  * This Class should include data regarding the <ornament> musicXML:
@@ -8,5 +10,15 @@ package custom_component_data;
  * 
  */
 public class Ornament {
-	//Must have: tremelo
+	Tremolo tremolo;
+	
+	public Ornament(Element ornaments) {
+		if (ornaments.getElementsByTagName("tremolo").getLength() > 0) {
+			this.tremolo = new Tremolo((Element) ornaments.getElementsByTagName("tremolo").item(0));
+		}
+	}
+	
+	public Tremolo getTremolo() {
+		return this.tremolo;
+	}
 }

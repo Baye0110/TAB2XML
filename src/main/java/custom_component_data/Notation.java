@@ -23,10 +23,11 @@ public class Notation {
 	List<Slur> slur;
 	List<Tied> tied;
 	List<Slide> slide;
-	Ornament ornament; // to be completed
+	Ornament ornaments; // to be completed
 	int string;
 	int fret;
-		
+	Technical technical;	
+	
 	public Notation(Element notation) {
 		NodeList slurList = notation.getElementsByTagName("slur");
 		NodeList tiedList = notation.getElementsByTagName("tied");
@@ -54,6 +55,13 @@ public class Notation {
 			this.string = Integer.valueOf(technicalEl.getElementsByTagName("string").item(0).getTextContent());
 			this.fret = Integer.valueOf(technicalEl.getElementsByTagName("fret").item(0).getTextContent());
 			// Add the additional Technical Element data such as PullOff
+			
+			this.technical = new Technical(technicalEl);
+		}
+		
+		NodeList ornamentsList = notation.getElementsByTagName("ornaments");
+		if (ornamentsList.getLength() > 0) {
+			this.ornaments = new Ornament((Element) ornamentsList.item(0));
 		}
 		
 	}
@@ -78,8 +86,8 @@ public class Notation {
 		return this.fret;
 	}
 	
-	public Ornament getOrnament() {
-		return this.ornament;
+	public Ornament getOrnaments() {
+		return this.ornaments;
 	}
 
 }

@@ -24,6 +24,7 @@ public class Note {
 	int dot; // The number of "dots" associated with this note which extend its duration
 	String stem; // Should the stem of the note (the verticle line) point up, down, or should it have no stem
  	String notehead; // The shape of the note: solid circle, white circle, cross
+ 	boolean parentheses;
 	boolean grace; // Is this a grace note? (A note which supports the one that comes after)
 	boolean chord; // Does this note belong to a chord with previous notes
 	boolean rest; // Is this a rest?
@@ -103,13 +104,14 @@ public class Note {
 			this.stem = stemList.item(0).getTextContent();
 		}
 		
-		// Initialize the notehead value for the Note
+		// Initialize the notehead and parenthsis value for the Note
 		NodeList noteheadList = noteData.getElementsByTagName("notehead");
 		if (noteheadList.getLength() > 0) {
 			this.notehead = noteheadList.item(0).getTextContent();
+			this.parentheses = ((Element) noteheadList.item(0)).getAttribute("parentheses").equals("yes") ? true : false;
 		}
 		
-		// Initialize 3 boolean values: Is this part of a chord? Is this a grace note? Is this a rest?
+		// Initialize 3 boolean values: Is this part of a chord? Is this a grace note? Is this a rest?		
 		this.chord = noteData.getElementsByTagName("chord").getLength() > 0 ? true : false;
 		
 		this.grace = noteData.getElementsByTagName("grace").getLength() > 0 ? true : false;
@@ -169,6 +171,10 @@ public class Note {
 	
 	public String getNotehead() {
 		return this.notehead;
+	}
+	
+	public boolean getParentheses() {
+		return this.parentheses;
 	}
 	
 	public boolean getGrace() {
