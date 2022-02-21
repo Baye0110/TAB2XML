@@ -92,11 +92,11 @@ class ClefTest {
 	
 	@Test
 	public void clefTest6() {
-		setUp("src/test/resources/system/demoDrumSimple1.musicxml");
+		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		Clef expected = new Clef('G', 2);
 		Clef actual = score.getParts().get(0).getMeasures().get(0).getClef();
 		assertNotNull(actual);
-		assertEquals(expected, actual);
+		Assertions.assertTrue(expected.getSymbol() == actual.getSymbol(), "The expected symbol of clef is " + expected.getLine() + "while the actual symbol is " + actual.getLine());
 		Assertions.assertTrue(expected.getLine() == actual.getLine(), "The expected line of clef is " + expected.getLine() + "while the actual line is " + actual.getLine()); 
 	}
 	
