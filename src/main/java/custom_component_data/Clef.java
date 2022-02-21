@@ -31,4 +31,22 @@ public class Clef {
 	public int getLine() {
 		return this.line;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		}
+		else if (o.getClass() != this.getClass()) {
+			return false;
+		}
+		
+		Clef other = (Clef) o;
+		if (other.symbol == this.symbol && other.line == this.line) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 }
