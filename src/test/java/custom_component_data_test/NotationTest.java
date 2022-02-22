@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import custom_component_data.Note;
 import custom_component_data.Score;
 
 class NotationTest {
@@ -36,11 +39,44 @@ class NotationTest {
        }
        
 	}
-
+	
 	@Test
 	public void NotationTest1() {
-		setUp("demoGuitarSimple1.musicxml");
-		
+		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
+		boolean existNotation = false;
+		List<Note> noteList = score.getParts().get(0).getMeasures().get(0).getNotes();
+		for(int i = 0; i < noteList.size(); i++) {
+			if(noteList.get(i).getNotation() != null) {
+				existNotation = true;
+			}
+		}
+		Assertions.assertTrue(existNotation == true);
+	}
+	
+	@Test
+	public void NotationTest2() {
+		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
+		boolean existNotation = false;
+		List<Note> noteList = score.getParts().get(0).getMeasures().get(1).getNotes();
+		for(int i = 0; i < noteList.size(); i++) {
+			if(noteList.get(i).getNotation() != null) {
+				existNotation = true;
+			}
+		}
+		Assertions.assertTrue(existNotation == true);
+	}
+
+	@Test
+	public void NotationTest3() {
+		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
+		boolean existNotation = false;
+		List<Note> noteList = score.getParts().get(0).getMeasures().get(2).getNotes();
+		for(int i = 0; i < noteList.size(); i++) {
+			if(noteList.get(i).getNotation() != null) {
+				existNotation = true;
+			}
+		}
+		Assertions.assertTrue(existNotation == false);
 	}
 
 }
