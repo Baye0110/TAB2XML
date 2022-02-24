@@ -16,7 +16,7 @@ import custom_component_data.Tied;
 
 class TiedTest {
 	
-	Score score = null;
+	private Score score = null;
 	
 	private void setUp(String location) {
 		 // Get the file
