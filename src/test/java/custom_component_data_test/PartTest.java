@@ -1,14 +1,11 @@
 package custom_component_data_test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import custom_component_data.Score;
 
 class PartTest {
@@ -89,5 +86,23 @@ class PartTest {
 		Assertions.assertEquals(0, instrumentCount);
 	}
 	
+	
+	@Test
+	public void partTest3()
+	{
+		setUp("src/test/resources/system/demoDrumsSimple2.musicxml");
+		assertNotNull(score.getParts());
+		assertEquals("P1",score.getParts().get(0).getId());
+		assertEquals("Guitar",score.getParts().get(0).getName());
+	}
+	
+	@Test
+	public void partTest4()
+	{
+		setUp("src/test/resources/system/demoDrumsSimple3.musicxml");
+		assertNotNull(score.getParts());
+		assertEquals("Drumset",score.getParts().get(0).getName());
+		assertEquals("P1",score.getParts().get(0).getId());
+	}
 
 }
