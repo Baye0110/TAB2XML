@@ -46,24 +46,15 @@ class TiedTest {
 	public void Tiedtest1() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		Tied note1 = score.getParts().get(0).getMeasures().get(0).getNotes().get(11).getNotation().getTieds().get(0);
+		Assertions.assertNotNull(note1);
 		Assertions.assertTrue(note1.getType().equals("start"));
 		Assertions.assertTrue(note1.getNumber() == 0);
-		try {
-			String placement = note1.getPlacement();
-		}
-		catch(NullPointerException e) {
-			Assertions.assertTrue(e instanceof NullPointerException);
-		}
+		Assertions.assertTrue(note1.getPlacement().equals(""));
 		
 		Tied note2 = score.getParts().get(0).getMeasures().get(0).getNotes().get(12).getNotation().getTieds().get(0);
 		Assertions.assertTrue(note2.getType().equals("start"));
 		Assertions.assertTrue(note2.getNumber() == 0);
-		try {
-			String placement = note2.getPlacement();
-		}
-		catch(NullPointerException e) {
-			Assertions.assertTrue(e instanceof NullPointerException);
-		}
+		Assertions.assertTrue(note2.getPlacement().equals(""));
 			
 	}
 	
@@ -73,22 +64,12 @@ class TiedTest {
 		Tied note1 = score.getParts().get(0).getMeasures().get(1).getNotes().get(0).getNotation().getTieds().get(0);
 		Assertions.assertTrue(note1.getType().equals("stop"));
 		Assertions.assertTrue(note1.getNumber() == 0);
-		try {
-			String placement = note1.getPlacement();
-		}
-		catch(NullPointerException e) {
-			Assertions.assertTrue(e instanceof NullPointerException);
-		}
+		Assertions.assertTrue(note1.getPlacement().equals(""));
 		
 		Tied note2 = score.getParts().get(0).getMeasures().get(1).getNotes().get(1).getNotation().getTieds().get(0);
 		Assertions.assertTrue(note2.getType().equals("stop"));
 		Assertions.assertTrue(note2.getNumber() == 0);
-		try {
-			String placement = note2.getPlacement();
-		}
-		catch(NullPointerException e) {
-			Assertions.assertTrue(e instanceof NullPointerException);
-		}
+		Assertions.assertTrue(note2.getPlacement().equals(""));
 	}
 	
 	
