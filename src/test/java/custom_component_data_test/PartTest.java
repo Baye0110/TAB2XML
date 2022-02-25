@@ -10,7 +10,7 @@ import custom_component_data.Score;
 
 class PartTest {
 	
-	Score score = null;
+	private Score score = null;
 	
 	private void setUp(String location) {
 		 // Get the file
