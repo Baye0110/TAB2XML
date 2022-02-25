@@ -50,5 +50,21 @@ class ScoreTest {
 		}
 		Assertions.assertEquals(1, partCount);
 	}
+	
+	@Test
+	public void ScoreTest2() {
+		setUp("src/test/resources/system/demoDrumsSimple2.musicxml");
+		//Who is the Author
+		assertEquals("composer", score.getAuthor());
+		//What is the size
+		assertEquals(1,score.getParts().size());
+	}
+	
+	@Test
+	public void ScoreTest3() {
+		setUp("src/test/resources/system/demoDrumsSimple3.musicxml");
+		assertEquals("composer",score.getAuthor());
+		assertEquals(1,score.getParts().size());
+	}
 
 }
