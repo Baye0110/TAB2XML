@@ -9,7 +9,7 @@ import javafx.scene.shape.Line;
 public class ScoreLine extends HBox{
 	List<Double> measureDistances;
 	
-	public ScoreLine(List<TabMeasure> measures, double pageWidth) {
+	public ScoreLine(List<? extends MusicMeasure> measures, double pageWidth) {
 		this.measureDistances = new ArrayList<>();
 		
 		Line start = new Line();
@@ -23,7 +23,7 @@ public class ScoreLine extends HBox{
 		
 		double current = 0;
 		double spacing = 0;
-		for (TabMeasure m: measures) {
+		for (MusicMeasure m: measures) {
 			this.getChildren().add(m);
 			this.measureDistances.add(current);
 			current += m.minWidth;
@@ -32,7 +32,7 @@ public class ScoreLine extends HBox{
 		
 		double scale = 1 + (pageWidth - current) / spacing;
 		System.out.println(scale);
-		for (TabMeasure m: measures) {
+		for (MusicMeasure m: measures) {
 			m.setBaseDistance(scale);
 			m.setSpacing(scale);
 		}

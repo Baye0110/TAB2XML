@@ -12,18 +12,12 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class TabMeasure extends Pane {
+public class TabMeasure extends MusicMeasure {
 	public static final double START_DISTANCE = 30;
 	
-	public double minWidth;
-	public double wholeDistance = 200;
-	public double spacing;
-	
-	
 	List<BoxedText> labels;
-	List<Line> barLines;
 	
-	public TabMeasure (Measure m, double size, boolean start) {
+	public TabMeasure (double size, Measure m, boolean start) {
 		double currentDistance = START_DISTANCE;
 		List<Note> notes = m.getNotes();
 		this.labels = new ArrayList<BoxedText>();
@@ -117,10 +111,6 @@ public class TabMeasure extends Pane {
 		Line end = this.barLines.get(this.barLines.size()-1);
 		end.setStartX(current);
 		end.setEndX(current);
-	}
-	
-	public void setBaseDistance(double scale) {
-		this.wholeDistance *= scale;
 	}
 
 }
