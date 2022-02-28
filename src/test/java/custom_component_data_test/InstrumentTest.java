@@ -1,8 +1,11 @@
 package custom_component_data_test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import custom_component_data.Instrument;
+import custom_component_data.Score;
 
 
 class InstrumentTest {
@@ -32,6 +35,24 @@ class InstrumentTest {
 		// assertEquals (expected, actual, epsilon) or without epsilon
 		assertEquals(expected, actual);
 		
+	}
+	
+	@Test
+	public void InstrumentTest1() {
+		Score scoreSheet = new Score("ex38.txt");
+		Instrument expected = null;
+		Instrument actual = scoreSheet.getParts().get(0).getInstruments().get("");
+		assertEquals(expected, actual);
+	}
+	
+	
+	@Test
+	public void InstrumentTest2() {
+		Score scoreSheet = new Score("parabola.txt");
+		Instrument expected = new Instrument("P1-I45", "Pedal Hi-hat");
+		Instrument actual = scoreSheet.getParts().get(0).getInstruments().get("P1-I45");
+		Assertions.assertTrue(expected.getName().equals(actual.getName()), "The expected instrument name is " + expected.getName() + "while the actual instruent name is " + actual.getName());
+		Assertions.assertTrue(expected.getId().equals(actual.getId()), "The expected instrument id is " + expected.getId() + "while the actual instruent id is " + actual.getId());
 	}
 	
 
