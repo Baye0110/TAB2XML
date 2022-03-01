@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -16,21 +15,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
+import org.jfugue.integration.MusicXmlParser;
+import org.jfugue.player.Player;
+import org.staccato.StaccatoParserListener;
 
 import converter.Converter;
+import converter.Instrument;
 import converter.measure.TabMeasure;
-import custom_component_data.Measure;
 import custom_component_data.Score;
-import custom_model.ScoreLine;
 import custom_model.SheetScore;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -43,7 +46,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -53,6 +55,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 import utility.Range;
 import utility.Settings;
 
@@ -316,23 +320,6 @@ public class MainViewController extends Application {
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);
 		}
 	}
-
-//	@FXML
-//	private void previewButtonHandle() throws IOException {
-//		System.out.println("Preview Button Clicked!");
-//		Parent root;
-//		try {
-//			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("GUI/tabPlayer.fxml"));
-//			root = loader.load();
-//			SaveMXLController controller = loader.getController();
-//			controller.setMainViewController(this);
-//			convertWindow = this.openNewWindow(root, "Sheet Music");
-//		} catch (IOException e) {
-//			Logger logger = Logger.getLogger(getClass().getName());
-//			logger.log(Level.SEVERE, "Failed to create new Window.", e);
-//		}
-//		// converter.getMusicXML() returns the MusicXML output as a String
-//	}
 	
 	@FXML
 	private void previewButtonHandle() throws Exception {
@@ -368,13 +355,24 @@ public class MainViewController extends Application {
 			Scene scene = new Scene(root, 1250, 700);
 			window.setScene(scene);			
 			
+			StaccatoParserListener listner = new StaccatoParserListener();
+			MusicXmlParser parser = new MusicXmlParser();
+			parser.addParserListener(listner);
+			parser.parse(converter.getMusicXML());
+			Player player = new Player();
+			org.jfugue.pattern.Pattern musicXMLParttern = listner.getPattern().setTempo(300);
+			
 			play.setOnAction(e -> {
-				window.setTitle("Music is Playing");
-				unImplementedFunctionOnClick("Music is Playing", "Music will be played shortly");
+				window.setTitle("Music is playing");
+				player.play(musicXMLParttern);
+				if(player.getManagedPlayer().isFinished()) {
+					window.setTitle("Music sheet");
+				}
 			});
 			
 			pause.setOnAction(e -> {
 				window.setTitle("Music Paused");
+				player.getManagedPlayer().pause();
 				unImplementedFunctionOnClick("Music Paused", "Music will be paused soon");
 			});
 			
