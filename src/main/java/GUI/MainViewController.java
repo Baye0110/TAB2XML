@@ -360,9 +360,16 @@ public class MainViewController extends Application {
 			parser.addParserListener(listner);
 			parser.parse(converter.getMusicXML());
 			Player player = new Player();
-			org.jfugue.pattern.Pattern musicXMLParttern = listner.getPattern().setTempo(300);
+			org.jfugue.pattern.Pattern musicXMLParttern = listner.getPattern().setTempo(200);
+			
+			Stage window1 = new Stage();
+			Pane pausePane = new Pane(pause);
+			Scene scene1 = new Scene(pausePane,100,100);
+			window1.setScene(scene1);
+			
 			
 			play.setOnAction(e -> {
+				window1.show();
 				window.setTitle("Music is playing");
 				player.play(musicXMLParttern);
 				if(player.getManagedPlayer().isFinished()) {
@@ -371,9 +378,12 @@ public class MainViewController extends Application {
 			});
 			
 			pause.setOnAction(e -> {
-				window.setTitle("Music Paused");
-				player.getManagedPlayer().pause();
-				unImplementedFunctionOnClick("Music Paused", "Music will be paused soon");
+				window1.hide();
+				if(player.getManagedPlayer().isPlaying()) {
+					player.getManagedPlayer().pause();
+					window.setTitle("Music Paused");
+				}
+				window.setTitle("Music sheet");
 			});
 			
 
