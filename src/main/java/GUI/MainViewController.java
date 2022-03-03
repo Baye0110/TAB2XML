@@ -34,6 +34,7 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -360,25 +361,19 @@ public class MainViewController extends Application {
 			parser.addParserListener(listner);
 			parser.parse(converter.getMusicXML());
 			Player player = new Player();
+			// get music and set its speed is 2x (200)
 			org.jfugue.pattern.Pattern musicXMLParttern = listner.getPattern().setTempo(200);
 			
-			Stage window1 = new Stage();
-			Pane pausePane = new Pane(pause);
-			Scene scene1 = new Scene(pausePane,100,100);
-			window1.setScene(scene1);
-			
-			
 			play.setOnAction(e -> {
-				window1.show();
 				window.setTitle("Music is playing");
 				player.play(musicXMLParttern);
 				if(player.getManagedPlayer().isFinished()) {
 					window.setTitle("Music sheet");
 				}
+
 			});
 			
 			pause.setOnAction(e -> {
-				window1.hide();
 				if(player.getManagedPlayer().isPlaying()) {
 					player.getManagedPlayer().pause();
 					window.setTitle("Music Paused");
