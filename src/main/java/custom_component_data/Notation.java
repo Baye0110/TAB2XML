@@ -23,7 +23,7 @@ public class Notation {
 	List<Slur> slur;
 	List<Tied> tied;
 	List<Slide> slide;
-	Ornament ornaments; // to be completed
+	Ornament ornaments; 
 	int string;
 	int fret;
 	Technical technical;	
@@ -88,6 +88,10 @@ public class Notation {
 	
 	public Ornament getOrnaments() {
 		return this.ornaments;
+	}
+	
+	public Technical getTechnical() {
+		return this.technical;
 	}
 
 }
