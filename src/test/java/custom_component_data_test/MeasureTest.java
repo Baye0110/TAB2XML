@@ -58,4 +58,33 @@ class MeasureTest {
 		int d = m.getDivisions(); //should be 16
 		assertEquals(16,d);
 	}
+	
+	@Test
+	public void testMeasure3() {
+		setUp("src/test/resources/system/demoDrumsSimple2.musicxml");
+		Measure m = score.getParts().get(0).getMeasures().get(0);	//measure number 1
+		assertNotNull(m);
+		
+		int d = m.getDivisions(); //<divisions>32</divisions>
+		assertEquals(32,d);
+		
+		int f = m.getFifths(); //<fifths>0</fifths>
+		assertEquals(0,f);
+	}
+	
+	@Test
+	public void testMeasure4() {
+		setUp("src/test/resources/system/demoDrumsSimple3.musicxml");
+		Measure m = score.getParts().get(0).getMeasures().get(0);	//measure number 1
+		assertNotNull(m);
+		
+		int size =  score.getParts().get(0).getMeasures().size(); //3
+		assertEquals(3,size);
+		
+		int d = m.getDivisions(); //<divisions>16</divisions>
+		assertEquals(16,d);
+		
+		int f = m.getFifths(); //<fifths>0</fifths>
+		assertEquals(0,f);
+	}
 }
