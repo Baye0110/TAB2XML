@@ -56,5 +56,22 @@ class SlideTest {
 		assertEquals(2,string);
 	}
 	
+	public void slideTest3() {
+		setUp("src/test/resources/system/demoGuitarSimple2.musicxml");
+		int string = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getNotation().getString(); //<string>1</string>
+		assertEquals(1,string);
+		
+		int fret = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getNotation().getFret(); //<fret>5</fret>
+		assertEquals(5,fret);
+	}
 	
+	public void slideTest4() {
+		setUp("src/test/resources/system/demoGuitarSimple2.musicxml");
+		int string = score.getParts().get(0).getMeasures().get(0).getNotes().get(1).getNotation().getString(); //<string>2</string>
+		assertEquals(2,string);
+		
+		int fret = score.getParts().get(0).getMeasures().get(0).getNotes().get(1).getNotation().getFret(); //<fret>7</fret>
+		assertEquals(7,fret);
+	}
+
 }
