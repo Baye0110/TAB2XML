@@ -10,6 +10,7 @@ import java.util.Scanner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import custom_component_data.Notation;
 import custom_component_data.Note;
 import custom_component_data.Score;
 
@@ -42,7 +43,7 @@ class NotationTest {
 	}
 	
 	@Test
-	public void NotationTest1() {
+	public void notationTest1() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		boolean existNotation = false;
 		List<Note> noteList = score.getParts().get(0).getMeasures().get(0).getNotes();
@@ -55,7 +56,7 @@ class NotationTest {
 	}
 	
 	@Test
-	public void NotationTest2() {
+	public void notationTest2() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		boolean existNotation = false;
 		List<Note> noteList = score.getParts().get(0).getMeasures().get(1).getNotes();
@@ -68,7 +69,7 @@ class NotationTest {
 	}
 
 	@Test
-	public void NotationTest3() {
+	public void notationTest3() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		boolean existNotation = false;
 		List<Note> noteList = score.getParts().get(0).getMeasures().get(2).getNotes();
@@ -78,6 +79,13 @@ class NotationTest {
 			}
 		}
 		Assertions.assertTrue(existNotation == false);
+	}
+	
+	@Test
+	public void notationTest4() {
+		setUp("src/test/resources/system/demoDrumsSimple2.musicxml");
+		Notation n = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getNotation();
+		assertNotNull(n);
 	}
 
 }

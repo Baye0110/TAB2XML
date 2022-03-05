@@ -44,7 +44,7 @@ class SlurTest {
 	}
 
 	@Test
-	public void Slurtest1() {
+	public void slurTest1() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		int noteCountM1 = 0;
 		for(int i = 0; i < score.getParts().get(0).getMeasures().get(0).getNotes().size(); i++) {
@@ -80,7 +80,7 @@ class SlurTest {
 	
 	
 	@Test
-	public void SlurTest2() {
+	public void slurTest2() {
 		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
 		Slur note1 = score.getParts().get(0).getMeasures().get(1).getNotes().get(0).getNotation().getSlurs().get(0);
 		Assertions.assertTrue(note1.getType().equals("start"));

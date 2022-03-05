@@ -44,21 +44,21 @@ class SlideTest {
 	}
 	
 	@Test
-	public void SlideTest1() {
+	public void slideTest1() {
 		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
 		int string = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getNotation().getString(); //<string>3</string>
 		assertEquals(3,string);
 	}
 	
 	@Test
-	public void SlideTest2() {
+	public void slideTest2() {
 		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
 		int string = score.getParts().get(0).getMeasures().get(1).getNotes().get(0).getNotation().getString(); //<string>2</string>
 		assertEquals(2,string);
 	}
 	
 	@Test
-	public void SlideTest3() {
+	public void slideTest3() {
 		setUp("src/test/resources/system/demoGuitarSimple2.musicxml");
 		int string = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getNotation().getString(); //<string>1</string>
 		assertEquals(1,string);
@@ -68,7 +68,7 @@ class SlideTest {
 	}
 	
 	@Test
-	public void SlideTest4() {
+	public void slideTest4() {
 		setUp("src/test/resources/system/demoGuitarSimple2.musicxml");
 		int string = score.getParts().get(0).getMeasures().get(0).getNotes().get(1).getNotation().getString(); //<string>2</string>
 		assertEquals(2,string);
@@ -78,7 +78,7 @@ class SlideTest {
 	}
 	
 	@Test
-	public void Slidetest5() {
+	public void slideTest5() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		int noteCountM1 = 0;
 		for(int i = 0; i < score.getParts().get(0).getMeasures().get(0).getNotes().size(); i++) {
@@ -113,7 +113,7 @@ class SlideTest {
 	}
 	
 	@Test
-	public void Slidetest6() {
+	public void slideTest6() {
 		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
 		int noteCountM2 = 0;
 		for(int i = 0; i < score.getParts().get(0).getMeasures().get(1).getNotes().size(); i++) {
@@ -138,7 +138,7 @@ class SlideTest {
 	
 	
 	@Test
-	public void Slidetest7() {
+	public void slideTest7() {
 		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
 		Slide note2 = score.getParts().get(0).getMeasures().get(9).getNotes().get(1).getNotation().getSlides().get(0);
 		Assertions.assertTrue(note2.getType().equals("start"));
