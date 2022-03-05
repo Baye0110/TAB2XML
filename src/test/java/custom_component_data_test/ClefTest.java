@@ -44,7 +44,7 @@ class ClefTest {
 	}
 	
 	@Test
-	public void cleftTest1() {
+	public void cleftConstructorTest1() {
 		Clef c1 = new Clef('G',1);
 		assertNotNull(c1);
 	}
