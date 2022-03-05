@@ -38,7 +38,7 @@ class InstrumentTest {
 	}
 	
 	@Test
-	public void InstrumentTest1() {
+	public void instrumentTest1() {
 		Score scoreSheet = new Score("ex38.txt");
 		Instrument expected = null;
 		Instrument actual = scoreSheet.getParts().get(0).getInstruments().get("");
@@ -47,7 +47,7 @@ class InstrumentTest {
 	
 	
 	@Test
-	public void InstrumentTest2() {
+	public void instrumentTest2() {
 		Score scoreSheet = new Score("parabola.txt");
 		Instrument expected = new Instrument("P1-I45", "Pedal Hi-hat");
 		Instrument actual = scoreSheet.getParts().get(0).getInstruments().get("P1-I45");

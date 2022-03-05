@@ -43,7 +43,7 @@ class TiedTest {
 	}
 
 	@Test
-	public void Tiedtest1() {
+	public void tiedTest1() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		Tied note1 = score.getParts().get(0).getMeasures().get(0).getNotes().get(11).getNotation().getTieds().get(0);
 		Assertions.assertNotNull(note1);
@@ -59,7 +59,7 @@ class TiedTest {
 	}
 	
 	@Test
-	public void Tiedtest2() {
+	public void tiedTest2() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		Tied note1 = score.getParts().get(0).getMeasures().get(1).getNotes().get(0).getNotation().getTieds().get(0);
 		Assertions.assertTrue(note1.getType().equals("stop"));
