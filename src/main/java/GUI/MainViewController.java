@@ -46,9 +46,12 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -341,7 +344,9 @@ public class MainViewController extends Application {
 			window.setTitle("Music sheet");
 			
 			Score score = new Score(converter.getMusicXML());
-			SheetScore sheet = new SheetScore(score, 25, 1050);
+			SheetScore sheet = new SheetScore(score, 18, 1050);
+			sheet.setTranslateX(50);
+			
 			ScrollPane sp = new ScrollPane();
 			sp.setContent(sheet);
 			sp.setTranslateX(50);
