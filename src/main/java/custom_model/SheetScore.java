@@ -20,7 +20,8 @@ public class SheetScore extends VBox{
 			if (!score.getParts().get(0).getMeasures().get(0).getTab()) {
 				Text inValid = new Text("This type of tablature is currently unsupported.\n"
 						+ "Support for drum tablature is anticipated to arrive soon.\n"
-						+ "Your patience is greatly appreciated.");
+						+ "Your patience is greatly appreciated.\n"
+						+ "But you can still play the music.");
 				inValid.setFont(Font.font(40));
 				inValid.setTextAlignment(TextAlignment.CENTER);
 				inValid.setFill(Color.RED);
