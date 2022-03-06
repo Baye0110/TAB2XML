@@ -8,6 +8,7 @@ import javafx.scene.shape.Line;
 
 public class ScoreLine extends HBox{
 	List<Double> measureDistances;
+	double maxHeight;
 	
 	public ScoreLine(List<? extends MusicMeasure> measures, double pageWidth) {
 		this.measureDistances = new ArrayList<>();

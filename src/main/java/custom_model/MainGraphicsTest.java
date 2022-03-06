@@ -23,7 +23,7 @@ public class MainGraphicsTest extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-       File in = new File("src/test/resources/system/demoDrumsSimple1.musicxml");
+       File in = new File("src/test/resources/system/demoDrumsComplex1.musicxml");
         String build = "";
         Score score = null;
         Scanner input = null;
@@ -40,16 +40,21 @@ public class MainGraphicsTest extends Application {
             e1.printStackTrace();
         }
         
-        int height = 20;
+        int height = 30;
 		StaffMeasure fn2 = new StaffMeasure(height, score.getParts().get(0).getMeasures().get(2), true);
 		fn2.setSpacing(1.1);
 		
-		DisplayNote dn = new DisplayNote(height, score.getParts().get(0).getMeasures().get(1).getNotes().get(9), true);
+		DisplayNote dn = new DisplayNote(height, score.getParts().get(0).getMeasures().get(1).getNotes().get(8), false, false);
+		dn.addTails(height, false);
+		
 		dn.setTranslateX(height * 3);
 		
-		Group root = new Group(fn2);
-		root.setTranslateX(50);
-		root.setTranslateY(50);
+		NoteTail nt = new NoteTail(80, 3, true);
+		QuarterRest qr = new QuarterRest(height);
+		
+		Group root = new Group(dn);
+		root.setTranslateX(200);
+		root.setTranslateY(200);
 		Scene display = new Scene(root, 700, 700);
         
 		primaryStage.setScene(display);

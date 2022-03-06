@@ -5,72 +5,72 @@ import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 public class StaffMeasure extends MusicMeasure{
-	public static final double START_DISTANCE = 30;
 	public static final int UPPER_PADDING = 3;
 
-	List<DisplayNote> notes;
+	List<DisplayUnit> noteUnits;
 	
 	public StaffMeasure(double height, Measure measure, boolean start) {
-		double currentDistance = START_DISTANCE;
+		super(height, measure, start);
+		
 		List<Note> notes = measure.getNotes();
-		this.notes = new ArrayList<>();
+		this.noteUnits = new ArrayList<>();
 		measure.generatePositions();
-		
-		if (start) {
-			// Create a clef symbol
-		}
-		
-		if (measure.getTimeDisplay()) {
-			Text beat = new Text();
-			beat.setText(Integer.toString(measure.getTimeSignature()[0]));
-			beat.setFont(Font.font(height * (measure.getStaffLines()-1) * 0.675));
-			beat.setX(currentDistance);
-			beat.setY(height * (UPPER_PADDING + (measure.getStaffLines()-1)/2.0));
-			this.getChildren().add(beat);
-			
-			Text beatType = new Text();
-			beatType.setText(Integer.toString(measure.getTimeSignature()[1]));
-			beatType.setFont(Font.font(height * (measure.getStaffLines()-1) * 0.675));
-			beatType.setX(currentDistance);
-			beatType.setY(height * (UPPER_PADDING + measure.getStaffLines()-1));
-			this.getChildren().add(beatType);
-			
-			currentDistance += beat.minWidth(0) + 50;
-		}
 		
 		for (int i = 0; i < notes.size(); i++) {
 			boolean isChord = i + 1 < notes.size() && notes.get(i+1).getChord();
-			DisplayNote note = new DisplayNote(height, notes.get(i), isChord);
-			Note currentNote = notes.get(i);
 			
-			note.setTranslateX(currentDistance);
+			DisplayUnit currentUnit = null;
 			
-			
-			double pos_y = height*(measure.getStaffLines() + UPPER_PADDING-1.5) - (height/2)*currentNote.getPosition() - note.parenthesesDisplacement;
-			
-			if (currentNote.getRest())
-				pos_y = height*UPPER_PADDING + (height*(measure.getStaffLines()-1) - note.height)/2 ;
-			
-			System.out.println(currentNote.getPosition());
-			
-			note.setTranslateY(pos_y); 
 			if (isChord) {
-				currentDistance += 0;
-			} else {
-				currentDistance += note.width + wholeDistance/note.spacingType;
-				this.spacing += wholeDistance/note.spacingType;
+				List<Note> chordNotes = new ArrayList<>();
+				chordNotes.add(notes.get(i));
+				
+				int noteNum = 1;
+				while (isChord) {
+					chordNotes.add(notes.get(i + 1));
+					noteNum += 1;
+					isChord = i + noteNum < notes.size() && notes.get(i + noteNum).getChord();					
+				}
+				
+				i += chordNotes.size() - 1;
+				
+				currentUnit = new DisplayChord(height, chordNotes);
 			}
-			this.notes.add(note);
+			else {
+				currentUnit = new DisplayNote(height, notes.get(i), false, false);	
+				currentUnit.addTails(height, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
+			}
+			
+			
+			currentUnit.extendStaff((measure.getStaffLines()-1)*2, height);
+					
+			currentUnit.setTranslateX(currentDistance);
+			
+			double pos_y = height*(measure.getStaffLines() + UPPER_PADDING-1.5) - (height/2)*currentUnit.getPosition();
+			if (notes.get(i).getRest())
+				currentUnit.setTranslateY(height*UPPER_PADDING + (height*(measure.getStaffLines()-1) - currentUnit.height)/2);
+			else 
+				currentUnit.setTranslateY(currentUnit.getTranslateY() + pos_y);
+			
+			System.out.println(currentUnit.height);
+			
+			//System.out.println(currentUnit.getPosition());
+			
+			currentDistance += currentUnit.getWidth() + wholeDistance/currentUnit.getSpacingType();
+			this.spacing += wholeDistance/currentUnit.getSpacingType();
+			this.noteUnits.add(currentUnit);
 		}
 		
 		this.minWidth = currentDistance;
+		
+		for (DisplayUnit note: this.noteUnits) {
+			this.maxHeight = note.getTranslateY() + note.top > this.maxHeight ? note.getTranslateY() + note.top : this.maxHeight;
+			this.getChildren().add(note);
+		}
 		
 		this.barLines = new ArrayList<Line>();
 		for (int i = 0; i < measure.getStaffLines(); i++) {
@@ -95,25 +95,20 @@ public class StaffMeasure extends MusicMeasure{
 		this.barLines.add(end);
 		this.getChildren().add(end);
 		
-		for (DisplayNote note: this.notes) {
-			this.getChildren().add(note);
-		}
 	}
 	
 	public void setSpacing(double scale) {
-		if (this.notes.size() == 0)
+		if (this.noteUnits.size() == 0)
 			return;
 		
-		double current = this.notes.get(0).getTranslateX();
+		double current = this.noteUnits.get(0).getTranslateX();
 		this.spacing = 0;
 		
-		for (int i = 0; i < this.notes.size(); i++) {
-			DisplayNote currNote = this.notes.get(i);
+		for (int i = 0; i < this.noteUnits.size(); i++) {
+			DisplayUnit currNote = this.noteUnits.get(i);
 			currNote.setTranslateX(current);
-			if (!currNote.isChord) {
-				current += currNote.width + (this.wholeDistance/currNote.spacingType);
-				this.spacing += this.wholeDistance/currNote.spacingType;
-			}
+			current += currNote.width + (this.wholeDistance/currNote.spacingType);
+			this.spacing += this.wholeDistance/currNote.spacingType;
 		}
 		
 		for (int i = 0; i < this.barLines.size()-1; i++) {
