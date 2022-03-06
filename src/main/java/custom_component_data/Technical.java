@@ -51,10 +51,6 @@ public class Technical {
 	public List<HammerOn> getHammerOns() { 
 		return this.hammerOns;
 	}
-	
-	public List<PullOff> getPullOffs() { 
-		return this.pullOffs;
-	}
 
 	public String getHarmonic() {
 		return this.harmonic;
