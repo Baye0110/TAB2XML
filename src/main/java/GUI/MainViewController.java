@@ -369,6 +369,7 @@ public class MainViewController extends Application {
 			// get music and set its speed is 2x (200)
 			org.jfugue.pattern.Pattern musicXMLParttern = listner.getPattern().setTempo(200);
 			
+			
 			play.setOnAction(e -> {
 				if(score.getParts().get(0).getMeasures().get(0).getTab()) {
 					System.out.println("Guitar/ Bass (String instrument) is playing");
@@ -377,11 +378,17 @@ public class MainViewController extends Application {
 					System.out.println("Drum is playing");
 					window.setTitle("Drum is playing");
 				}
-				player.play(musicXMLParttern);
-				if(player.getManagedPlayer().isFinished()) {
-					window.setTitle("Music sheet");
-					System.out.println("Music is finished");
+				
+				if(player.getManagedPlayer().isPaused()) {
+					player.getManagedPlayer().resume();
+				}else {
+					player.delayPlay(0, musicXMLParttern);
+					if(player.getManagedPlayer().isFinished()) {
+						window.setTitle("Music sheet");
+						System.out.println("Music is finished");
+					}
 				}
+
 
 			});
 			
@@ -398,6 +405,7 @@ public class MainViewController extends Application {
 			
 
 			exit.setOnAction(e -> {window.hide();
+			player.getManagedPlayer().finish();
 				System.out.println("preview windows exited");});
 			window.show();
 			
