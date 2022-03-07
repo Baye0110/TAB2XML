@@ -76,6 +76,8 @@ public class MainViewController extends Application {
 
 	public Highlighter highlighter;
 	public Converter converter;
+	org.jfugue.pattern.Pattern musicXMLParttern;
+	int instrument_type = 0;
 
 	@FXML  Label mainViewState;
 	@FXML  TextField instrumentMode;
@@ -366,22 +368,47 @@ public class MainViewController extends Application {
 			parser.addParserListener(listner);
 			parser.parse(converter.getMusicXML());
 			Player player = new Player();
-			// get music and set its speed is 2x (200)
-			org.jfugue.pattern.Pattern musicXMLParttern = listner.getPattern().setTempo(200);
+			// get music and set its speed is 1x (100)
+			
+			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
+				if(score.getParts().get(0).getName().equals("Bass")) {
+					musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Acoustic_Bass");
+					instrument_type = 1;
+				}else {
+					musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Guitar");
+					instrument_type = 2;
+				}
+			}else {
+				musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Steel_Drums");
+				instrument_type = 3;
+			}
 			
 			play.setOnAction(e -> {
-				if(score.getParts().get(0).getMeasures().get(0).getTab()) {
-					System.out.println("Guitar/ Bass (String instrument) is playing");
-					window.setTitle("Guitar/ Bass (String instrument) is playing");
-				}else {
+				if(instrument_type == 1) {
+					System.out.println("Bass is playing");
+					window.setTitle("Bass is playing");
+				}else if(instrument_type == 2){
+					System.out.println("Guitar is playing");
+					window.setTitle("Guitar is playing");
+				}else if(instrument_type == 3){
 					System.out.println("Drum is playing");
 					window.setTitle("Drum is playing");
 				}
-				player.play(musicXMLParttern);
-				if(player.getManagedPlayer().isFinished()) {
-					window.setTitle("Music sheet");
-					System.out.println("Music is finished");
+				
+				if(player.getManagedPlayer().isPaused()) {
+					player.getManagedPlayer().resume();
+				}else {
+					if(player.getManagedPlayer().isPlaying()) {
+						// do nothing
+					}else {
+						player.delayPlay(0, musicXMLParttern);
+						if(player.getManagedPlayer().isFinished()) {
+							window.setTitle("Music sheet");
+							System.out.println("Music is finished");
+						}
+					}
 				}
+
 
 			});
 			
@@ -398,8 +425,12 @@ public class MainViewController extends Application {
 			
 
 			exit.setOnAction(e -> {window.hide();
+			if(player.getManagedPlayer().isPlaying()) {
+				player.getManagedPlayer().finish();
+			}
 				System.out.println("preview windows exited");});
 			window.show();
+			
 			
 		} catch (Exception e) {
 			Logger logger = Logger.getLogger(getClass().getName());
