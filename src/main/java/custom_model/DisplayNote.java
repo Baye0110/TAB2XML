@@ -11,6 +11,8 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 
 public class DisplayNote extends DisplayUnit{
+	// Restore this class
+	
 	double preceding;
 	double trailing;
 	double parenthesesDisplacement;
