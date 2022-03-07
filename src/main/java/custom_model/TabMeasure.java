@@ -5,55 +5,59 @@ import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
-import javafx.scene.Group;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
-public class TabMeasure extends Pane {
-	public static final double START_DISTANCE = 30;
-	
-	public double minWidth;
-	public double wholeDistance = 200;
-	public double spacing;
-	
-	
+public class TabMeasure extends MusicMeasure {	
 	List<BoxedText> labels;
-	List<Line> barLines;
+	List<TabNoteStem> stems;
 	
-	public TabMeasure (Measure m, double size, boolean start) {
-		double currentDistance = START_DISTANCE;
+	public TabMeasure (double size, Measure m, boolean start) {
+		super(size, m, start);
 		List<Note> notes = m.getNotes();
 		this.labels = new ArrayList<BoxedText>();
+		this.stems = new ArrayList<TabNoteStem>();
+		this.maxHeight = size * (m.getStaffLines());
+//		
+//		if (start) {
+//			currentDistance += this.generateTabClef(size * (m.getStaffLines() - 1), currentDistance, m.getStaffLines());
+//		}
 		
-		if (start) {
-			// Add the clef
-		}
-		
-		if (m.getTimeDisplay()) {
-			Text beat = new Text();
-			beat.setText(Integer.toString(m.getTimeSignature()[0]));
-			beat.setFont(Font.font(size * (m.getStaffLines()-1) * 0.675));
-			beat.setX(currentDistance);
-			beat.setY(size * (2 + (m.getStaffLines()-1)/2.0));
-			this.getChildren().add(beat);
-			
-			Text beatType = new Text();
-			beatType.setText(Integer.toString(m.getTimeSignature()[1]));
-			beatType.setFont(Font.font(size * (m.getStaffLines()-1) * 0.675));
-			beatType.setX(currentDistance);
-			beatType.setY(size * (2 + m.getStaffLines()-1));
-			this.getChildren().add(beatType);
-			
-			currentDistance += beat.minWidth(0) + 50;
-		}
+//		if (m.getTimeDisplay()) {
+//			Text beat = new Text();
+//			beat.setText(Integer.toString(m.getTimeSignature()[0]));
+//			beat.setFont(Font.font(size * (m.getStaffLines()-1) * 0.675));
+//			beat.setX(currentDistance);
+//			beat.setY(size * (2 + (m.getStaffLines()-1)/2.0));
+//			this.getChildren().add(beat);
+//			
+//			Text beatType = new Text();
+//			beatType.setText(Integer.toString(m.getTimeSignature()[1]));
+//			beatType.setFont(Font.font(size * (m.getStaffLines()-1) * 0.675));
+//			beatType.setX(currentDistance);
+//			beatType.setY(size * (2 + m.getStaffLines()-1));
+//			this.getChildren().add(beatType);
+//			
+//			List<Text> timeVertical = new ArrayList<>();
+//			timeVertical.add(beat);
+//			timeVertical.add(beatType);
+//			MusicMeasure.alignVerticalText(timeVertical);
+//			
+//			currentDistance += beat.minWidth(0) + 50;
+//		}
 		
 		for (int i = 0; i < notes.size(); i++) {
 			double type = notes.get(i).getType() != 0 ? notes.get(i).getType() : 0.5;
 			boolean isChord = i + 1 < notes.size() && notes.get(i+1).getChord();
 			BoxedText fret = new BoxedText("" + notes.get(i).getNotation().getFret(), size, type, isChord);
+			
+			if (!notes.get(i).getChord()) {
+				TabNoteStem stem = new TabNoteStem(size, notes.get(i).getType(), notes.get(i).getDot());
+				stem.setTranslateX(currentDistance + (fret.minWidth(0)/2));
+				stem.setTranslateY(size * (m.getStaffLines() + 2));
+				stems.add(stem);
+			}
+			
 			Note currentNode = notes.get(i);
 			
 			fret.setTranslateX(currentDistance);
@@ -66,7 +70,7 @@ public class TabMeasure extends Pane {
 			}
 			labels.add(fret);
 		}
-		this.minWidth = currentDistance;
+		this.minWidth = currentDistance + labels.get(0).minWidth(0)/2;
 		
 		this.barLines = new ArrayList<Line>();
 		for (int i = 0; i < m.getStaffLines(); i++) {
@@ -95,20 +99,30 @@ public class TabMeasure extends Pane {
 			this.getChildren().add(label);
 		}
 		
+		for (TabNoteStem stem: this.stems) {
+			this.getChildren().add(stem);
+		}
+		
 	}
 	
 	public void setSpacing(double scale) {
 		double current = this.labels.get(0).getTranslateX();
 		this.spacing = 0;
 		
+		int chordNum = 0;
 		for (int i = 0; i < this.labels.size(); i++) {
 			BoxedText currLabel = this.labels.get(i);
 			currLabel.setTranslateX(current);
 			if (!currLabel.chord) {
+				this.stems.get(chordNum).setTranslateX(current + (currLabel.minWidth(0)/2));
+				chordNum ++;
+				
 				current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.type);
 				this.spacing += this.wholeDistance/currLabel.type;
 			}
 		}
+		
+		current += this.labels.get(0).minWidth(0)/2;
 		
 		for (int i = 0; i < this.barLines.size()-1; i++) {
 			this.barLines.get(i).setEndX(current);
@@ -117,10 +131,6 @@ public class TabMeasure extends Pane {
 		Line end = this.barLines.get(this.barLines.size()-1);
 		end.setStartX(current);
 		end.setEndX(current);
-	}
-	
-	public void setBaseDistance(double scale) {
-		this.wholeDistance *= scale;
 	}
 
 }

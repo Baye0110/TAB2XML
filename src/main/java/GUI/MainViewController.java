@@ -46,9 +46,12 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -341,7 +344,9 @@ public class MainViewController extends Application {
 			window.setTitle("Music sheet");
 			
 			Score score = new Score(converter.getMusicXML());
-			SheetScore sheet = new SheetScore(score, 25, 1050);
+			SheetScore sheet = new SheetScore(score, 18, 1050);
+			sheet.setTranslateX(50);
+			
 			ScrollPane sp = new ScrollPane();
 			sp.setContent(sheet);
 			sp.setTranslateX(50);
@@ -365,10 +370,17 @@ public class MainViewController extends Application {
 			org.jfugue.pattern.Pattern musicXMLParttern = listner.getPattern().setTempo(200);
 			
 			play.setOnAction(e -> {
-				window.setTitle("Music is playing");
+				if(score.getParts().get(0).getMeasures().get(0).getTab()) {
+					System.out.println("Guitar/ Bass (String instrument) is playing");
+					window.setTitle("Guitar/ Bass (String instrument) is playing");
+				}else {
+					System.out.println("Drum is playing");
+					window.setTitle("Drum is playing");
+				}
 				player.play(musicXMLParttern);
 				if(player.getManagedPlayer().isFinished()) {
 					window.setTitle("Music sheet");
+					System.out.println("Music is finished");
 				}
 
 			});
@@ -377,12 +389,16 @@ public class MainViewController extends Application {
 				if(player.getManagedPlayer().isPlaying()) {
 					player.getManagedPlayer().pause();
 					window.setTitle("Music Paused");
+					System.out.println("Music paused");
+				}else {
+					window.setTitle("Music sheet");
+					System.out.println("playing a music first");
 				}
-				window.setTitle("Music sheet");
 			});
 			
 
-			exit.setOnAction(e -> window.hide());
+			exit.setOnAction(e -> {window.hide();
+				System.out.println("preview windows exited");});
 			window.show();
 			
 		} catch (Exception e) {

@@ -194,6 +194,9 @@ public class Measure {
 		if (this.tunings == null) {
 			this.tunings = previous.tunings;
 		}	
+		
+		this.tab = previous.tab;
+		this.percussion = previous.percussion;
 	}
 	
 	public void generatePositions() {

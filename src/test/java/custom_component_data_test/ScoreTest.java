@@ -40,7 +40,7 @@ class ScoreTest {
 	}
 
 	@Test
-	public void Scoretest1() {
+	public void scoreTest1() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		Assertions.assertTrue(score.getAuthor().equals("composer"));
 		Assertions.assertTrue(score.getTitle().equals("composer"));
@@ -52,7 +52,7 @@ class ScoreTest {
 	}
 	
 	@Test
-	public void ScoreTest2() {
+	public void scoreTest2() {
 		setUp("src/test/resources/system/demoDrumsSimple2.musicxml");
 		//Who is the Author
 		assertEquals("composer", score.getAuthor());
@@ -61,10 +61,16 @@ class ScoreTest {
 	}
 	
 	@Test
-	public void ScoreTest3() {
+	public void scoreTest3() {
 		setUp("src/test/resources/system/demoDrumsSimple3.musicxml");
 		assertEquals("composer",score.getAuthor());
 		assertEquals(1,score.getParts().size());
+	}
+	
+	@Test
+	public void scoreTest4() {
+		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
+		assertEquals("composer",score.getAuthor());
 	}
 
 }
