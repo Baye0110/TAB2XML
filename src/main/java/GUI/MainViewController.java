@@ -76,6 +76,7 @@ public class MainViewController extends Application {
 
 	public Highlighter highlighter;
 	public Converter converter;
+	org.jfugue.pattern.Pattern musicXMLParttern;
 
 	@FXML  Label mainViewState;
 	@FXML  TextField instrumentMode;
@@ -367,8 +368,16 @@ public class MainViewController extends Application {
 			parser.parse(converter.getMusicXML());
 			Player player = new Player();
 			// get music and set its speed is 2x (200)
-			org.jfugue.pattern.Pattern musicXMLParttern = listner.getPattern().setTempo(200);
 			
+			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
+				if(score.getParts().get(0).getName().equals("Bass")) {
+					musicXMLParttern = listner.getPattern().setTempo(200).setInstrument("Acoustic_Bass");
+				}else {
+					musicXMLParttern = listner.getPattern().setTempo(200).setInstrument("Guitar");
+				}
+			}else {
+				musicXMLParttern = listner.getPattern().setTempo(200).setInstrument("Steel_Drums");
+			}
 			
 			play.setOnAction(e -> {
 				if(score.getParts().get(0).getMeasures().get(0).getTab()) {
@@ -382,10 +391,14 @@ public class MainViewController extends Application {
 				if(player.getManagedPlayer().isPaused()) {
 					player.getManagedPlayer().resume();
 				}else {
-					player.delayPlay(0, musicXMLParttern);
-					if(player.getManagedPlayer().isFinished()) {
-						window.setTitle("Music sheet");
-						System.out.println("Music is finished");
+					if(player.getManagedPlayer().isPlaying()) {
+						// do nothing
+					}else {
+						player.delayPlay(0, musicXMLParttern);
+						if(player.getManagedPlayer().isFinished()) {
+							window.setTitle("Music sheet");
+							System.out.println("Music is finished");
+						}
 					}
 				}
 
