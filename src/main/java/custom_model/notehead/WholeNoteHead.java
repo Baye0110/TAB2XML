@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
 public class WholeNoteHead extends Group{
+	// Restore this class
+	
 	double width;
 	
 	public WholeNoteHead(double height) {

@@ -3,6 +3,8 @@ package custom_model.rest;
 import javafx.scene.Group;
 
 public class SmallRest extends Group {
+	// Restore this class
+	
 	double height;
 	double width;
 	
