@@ -68,8 +68,12 @@ class InstrumentTest {
 	}
 	
 	@Test
+
 	public void InstrumentTest1() {
 		setUp("src/test/resources/system/demoBassSimple1.musicxml");
+
+	public void instrumentTest1() {
+		Score scoreSheet = new Score("ex38.txt");
 		Instrument expected = null;
 		Instrument actual = score.getParts().get(0).getInstruments().get("");
 		assertEquals(expected, actual);
@@ -115,6 +119,8 @@ class InstrumentTest {
 		}
 		assertEquals(0, numInstrument);
 	}
+
+	
 	
 
 }
