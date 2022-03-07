@@ -7,6 +7,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class BoxedText extends Group{
+	// Restore this Class
+
 	static final int PADDING_LEFT = 8; 
 	static final int FONT_SIZE = 12;
 	double size;

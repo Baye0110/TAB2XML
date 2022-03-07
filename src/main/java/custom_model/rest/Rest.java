@@ -5,6 +5,8 @@ import java.io.IOException;
 import javafx.scene.Group;
 
 public class Rest extends Group{
+	// Restore this class
+	
 	double width;
 	double height;
 	

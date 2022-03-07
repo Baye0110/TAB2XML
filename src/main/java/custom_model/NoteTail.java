@@ -9,6 +9,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 
 public class NoteTail extends Group {
+	// restore this class
+	
 	double width;	
 	
 	public NoteTail(double height, int num, boolean stemDown) {
