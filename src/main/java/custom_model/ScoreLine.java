@@ -7,6 +7,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Line;
 
 public class ScoreLine extends HBox{
+	// Restore this Class
+
 	List<Double> measureDistances;
 	double maxHeight;
 	
