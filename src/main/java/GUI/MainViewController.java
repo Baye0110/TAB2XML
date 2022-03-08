@@ -1,6 +1,5 @@
 package GUI;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,12 +15,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
+import org.jfugue.integration.MusicXmlParser;
+import org.jfugue.player.Player;
+import org.staccato.StaccatoParserListener;
 
 import converter.Converter;
+import converter.Instrument;
 import converter.measure.TabMeasure;
+import custom_component_data.Score;
+import custom_model.SheetScore;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -36,13 +44,23 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 import utility.Range;
 import utility.Settings;
 
@@ -58,6 +76,8 @@ public class MainViewController extends Application {
 
 	public Highlighter highlighter;
 	public Converter converter;
+	org.jfugue.pattern.Pattern musicXMLParttern;
+	int instrument_type = 0;
 
 	@FXML  Label mainViewState;
 	@FXML  TextField instrumentMode;
@@ -306,63 +326,130 @@ public class MainViewController extends Application {
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);
 		}
 	}
-
-//	@FXML
-//	private void previewButtonHandle() throws IOException {
-//		System.out.println("Preview Button Clicked!");
-//		Parent root;
-//		try {
-//			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("GUI/tabPlayer.fxml"));
-//			root = loader.load();
-//			SaveMXLController controller = loader.getController();
-//			controller.setMainViewController(this);
-//			convertWindow = this.openNewWindow(root, "Sheet Music");
-//		} catch (IOException e) {
-//			Logger logger = Logger.getLogger(getClass().getName());
-//			logger.log(Level.SEVERE, "Failed to create new Window.", e);
-//		}
-//		// converter.getMusicXML() returns the MusicXML output as a String
-//	}
 	
 	@FXML
 	private void previewButtonHandle() throws Exception {
-		System.out.println("Preview button clicked!");
+
+		System.out.println("Preview Button Clicked!");
 		try {
 			Button play = new Button("Play");
 			Button pause = new Button("Pause");
 			Button exit = new Button("Exit");
 			
-			play.setTranslateX(800);
-			play.setTranslateY(640);
+			play.setTranslateX(150);
 			
+			pause.setTranslateX(300);
 			
-			pause.setTranslateX(860);
-			pause.setTranslateY(640);
-			
-			exit.setTranslateX(930);
-			exit.setTranslateY(640);
+			exit.setTranslateX(1100);
 			
 			Stage window = new Stage();
 			window.setTitle("Music sheet");
 			
-		
+			Score score = new Score(converter.getMusicXML());
+			SheetScore sheet = new SheetScore(score, 18, 1050);
+			sheet.setTranslateX(50);
 			
-			Group root = new Group(play,pause,exit);
-			Scene scene = new Scene(root,1000,700);
-		
+			ScrollPane sp = new ScrollPane();
+			sp.setContent(sheet);
+			sp.setTranslateX(50);
+			sp.setMaxWidth(1150);
+			sp.setMaxHeight(600);
+			sp.setMinHeight(sheet.getChildren().get(0).minHeight(0)+50);
 			
 			
-			window.setScene(scene);
-			play.setOnAction(e -> window.setTitle("Music is Playing"));
-			pause.setOnAction(e -> window.setTitle("Music Paused"));
-			exit.setOnAction(e -> window.hide());
+			Pane musicPlay = new Pane(play,pause,exit);
+			musicPlay.setTranslateY(25);
+			VBox root = new VBox(sp, musicPlay);
+			Scene scene = new Scene(root, 1250, 700);
+			window.setScene(scene);			
+			
+			StaccatoParserListener listner = new StaccatoParserListener();
+			MusicXmlParser parser = new MusicXmlParser();
+			parser.addParserListener(listner);
+			parser.parse(converter.getMusicXML());
+			Player player = new Player();
+			// get music and set its speed is 1x (100)
+			
+			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
+				if(score.getParts().get(0).getName().equals("Bass")) {
+					musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Acoustic_Bass");
+					instrument_type = 1;
+				}else {
+					musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Guitar");
+					instrument_type = 2;
+				}
+			}else {
+				musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Steel_Drums");
+				instrument_type = 3;
+			}
+			
+			play.setOnAction(e -> {
+				if(instrument_type == 1) {
+					System.out.println("Bass is playing");
+					window.setTitle("Bass is playing");
+				}else if(instrument_type == 2){
+					System.out.println("Guitar is playing");
+					window.setTitle("Guitar is playing");
+				}else if(instrument_type == 3){
+					System.out.println("Drum is playing");
+					window.setTitle("Drum is playing");
+				}
+				
+				if(player.getManagedPlayer().isPaused()) {
+					player.getManagedPlayer().resume();
+				}else {
+					if(player.getManagedPlayer().isPlaying()) {
+						// do nothing
+					}else {
+						player.delayPlay(0, musicXMLParttern);
+						if(player.getManagedPlayer().isFinished()) {
+							window.setTitle("Music sheet");
+							System.out.println("Music is finished");
+						}
+					}
+				}
+
+
+			});
+			
+			pause.setOnAction(e -> {
+				if(player.getManagedPlayer().isPlaying()) {
+					player.getManagedPlayer().pause();
+					window.setTitle("Music Paused");
+					System.out.println("Music paused");
+				}else {
+					window.setTitle("Music sheet");
+					System.out.println("playing a music first");
+				}
+			});
+			
+
+			exit.setOnAction(e -> {window.hide();
+			if(player.getManagedPlayer().isPlaying()) {
+				player.getManagedPlayer().finish();
+			}
+				System.out.println("preview windows exited");});
 			window.show();
+			
 			
 		} catch (Exception e) {
 			Logger logger = Logger.getLogger(getClass().getName());
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);
 		}
 		// converter.getMusicXML() returns the MusicXML output as a String
+	}
+	
+	public static void unImplementedFunctionOnClick(String functionName, String functionDesc) {
+		Text lack = new Text(functionDesc + " :) ... \n\n\n\n\n **(Once this feature is developed)");
+		lack.setTranslateY(100);
+		lack.setFont(Font.font(20));
+		lack.setTextAlignment(TextAlignment.CENTER);
+		Pane lackPane = new Pane(lack);
+		Scene lackScence = new Scene(lackPane, 400, 300);
+		Stage inImplemented = new Stage();
+		inImplemented.setScene(lackScence);
+		inImplemented.show();
+		inImplemented.setTitle(functionName);
 	}
 
 	public void refresh() {
