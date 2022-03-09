@@ -9,6 +9,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 public class TabMeasure extends MusicMeasure {	
+	// Restore this Class
+
 	List<BoxedText> labels;
 	List<TabNoteStem> stems;
 	

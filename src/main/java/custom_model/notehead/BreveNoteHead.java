@@ -4,6 +4,8 @@ import javafx.scene.Group;
 import javafx.scene.shape.Line;
 
 public class BreveNoteHead extends Group{
+	// Restore this class
+	
 	double width;
 	
 	public BreveNoteHead(double height) {

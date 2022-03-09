@@ -4,6 +4,8 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 public class NoteHead extends Group{
+	// Restore this class
+	
 	double width;
 	double height;
 	double stemPosition;

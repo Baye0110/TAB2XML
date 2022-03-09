@@ -3,6 +3,8 @@ package custom_model.notehead;
 import javafx.scene.shape.Ellipse;
 
 public class FullNoteHead extends Ellipse{
+	// Restore this class
+	
 	double width;
 	double stemPosition;
 	

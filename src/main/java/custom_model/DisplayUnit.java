@@ -3,6 +3,8 @@ package custom_model;
 import javafx.scene.Group;
 
 public abstract class DisplayUnit extends Group{
+	// Restore this class
+	
 	double width;
 	double top;
 	double bottom;

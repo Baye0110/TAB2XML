@@ -11,6 +11,8 @@ public class QuarterRest extends Group{
 	double height;
 	double width;
 	
+	// Restore this class
+	
 	public QuarterRest(double height) throws IOException{
 		Image rest = new Image(new FileInputStream("src/main/resources/image_assets/quarter_rest.png"));
 		ImageView restView = new ImageView(rest);

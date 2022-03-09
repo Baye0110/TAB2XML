@@ -2,6 +2,10 @@ package custom_component_data_test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import custom_component_data.Instrument;
@@ -9,6 +13,32 @@ import custom_component_data.Score;
 
 
 class InstrumentTest {
+	
+	private Score score = null;
+	
+	private void setUp(String location) {
+		 // Get the file
+        File in = new File(location);
+        String build = "";
+
+        // Set up Scanner to use File Input (If invalid file then no Score object will be created
+        Scanner input = null;
+        try {
+            input = new Scanner(in);
+            input.useDelimiter("\n");
+            
+            // Put the entire file in String "build"
+            while(input.hasNext()) {
+                build += input.next() + "\n";
+            }
+            score = new Score(build);
+
+        } 
+        catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        
+	}
 
 	// Test toString method in Intrument.java
 	@Test
@@ -38,22 +68,56 @@ class InstrumentTest {
 	}
 	
 	@Test
-	public void instrumentTest1() {
-		Score scoreSheet = new Score("ex38.txt");
+
+	public void InstrumentTest1() {
+		setUp("src/test/resources/system/demoBassSimple1.musicxml");
 		Instrument expected = null;
-		Instrument actual = scoreSheet.getParts().get(0).getInstruments().get("");
+		Instrument actual = score.getParts().get(0).getInstruments().get("");
 		assertEquals(expected, actual);
 	}
 	
 	
 	@Test
-	public void instrumentTest2() {
-		Score scoreSheet = new Score("parabola.txt");
-		Instrument expected = new Instrument("P1-I45", "Pedal Hi-hat");
-		Instrument actual = scoreSheet.getParts().get(0).getInstruments().get("P1-I45");
-		Assertions.assertTrue(expected.getName().equals(actual.getName()), "The expected instrument name is " + expected.getName() + "while the actual instruent name is " + actual.getName());
-		Assertions.assertTrue(expected.getId().equals(actual.getId()), "The expected instrument id is " + expected.getId() + "while the actual instruent id is " + actual.getId());
+	public void InstrumentTest2() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		int numInstrument = 0;
+		for(int i = 0; i < score.getParts().get(0).getInstruments().size(); i++) {
+			numInstrument++;
+		}
+		assertEquals(13, numInstrument);
+		Instrument expected1 = new Instrument("P1-I45", "Pedal Hi-hat");
+		Instrument actual1 = score.getParts().get(0).getInstruments().get("P1-I45");
+		Assertions.assertTrue(expected1.getId().equals(actual1.getId()));
+		// the id test is correct but why is the name test wrong?
+		Assertions.assertTrue(expected1.getName().equals(actual1.getName()));
 	}
+	
+	
+	@Test
+	public void InstrumentTest3() {
+		setUp("src/test/resources/system/demoGuitarSimple2.musicxml");
+		int numInstrument = 0;
+		for(int i = 0; i < score.getParts().get(0).getInstruments().size(); i++) {
+			numInstrument++;
+		}
+		assertEquals(0, numInstrument);
+		Instrument expected1 = null;
+		Instrument actual1 = score.getParts().get(0).getInstruments().get("");
+		Assertions.assertEquals(expected1, actual1);
+	}
+	
+	
+	@Test
+	public void InstrumentTest4() {
+		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
+		int numInstrument = 0;
+		for(int i = 0; i < score.getParts().get(0).getInstruments().size(); i++) {
+			numInstrument++;
+		}
+		assertEquals(0, numInstrument);
+	}
+
+	
 	
 
 }
