@@ -373,14 +373,14 @@ public class MainViewController extends Application {
 			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
 				if(score.getParts().get(0).getName().equals("Bass")) {
 					musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Acoustic_Bass");
-					instrument_type = 1;
+					instrument_type = 3;
 				}else {
 					musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Guitar");
 					instrument_type = 2;
 				}
 			}else {
 				musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Steel_Drums");
-				instrument_type = 3;
+				instrument_type = 1;
 			}
 			
 			play.setOnAction(e -> {
