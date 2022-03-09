@@ -61,6 +61,12 @@ class ClefTest {
 		Assertions.assertTrue(expected.getLine() == actual.getLine(), "The expected line of clef is " + expected.getLine() + "while the actual line is " + actual.getLine()); 
 	}
 	
+	
+	@Test
+	public void clefTest2() {
+		
+	}
+	
 }
 
 
