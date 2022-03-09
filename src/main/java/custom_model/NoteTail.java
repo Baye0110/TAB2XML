@@ -15,7 +15,7 @@ public class NoteTail extends Group {
 	
 	public NoteTail(double height, int num, boolean stemDown) {
 		try {
-			Image tailImg = new Image(new FileInputStream("src/main/resources/image_assets/note_tail.png"));
+			Image tailImg = new Image(new FileInputStream("src/main/resources/image_assets/note_Tail.png"));
 			for (int i = 0; i < num; i++) {
 				ImageView tailImgView = new ImageView(tailImg);
 				tailImgView.setFitWidth(height * 2);
