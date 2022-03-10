@@ -14,8 +14,9 @@ public class BoxedText extends Group{
 	double size;
 	double type;
 	boolean chord;
+	boolean grace;
 	
-	BoxedText(String text, double size, double type, boolean chord) {
+	BoxedText(String text, double size, double type, boolean chord, boolean grace) {
 		
 		Text label = new Text(text);
 		label.setFont(Font.font(size*0.675));
@@ -37,5 +38,6 @@ public class BoxedText extends Group{
 		this.size = container.getWidth();
 		this.type = type;
 		this.chord = chord;
+		this.grace = grace;
 	}
 }

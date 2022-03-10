@@ -49,21 +49,25 @@ public class TabMeasure extends MusicMeasure {
 //		}
 		
 		for (int i = 0; i < notes.size(); i++) {
-			double type = notes.get(i).getType() != 0 ? notes.get(i).getType() : 0.5;
+			Note currentNote = notes.get(i);
+			double type = notes.get(i).getType() != 0 ? currentNote.getType() : 0.5;
 			boolean isChord = i + 1 < notes.size() && notes.get(i+1).getChord();
-			BoxedText fret = new BoxedText("" + notes.get(i).getNotation().getFret(), size, type, isChord);
 			
-			if (!notes.get(i).getChord()) {
+			double noteSize = currentNote.getGrace() ? size * 0.65 : size;
+			
+			BoxedText fret = new BoxedText("" + currentNote.getNotation().getFret(), noteSize, type, isChord, currentNote.getGrace());
+			
+			if (!currentNote.getChord() && !currentNote.getGrace()) {
 				TabNoteStem stem = new TabNoteStem(size, notes.get(i).getType(), notes.get(i).getDot());
 				stem.setTranslateX(currentDistance + (fret.minWidth(0)/2));
 				stem.setTranslateY(size * (m.getStaffLines() + 2));
 				stems.add(stem);
 			}
 			
-			Note currentNode = notes.get(i);
+			
 			
 			fret.setTranslateX(currentDistance);
-			fret.setTranslateY(size * (currentNode.getNotation().getString() + 0.5)); 
+			fret.setTranslateY(size * (currentNote.getNotation().getString() + 0.5) + (size - noteSize)); 
 			if (isChord) {
 				currentDistance += 0;
 			} else {
@@ -116,8 +120,10 @@ public class TabMeasure extends MusicMeasure {
 			BoxedText currLabel = this.labels.get(i);
 			currLabel.setTranslateX(current);
 			if (!currLabel.chord) {
-				this.stems.get(chordNum).setTranslateX(current + (currLabel.minWidth(0)/2));
-				chordNum ++;
+				if (!currLabel.grace) {
+					this.stems.get(chordNum).setTranslateX(current + (currLabel.minWidth(0)/2));
+					chordNum ++;
+				}
 				
 				current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.type);
 				this.spacing += this.wholeDistance/currLabel.type;
