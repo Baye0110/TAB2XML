@@ -7,7 +7,7 @@ Welcome music enthusiasts! Please read this short guide to learn how to effectiv
 1. All related documents(User Mannual, Requirment, Testing document) are located in the path of "src/Documentation"
 2. Although other IDEs may suffice, it is recommended to use Eclipse for optimal performance.
 3. Ensure Gradle is installed on the IDE of choice.
-4. Download a copy of this project from the <b>develop</b> branch and import it as a Gradle project. (Refer to the User Manual)
+4. Download a copy of this project from the <b>master</b> branch and import it as a Gradle project. (Refer to the User Manual)
 5. Run the software as a gradle application.
 6. Select a tablature .txt file or paste the tablature directly into the application.
 7. Ensure to resolve possible errors indicated by red/yellow highlighting.
