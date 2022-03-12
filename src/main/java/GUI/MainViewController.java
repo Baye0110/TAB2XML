@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,9 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.jfugue.integration.MusicXmlParser;
+import org.jfugue.pattern.Pattern;
+import org.jfugue.pattern.Token;
+import org.jfugue.pattern.Token.TokenType;
 import org.jfugue.player.Player;
 import org.staccato.StaccatoParserListener;
 
@@ -367,6 +371,7 @@ public class MainViewController extends Application {
 			MusicXmlParser parser = new MusicXmlParser();
 			parser.addParserListener(listner);
 			parser.parse(converter.getMusicXML());
+			StringBuilder patternString = new StringBuilder("T115 V9 V9 ").append(listner.getPattern().toString().substring(11));
 			Player player = new Player();
 			// get music and set its speed is 1x (100)
 			
@@ -380,6 +385,7 @@ public class MainViewController extends Application {
 				}
 			}else {
 				musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Steel_Drums");
+				musicXMLParttern = new Pattern(patternString.toString()).setTempo(100);
 				instrument_type = 3;
 			}
 			
@@ -402,6 +408,7 @@ public class MainViewController extends Application {
 						// do nothing
 					}else {
 						player.delayPlay(0, musicXMLParttern);
+						System.out.println(this.musicXMLParttern.getTokens().get(4));
 						if(player.getManagedPlayer().isFinished()) {
 							window.setTitle("Music sheet");
 							System.out.println("Music is finished");
