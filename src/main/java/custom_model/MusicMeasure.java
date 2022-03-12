@@ -11,8 +11,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 abstract public class MusicMeasure extends Pane {
-	// restore this class
-	
 	public static final double START_DISTANCE = 30;
 	List<Line> barLines;
 	

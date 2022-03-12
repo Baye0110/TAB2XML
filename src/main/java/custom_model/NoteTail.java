@@ -9,13 +9,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 
 public class NoteTail extends Group {
-	// restore this class
-	
 	double width;	
 	
 	public NoteTail(double height, int num, boolean stemDown) {
 		try {
-			Image tailImg = new Image(new FileInputStream("src/main/resources/image_assets/note_Tail.png"));
+			Image tailImg = new Image(new FileInputStream("src/main/resources/image_assets/note_tail.png"));
 			for (int i = 0; i < num; i++) {
 				ImageView tailImgView = new ImageView(tailImg);
 				tailImgView.setFitWidth(height * 2);

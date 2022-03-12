@@ -13,7 +13,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class SheetScore extends VBox{
-	// Attempt to restore balance (The deleted files)
 
 		public SheetScore(Score score, double lineSize, double pageWidth) {
 			List<MusicMeasure> cumulated = new ArrayList<>();

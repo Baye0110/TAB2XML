@@ -5,7 +5,6 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 
 public class TabNoteStem extends Group {
-	// restore this class
 	
 	public TabNoteStem(double height, int type, int dot) {
 		if (type == 2) {

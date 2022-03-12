@@ -8,8 +8,6 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 
 public class EighthRest extends Group{
-	// Restore this class
-	
 	double height;
 	double width;
 	

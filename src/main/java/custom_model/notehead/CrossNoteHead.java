@@ -6,8 +6,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
 public class CrossNoteHead extends Group{
-	// Restore this class
-	
 	double width;
 	double stemPosition;
 	

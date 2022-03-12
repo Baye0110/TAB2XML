@@ -5,8 +5,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 public class WholeRest extends Group{
-	// Restore this class
-	
 	double width;
 	double height;
 	

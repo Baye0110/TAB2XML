@@ -22,7 +22,6 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.jfugue.integration.MusicXmlParser;
-import org.jfugue.pattern.Pattern;
 import org.jfugue.player.Player;
 import org.staccato.StaccatoParserListener;
 
@@ -367,9 +366,7 @@ public class MainViewController extends Application {
 			StaccatoParserListener listner = new StaccatoParserListener();
 			MusicXmlParser parser = new MusicXmlParser();
 			parser.addParserListener(listner);
-						
 			parser.parse(converter.getMusicXML());
-			String patternString = "T100 V9 V9 "+ listner.getPattern().toString().substring(6);
 			Player player = new Player();
 			// get music and set its speed is 1x (100)
 			
@@ -382,7 +379,7 @@ public class MainViewController extends Application {
 					instrument_type = 2;
 				}
 			}else {
-				musicXMLParttern = new Pattern(patternString).setTempo(100).setInstrument("Steel_Drums");
+				musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Steel_Drums");
 				instrument_type = 3;
 			}
 			

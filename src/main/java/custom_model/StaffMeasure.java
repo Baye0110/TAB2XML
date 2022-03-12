@@ -9,8 +9,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 public class StaffMeasure extends MusicMeasure{
-	// restore this class
-	
 	public static final int UPPER_PADDING = 3;
 
 	List<DisplayUnit> noteUnits;
