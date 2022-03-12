@@ -5,13 +5,19 @@ import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 public class StaffMeasure extends MusicMeasure{
 	// restore this class
 	
-	public static final int UPPER_PADDING = 3;
+	public static final int UPPER_PADDING = 0;
 
 	List<DisplayUnit> noteUnits;
 	

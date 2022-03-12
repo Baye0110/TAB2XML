@@ -4,14 +4,18 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 public class NoteHead extends Group{
-	// Restore this class
-	
+	// Create the correct notehead object from the other 5 classes in the "custom_model.notehead" package
+	//   based on the type of the note.	
 	double width;
 	double height;
 	double stemPosition;
 
 	public NoteHead(double height, int type, String notehead) {
-		if (notehead != null && notehead.equals("x")) {
+		/*
+		 * Create the CrossNoteHead, but if the duration is half note, or whole hote
+		 * then create a WhiteCross inside it to distinguish it.
+		 */
+		if (notehead != null && notehead.equals("x")) { // Create the CrossNoteHead
 			CrossNoteHead x = null;
 			if (type < 2)
 				x = new CrossNoteHead(height, Color.BLACK, 2);
@@ -22,7 +26,7 @@ public class NoteHead extends Group{
 			this.stemPosition = x.stemPosition;
 			this.getChildren().add(x);
 			
-			if (type < 2) {
+			if (type < 2) { // 
 				CrossNoteHead inner = new CrossNoteHead(height * 0.9, Color.WHITE, 1);
 				inner.setTranslateY(height * 0.05);
 				inner.setTranslateX(height * 0.06);
@@ -31,6 +35,8 @@ public class NoteHead extends Group{
 			return;
 		}
 		
+		
+		// Create the correct notehead based on their type.
 		switch(type) {
 		case 0:
 			BreveNoteHead breve = new BreveNoteHead(height);
@@ -64,6 +70,9 @@ public class NoteHead extends Group{
 		}		
 	}
 	
+	/*
+	 * Getter methods for the fields
+	 */
 	public double getHeight() {
 		return this.height;
 	}

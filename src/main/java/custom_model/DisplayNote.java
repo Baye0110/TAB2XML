@@ -10,9 +10,10 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 
+// DRUMS
 public class DisplayNote extends DisplayUnit{
-	// Restore this class
-	
+	// Create a Drum Note
+
 	double preceding;
 	double trailing;
 	double parenthesesDisplacement;
@@ -23,52 +24,73 @@ public class DisplayNote extends DisplayUnit{
 	static double dotDistanceScale = 1.5;
 	double noteHeadWidth;
 	
+	/**
+	 * 
+	 * @param height		The space between the staffLines
+	 * @param note			The Note XML parsed data
+	 * @param hasFlip		Is this Note in a chord with a flipped note (advanced - don't need to know)
+	 * @param isFlip		Is this Note a flipped note (advanced - don't need to know)
+	 */
 	public DisplayNote(double height, Note note, boolean hasFlip, boolean isFlip) {
+		// Set the basic values
 		this.top = 0;
 		this.bottom = 0;
+		
+		// The spacingType is (0.5 = breve, 1 = whole, 2 = half, 4 = quarter, 8 = 8th, ...)
 		this.spacingType = note.getType() != 0 ? note.getType() : 0.5;
+		// This is the position on the staff which was already calculated during the XML parsing.
 		this.position = note.getPosition();
 		
+		// If the note was a rest note
 		if (note.getRest()) {
+			// Generate the rest note, and set the dimensions for the note
 			Rest rest = new Rest(height, note.getType());
 			this.height = rest.getHeight();
 			this.width = rest.getWidth();
 			this.getChildren().add(rest);
 			
+			// Add the number of dots that are needed for this rest.
 			this.addDots(height, note);
+			// Don't do anything else for rest notes.
 			return;
 		}
 		
-		// create the notehead
-		// add the appropriate stem in the identified direction
-		// add the number of dots
-		// add the parentheses
-		// add the tremolo
-		// do the grace note
 		this.width = 0;
 		this.height = 0;
 		
+		// If this note is parenthesized add the Left-size parentheses
 		if (note.getParentheses()) {
 			this.addParentheses(1, height);
 		}
 		
+		// Is the stem supposed to point down?
 		boolean stemDown = note.getStem() != null && note.getStem().equals("down");
 		
+		// Create the note head based on the (line spacing - height, the type of the note, and the shape of the notehead)
 		NoteHead head = new NoteHead(height, note.getType(), note.getNotehead());
+		// Set the width of the notehead
 		this.noteHeadWidth = head.getWidth();
+		
+		// If the note is supposed to be on the opposite side as normal
 		if ((isFlip && !stemDown) || (hasFlip && !isFlip && stemDown)) {
 			head.setTranslateX(this.width + head.getWidth());
 			this.width += head.getWidth() * 2;
 		}
+		// Otherwise for a normal note, increment the width of the this object, and set the X position of the notehead
 		else {
 			head.setTranslateX(this.width);
 			this.width += head.getWidth();
 		}
 		
+		// Add the notehead to the object.
 		this.getChildren().add(head);
 		
+		// Get the type of stem specified in the XML
 		String stemType = note.getStem();
+		
+		// Only create the stem if: 1. the stem is specified in the XML, it is note a breve/whole note, its not flipped
 		if (stemType != null && !stemType.equals("none") && note.getType() != 0 && note.getType() != 1 &&  !hasFlip) {
+			// Creating the stem going up
 			if (stemType.equals("up")) {
 				Line stem = new Line(this.width, 0 - 3*height, this.width, head.getStemPosition());
 				stem.setStrokeWidth(height/15);
@@ -76,6 +98,7 @@ public class DisplayNote extends DisplayUnit{
 				this.width += stem.minWidth(0);
 				this.getChildren().add(stem);
 			}
+			// Creating the stem going down
 			else if (stemType.equals("down")) {
 				Line stem = new Line(0, 4*height, 0, head.getStemPosition());
 				stem.setStrokeWidth(height/15);
@@ -84,6 +107,8 @@ public class DisplayNote extends DisplayUnit{
 				this.getChildren().add(stem);
 			}
 		}
+		
+		// Set the value for the edge of the note stem.
 		if (stemType != null && !stemType.equals("none") && note.getType() != 0 && note.getType() != 1) {
 			if (stemType.equals("up")) {
 				this.top = 0 - 3*height;
@@ -93,23 +118,33 @@ public class DisplayNote extends DisplayUnit{
 			}
 		}
 		
+		// is this a normal note (that is not flipped)
 		this.isNormalSide = !hasFlip || (hasFlip && !isFlip && !stemDown) || (hasFlip && isFlip && stemDown);
 		
+		// If this is a normal note, but is part of a chord that has a flipped note, then accord for that in the width and the trailing
 		if (this.isNormalSide && hasFlip) {
 			this.width += head.getWidth();
 			this.trailing += head.getWidth();
 		}
 		
+		// Add the specified number of dots into the note
 		this.addDots(height, note);
 		
+		// Add the left parentheses
 		if (note.getParentheses()) {		
 			this.addParentheses(2, height);
 		}
 		
+		// Set the dimensions of the note
 		this.width = this.minWidth(0);
 		this.height = this.minHeight(0);
 	}
 	
+	/** Add the parentheses (type==1 : left,  type==2 : right)
+	 * 
+	 * @param type
+	 * @param height
+	 */
 	private void addParentheses(int type, double height) {
 		Arc ring = new Arc();
 		Arc shadow = new Arc();
@@ -145,7 +180,11 @@ public class DisplayNote extends DisplayUnit{
 		}
 	}
 	
-	
+	/**Add the dots to the note
+	 * 
+	 * @param height
+	 * @param note
+	 */
 	public void addDots(double height, Note note) {
 		for (int i = 0; i < note.getDot(); i++) {
 			double pos_x = this.width + height/dotScale*(1.5); 
@@ -161,6 +200,9 @@ public class DisplayNote extends DisplayUnit{
 	}
 	
 	
+	/**
+	 * Extends the staff to support notes which are too hight
+	 */
 	public void extendStaff(int positions, double height) {
 		for (int i = 0; i < (this.position - positions)/2; i ++) {
 			System.out.println(positions);
@@ -175,6 +217,9 @@ public class DisplayNote extends DisplayUnit{
 		}
 	}
 	
+	/** Adds the NoteTails
+	 * 
+	 */
 	public void addTails(double height, boolean stemDown) {
 		if (this.spacingType >= 8) {
 			int log_spacingType = 0;

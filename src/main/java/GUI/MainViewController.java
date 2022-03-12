@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,8 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.jfugue.integration.MusicXmlParser;
 import org.jfugue.pattern.Pattern;
+import org.jfugue.pattern.Token;
+import org.jfugue.pattern.Token.TokenType;
 import org.jfugue.player.Player;
 import org.staccato.StaccatoParserListener;
 
@@ -367,9 +370,57 @@ public class MainViewController extends Application {
 			StaccatoParserListener listner = new StaccatoParserListener();
 			MusicXmlParser parser = new MusicXmlParser();
 			parser.addParserListener(listner);
-						
+			
+			List<custom_component_data.Note> instruments = new ArrayList<>();
+			for (custom_component_data.Part p: score.getParts()) {
+				for (custom_component_data.Measure m: p.getMeasures()) {
+					for (custom_component_data.Note n: m.getNotes()) {
+						if (!n.getRest()) {
+							instruments.add(n);
+						}
+					}
+				}
+			}
+			
+			
 			parser.parse(converter.getMusicXML());
-			String patternString = "T100 V9 V9 "+ listner.getPattern().toString().substring(6);
+			StringBuilder patternString = new StringBuilder("T115 V9 V9 ").append(listner.getPattern().toString().substring(11));
+//			List<Token> tokens = listner.getPattern().getTokens();
+//			int noteNum = 0;
+//			String savedEnding = null;
+//			boolean currChord = false;
+//			
+//			for (int i = 3; i < tokens.size(); i++) {
+//				boolean nonRest_Note = tokens.get(i).getType() == TokenType.NOTE && tokens.get(i).toString().charAt(0) != 'R';
+//				if (nonRest_Note) {
+//					String token = tokens.get(i).toString();
+//					
+//					currChord = noteNum + 1 < instruments.size() && instruments.get(noteNum + 1).getChord();
+//					
+//					patternString.append(Integer.parseInt(instruments.get(noteNum).getInstrumentID().substring(4)) - 1);
+//					if (!currChord) 
+//						patternString.append(token.substring(token.indexOf(']') + 1, token.length()-3));
+//					
+//					noteNum++;
+//				}
+//				else if (tokens.get(i).getType() != TokenType.INSTRUMENT){
+//					patternString.append(tokens.get(i).toString());
+//				}
+//				else {
+//					continue;
+//				}
+//				
+//				if (noteNum < instruments.size() && instruments.get(noteNum).getGrace()) {
+//					patternString.append(" " + (Integer.parseInt(instruments.get(noteNum).getInstrumentID().substring(4)) - 1) + "XA90");
+//					noteNum++;
+//				}
+//				
+//				if (nonRest_Note && currChord)
+//					patternString.append("+");
+//				else 
+//					patternString.append(" ");
+//			}
+			
 			Player player = new Player();
 			// get music and set its speed is 1x (100)
 			System.out.println("=============================================================");
@@ -386,7 +437,7 @@ public class MainViewController extends Application {
 					instrument_type = 2;
 				}
 			}else {
-				musicXMLParttern = new Pattern(patternString).setTempo(100).setInstrument("Steel_Drums");
+				musicXMLParttern = new Pattern(patternString.toString()).setTempo(100);
 //				musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Steel_Drums");
 				instrument_type = 3;
 			}
@@ -413,6 +464,7 @@ public class MainViewController extends Application {
 						// do nothing
 					}else {
 						player.delayPlay(0, musicXMLParttern);
+						System.out.println(this.musicXMLParttern.getTokens().get(4));
 						if(player.getManagedPlayer().isFinished()) {
 							window.setTitle("Music sheet");
 							System.out.println("Music is finished");
