@@ -23,14 +23,11 @@ public class NoteTail extends Group {
 	 */
 	public NoteTail(double height, int num, boolean stemDown) {
 		try {
-<<<<<<< HEAD
-			Image tailImg = new Image(new FileInputStream("src/main/resources/image_assets/note_tail.png"));
-=======
+
 			// Get the image file of the note_Tail.png
 			Image tailImg = new Image(new FileInputStream("src/main/resources/image_assets/note_Tail.png"));
 			
 			// For each tail that we should display, create Image from the imagefile, set the correct width and height, and the correct position
->>>>>>> branch 'develop' of https://github.com/Baye0110/TAB2XML
 			for (int i = 0; i < num; i++) {
 				ImageView tailImgView = new ImageView(tailImg);
 				tailImgView.setFitWidth(height * 2);
