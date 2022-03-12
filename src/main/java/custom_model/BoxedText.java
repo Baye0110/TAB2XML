@@ -8,13 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 // For GUTIAR, BASS 
-public class BoxedText extends Group{
-	static final int PADDING_LEFT = 8; 
-	static final int FONT_SIZE = 12;
-	double size;
-	double type;
-	boolean chord;
-	
+public class BoxedText extends Group{	
 	// The space on the sides of the textbox
 	static final int PADDING_LEFT = 8; 
 	// The width of the textbox
