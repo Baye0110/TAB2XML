@@ -423,10 +423,6 @@ public class MainViewController extends Application {
 			
 			Player player = new Player();
 			// get music and set its speed is 1x (100)
-			System.out.println("=============================================================");
-			System.out.println(listner.getPattern().toString());
-			System.out.println(patternString);
-			System.out.println("=============================================================");
 			
 			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
 				if(score.getParts().get(0).getName().equals("Bass")) {
@@ -441,10 +437,7 @@ public class MainViewController extends Application {
 //				musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Steel_Drums");
 				instrument_type = 3;
 			}
-			System.out.println("=============================================================");
-			System.out.println(listner.getPattern().toString());
-			System.out.println(patternString);
-			System.out.println("=============================================================");
+			
 			play.setOnAction(e -> {
 				if(instrument_type == 1) {
 					System.out.println("Bass is playing");
