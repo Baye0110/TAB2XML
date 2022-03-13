@@ -381,14 +381,9 @@ public class MainViewController extends Application {
 			parser.addParserListener(listner);
 						
 			parser.parse(converter.getMusicXML());
-			drumString = "V9 " + listner.getPattern().toString().substring(6);
+
 			Player player = new Player();
-			// get music and set its speed is 1x (100)
-			drumpattern = new Pattern(drumString);
-			
-			System.out.println("The tempoSpeed: " + tempoSpeed);
-			System.out.println("before set instrument: " + drumpattern.toString());
-			
+
 			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
 				if(score.getParts().get(0).getName().equals("Bass")) {
 					musicXMLParttern = listner.getPattern().setInstrument("Acoustic_Bass");
@@ -398,16 +393,16 @@ public class MainViewController extends Application {
 					instrument_type = 2;
 				}
 			}else {
-				musicXMLParttern = drumpattern.setInstrument("Steel_Drums");
+				drumString = " V9 V9 " + listner.getPattern().toString().substring(6);
+				drumpattern = new Pattern(drumString);
+				musicXMLParttern = drumpattern.getPattern();
 				instrument_type = 3;
 			}
 			
 			if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
 				tempoSpeed = Integer.parseInt(tempoInput.getText());
 			}
-			System.out.println("The tempoSpeed: " + tempoSpeed);
-			System.out.println("before set tempo: " + drumpattern.toString());
-			System.out.println("==========================================================");
+			
 			play.setOnAction(e -> {
 				
 				if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
@@ -415,15 +410,15 @@ public class MainViewController extends Application {
 				}
 				
 				if(instrument_type == 1) {
-					musicXMLParttern = listner.getPattern().setTempo(tempoSpeed);
+					musicXMLParttern.setTempo(tempoSpeed);
 					System.out.println("Bass is playing");
 					window.setTitle("Bass is playing");
 				}else if(instrument_type == 2){
-					musicXMLParttern = listner.getPattern().setTempo(tempoSpeed);
+					musicXMLParttern.setTempo(tempoSpeed);
 					System.out.println("Guitar is playing");
 					window.setTitle("Guitar is playing");
 				}else if(instrument_type == 3){
-					drumpattern = new Pattern("T" + tempoInput.getText() + " " + drumString);
+					musicXMLParttern.setTempo(tempoSpeed);
 					System.out.println("Drum is playing");
 					window.setTitle("Drum is playing");
 				}
@@ -441,8 +436,7 @@ public class MainViewController extends Application {
 						}
 					}
 				}
-				System.out.println("The tempoSpeed: " + tempoSpeed);
-				System.out.println("After set tempo: " + drumpattern.toString());
+				System.out.println("The tempoSpeed is: " + tempoSpeed);
 			});
 			
 			pause.setOnAction(e -> {
