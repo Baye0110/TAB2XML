@@ -10,9 +10,14 @@ public class CrossNoteHead extends Group{
 	double stemPosition;
 	
 	public CrossNoteHead(double height, Color color, double strokeScale) {
+		// Set the dimension of the note
 		this.width = height * 1.2;
+		
+		// Where to attach the stem (add the top of the note)
 		this.stemPosition = 0;
 				
+		// Create the 2 diagonal lines, that make the 'X' shape
+		// Set the color of the line, and make the Line shape 'round' on the edges
 		Line l1 = new Line(0, height/1.05, this.width, 0);
 		l1.setStrokeWidth(height/9 * strokeScale);
 		l1.setStroke(color);
@@ -24,6 +29,7 @@ public class CrossNoteHead extends Group{
 		this.getChildren().add(l1);
 		this.getChildren().add(l2);
 		
+		// Set the dimension of the width
 		this.width = this.minWidth(0);
 	}
 
