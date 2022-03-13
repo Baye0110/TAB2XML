@@ -73,6 +73,7 @@ public class MainViewController extends Application {
 	int instrument_type = 0;
 	TextField tempoInput;
 	int tempoSpeed = 60;
+	String drumString;
 
 	@FXML  Label mainViewState;
 	@FXML  TextField instrumentMode;
@@ -380,10 +381,13 @@ public class MainViewController extends Application {
 			parser.addParserListener(listner);
 						
 			parser.parse(converter.getMusicXML());
-			String patternString = "T100 V9 V9 "+ listner.getPattern().toString().substring(6);
+			drumString = "V9 " + listner.getPattern().toString().substring(6);
 			Player player = new Player();
 			// get music and set its speed is 1x (100)
-			drumpattern = new Pattern(patternString);
+			drumpattern = new Pattern(drumString);
+			
+			System.out.println("The tempoSpeed: " + tempoSpeed);
+			System.out.println("before set instrument: " + drumpattern.toString());
 			
 			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
 				if(score.getParts().get(0).getName().equals("Bass")) {
@@ -401,7 +405,9 @@ public class MainViewController extends Application {
 			if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
 				tempoSpeed = Integer.parseInt(tempoInput.getText());
 			}
-			
+			System.out.println("The tempoSpeed: " + tempoSpeed);
+			System.out.println("before set tempo: " + drumpattern.toString());
+			System.out.println("==========================================================");
 			play.setOnAction(e -> {
 				
 				if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
@@ -417,7 +423,7 @@ public class MainViewController extends Application {
 					System.out.println("Guitar is playing");
 					window.setTitle("Guitar is playing");
 				}else if(instrument_type == 3){
-					musicXMLParttern = drumpattern.setTempo(tempoSpeed);
+					drumpattern = new Pattern("T" + tempoInput.getText() + " " + drumString);
 					System.out.println("Drum is playing");
 					window.setTitle("Drum is playing");
 				}
@@ -435,8 +441,8 @@ public class MainViewController extends Application {
 						}
 					}
 				}
-
-
+				System.out.println("The tempoSpeed: " + tempoSpeed);
+				System.out.println("After set tempo: " + drumpattern.toString());
 			});
 			
 			pause.setOnAction(e -> {
