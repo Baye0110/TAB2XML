@@ -350,7 +350,7 @@ public class MainViewController extends Application {
 			window.setTitle("Music sheet");
 			
 			Score score = new Score(converter.getMusicXML());
-			SheetScore sheet = new SheetScore(score, 18, 1050);
+			SheetScore sheet = new SheetScore(score, 15, 1050);
 			sheet.setTranslateX(50);
 			
 			ScrollPane sp = new ScrollPane();
