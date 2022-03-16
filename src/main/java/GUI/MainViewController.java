@@ -382,7 +382,8 @@ public class MainViewController extends Application {
 			parser.parse(converter.getMusicXML());
 
 			Player player = new Player();
-
+//			System.out.println("Before set instrumment: " + listner.getPattern().toString());
+//			System.out.println("=============================================");
 			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
 				if(score.getParts().get(0).getName().equals("Bass")) {
 					musicXMLParttern = listner.getPattern().setInstrument("Acoustic_Bass");
@@ -392,18 +393,19 @@ public class MainViewController extends Application {
 					instrument_type = 2;
 				}
 			}else {
-				drumString = " V9 V9 " + listner.getPattern().toString().substring(6);
-				drumpattern = new Pattern(drumString);
-				musicXMLParttern = drumpattern.getPattern();
+				drumString = "V9 " + listner.getPattern().toString().substring(6);
+				musicXMLParttern = new Pattern(drumString);
 				instrument_type = 3;
 			}
 			
 			if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
 				tempoSpeed = Integer.parseInt(tempoInput.getText());
 			}
-			
+//			System.out.println("After set instrumment: " + musicXMLParttern.getPattern().toString());
+//			System.out.println("=============================================");
 			play.setOnAction(e -> {
-				
+				System.out.println("1:" + musicXMLParttern.getPattern().toString());
+				// set tempo
 				if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
 					tempoSpeed = Integer.parseInt(tempoInput.getText());
 				}
@@ -421,20 +423,30 @@ public class MainViewController extends Application {
 					System.out.println("Drum is playing");
 					window.setTitle("Drum is playing");
 				}
-				
+				System.out.println("2: "+ musicXMLParttern.getPattern().toString());
+				System.out.println("is paused: " + player.getManagedPlayer().isPaused());
+				System.out.println("is playing: " + player.getManagedPlayer().isPlaying());
+				System.out.println("is finished: " + player.getManagedPlayer().isFinished());
 				if(player.getManagedPlayer().isPaused()) {
-					player.getManagedPlayer().resume();
-				}else {
-					if(player.getManagedPlayer().isPlaying()) {
-						// do nothing
-					}else {
-						player.delayPlay(0, musicXMLParttern);
-						if(player.getManagedPlayer().isFinished()) {
-							window.setTitle("Music sheet");
-							System.out.println("Music is finished");
-						}
-					}
-				}
+                    player.getManagedPlayer().resume();
+                }else {
+                    if(player.getManagedPlayer().isPlaying()) {
+                        // do nothing
+                    	 System.out.println("Music is Playing");
+                    }else {
+                        player.delayPlay(0, musicXMLParttern.toString());
+//                        System.out.println(this.musicXMLParttern.getTokens().get(4));
+                        if(player.getManagedPlayer().isFinished()) {
+                            window.setTitle("Music sheet");
+                            System.out.println("Music is finished");
+                        }
+                    }
+                }
+				System.out.println("====================================");
+				System.out.println("is paused: " + player.getManagedPlayer().isPaused());
+				System.out.println("is playing: " + player.getManagedPlayer().isPlaying());
+				System.out.println("is finished: " + player.getManagedPlayer().isFinished());
+				//System.out.println("After set tempo: " + musicXMLParttern.getPattern().toString());
 				System.out.println("The tempoSpeed is: " + tempoSpeed);
 			});
 			
@@ -443,6 +455,9 @@ public class MainViewController extends Application {
 					player.getManagedPlayer().pause();
 					window.setTitle("Music Paused");
 					System.out.println("Music paused");
+				}else if(player.getManagedPlayer().isFinished()){
+					window.setTitle("Music sheet");
+					System.out.println("playing a music first");
 				}else {
 					window.setTitle("Music sheet");
 					System.out.println("playing a music first");
@@ -456,6 +471,10 @@ public class MainViewController extends Application {
 			}
 				System.out.println("preview windows exited");});
 			window.show();
+			if(!window.isShowing()) {
+				player.getManagedPlayer().finish();
+				System.out.println("preview windows exited");
+			}
 			
 			
 		} catch (Exception e) {
