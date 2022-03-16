@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 
 public class NoteHead extends Group{
 	// Create the correct notehead object from the other 5 classes in the "custom_model.notehead" package
-	//   based on the type of the note.	
+	//   based on the type of the note.
 	double width;
 	double height;
 	double stemPosition;

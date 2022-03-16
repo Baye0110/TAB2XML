@@ -7,6 +7,7 @@ import javafx.scene.shape.Line;
 // For GUITARS, BASS
 public class TabNoteStem extends Group {
 	// Creates the noteStem that is displayed under guitar/bass tabs
+
 	
 	/**
 	 * @param height	the spacing between the stafflines

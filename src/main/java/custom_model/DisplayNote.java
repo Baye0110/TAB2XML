@@ -12,8 +12,6 @@ import javafx.scene.shape.Line;
 
 // DRUMS
 public class DisplayNote extends DisplayUnit{
-	// Create a Drum Note
-
 	double preceding;
 	double trailing;
 	double parenthesesDisplacement;

@@ -10,6 +10,7 @@ import javafx.scene.shape.Line;
 
 // For ALL INSTRUMENTS
 public class NoteTail extends Group {
+
 	// The class which creates the tail/flag displayed at the top of the note stem.
 	
 	double width;	
@@ -22,6 +23,7 @@ public class NoteTail extends Group {
 	 */
 	public NoteTail(double height, int num, boolean stemDown) {
 		try {
+
 			// Get the image file of the note_Tail.png
 			Image tailImg = new Image(new FileInputStream("src/main/resources/image_assets/note_Tail.png"));
 			

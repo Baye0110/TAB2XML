@@ -7,8 +7,6 @@ import custom_component_data.Note;
 import javafx.scene.shape.Line;
 
 public class DisplayChord extends DisplayUnit{
-	// Restore this Class
-	
 	boolean hasFlip;
 	int max_position;
 	int min_position;

@@ -6,7 +6,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
 public class CrossNoteHead extends Group{
-	// Create the Notehead for the shape 'X'	
 	double width;
 	double stemPosition;
 	

@@ -8,9 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 // For GUTIAR, BASS 
-public class BoxedText extends Group{
-	// Create the numbered textbox 
-	
+public class BoxedText extends Group{	
 	// The space on the sides of the textbox
 	static final int PADDING_LEFT = 8; 
 	// The width of the textbox

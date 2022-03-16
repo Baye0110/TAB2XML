@@ -13,10 +13,6 @@ import javafx.scene.text.Text;
 
 // GUITARS, DRUMS, BASS
 abstract public class MusicMeasure extends Pane {
-	// The superclass for the TabMeasure and StaffFeatures
-	// Stores the common instance variables
-	// Initialized the common features of both staff: Clef, Time Signature
-	
 	// The amount of space before any element in a staff
 	public static final double START_DISTANCE = 30;
 	// The barLines (the last one is always the barLine for the end of the staff)

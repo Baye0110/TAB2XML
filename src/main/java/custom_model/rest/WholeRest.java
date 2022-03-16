@@ -5,6 +5,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 public class WholeRest extends Group{
+
 	// Creates a Rest with duration of a whole note
 	
 	double width;

@@ -1,12 +1,12 @@
 package GUI;
 
+import java.awt.TextArea;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -16,21 +16,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javax.swing.JOptionPane;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.jfugue.integration.MusicXmlParser;
 import org.jfugue.pattern.Pattern;
-import org.jfugue.pattern.Token;
-import org.jfugue.pattern.Token.TokenType;
 import org.jfugue.player.Player;
 import org.staccato.StaccatoParserListener;
 
 import converter.Converter;
-import converter.Instrument;
 import converter.measure.TabMeasure;
 import custom_component_data.Score;
 import custom_model.SheetScore;
@@ -38,7 +32,6 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -50,12 +43,9 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -63,8 +53,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import nu.xom.ParsingException;
-import nu.xom.ValidityException;
 import utility.Range;
 import utility.Settings;
 
@@ -81,7 +69,11 @@ public class MainViewController extends Application {
 	public Highlighter highlighter;
 	public Converter converter;
 	org.jfugue.pattern.Pattern musicXMLParttern;
+	org.jfugue.pattern.Pattern drumpattern;
 	int instrument_type = 0;
+	TextField tempoInput;
+	int tempoSpeed = 60;
+	String drumString;
 
 	@FXML  Label mainViewState;
 	@FXML  TextField instrumentMode;
@@ -333,24 +325,33 @@ public class MainViewController extends Application {
 	
 	@FXML
 	private void previewButtonHandle() throws Exception {
-
+	
 		System.out.println("Preview Button Clicked!");
 		try {
+	
+			Stage window = new Stage();
+			window.setTitle("Music sheet");
+			this.tempoInput = new TextField("60");
+			Label tempoLabel = new Label("Tempo:");
+			
 			Button play = new Button("Play");
 			Button pause = new Button("Pause");
 			Button exit = new Button("Exit");
 			
-			play.setTranslateX(150);
+			play.setTranslateX(100);
 			
-			pause.setTranslateX(300);
+			tempoLabel.setTranslateX(150);
+			tempoLabel.setFont(new Font(15));
+			
+			tempoInput.setTranslateX(200);
+			
+			
+			pause.setTranslateX(500);
 			
 			exit.setTranslateX(1100);
 			
-			Stage window = new Stage();
-			window.setTitle("Music sheet");
-			
 			Score score = new Score(converter.getMusicXML());
-			SheetScore sheet = new SheetScore(score, 15, 1050);
+			SheetScore sheet = new SheetScore(score, 18, 1050);
 			sheet.setTranslateX(50);
 			
 			ScrollPane sp = new ScrollPane();
@@ -361,91 +362,62 @@ public class MainViewController extends Application {
 			sp.setMinHeight(sheet.getChildren().get(0).minHeight(0)+50);
 			
 			
-			Pane musicPlay = new Pane(play,pause,exit);
-			musicPlay.setTranslateY(25);
-			VBox root = new VBox(sp, musicPlay);
+			Pane PlayPane = new Pane();
+			
+			PlayPane.getChildren().add(play);
+			PlayPane.getChildren().add(tempoLabel);
+			PlayPane.getChildren().add(tempoInput);
+			PlayPane.getChildren().add(pause);
+			PlayPane.getChildren().add(exit);
+			
+			PlayPane.setTranslateY(25);
+			VBox root = new VBox(sp, PlayPane);
 			Scene scene = new Scene(root, 1250, 700);
-			window.setScene(scene);			
+			window.setScene(scene);	
 			
 			StaccatoParserListener listner = new StaccatoParserListener();
 			MusicXmlParser parser = new MusicXmlParser();
 			parser.addParserListener(listner);
-			
-			List<custom_component_data.Note> instruments = new ArrayList<>();
-			for (custom_component_data.Part p: score.getParts()) {
-				for (custom_component_data.Measure m: p.getMeasures()) {
-					for (custom_component_data.Note n: m.getNotes()) {
-						if (!n.getRest()) {
-							instruments.add(n);
-						}
-					}
-				}
-			}
-			
-			
+						
 			parser.parse(converter.getMusicXML());
-			StringBuilder patternString = new StringBuilder("T115 V9 V9 ").append(listner.getPattern().toString().substring(11));
-//			List<Token> tokens = listner.getPattern().getTokens();
-//			int noteNum = 0;
-//			String savedEnding = null;
-//			boolean currChord = false;
-//			
-//			for (int i = 3; i < tokens.size(); i++) {
-//				boolean nonRest_Note = tokens.get(i).getType() == TokenType.NOTE && tokens.get(i).toString().charAt(0) != 'R';
-//				if (nonRest_Note) {
-//					String token = tokens.get(i).toString();
-//					
-//					currChord = noteNum + 1 < instruments.size() && instruments.get(noteNum + 1).getChord();
-//					
-//					patternString.append(Integer.parseInt(instruments.get(noteNum).getInstrumentID().substring(4)) - 1);
-//					if (!currChord) 
-//						patternString.append(token.substring(token.indexOf(']') + 1, token.length()-3));
-//					
-//					noteNum++;
-//				}
-//				else if (tokens.get(i).getType() != TokenType.INSTRUMENT){
-//					patternString.append(tokens.get(i).toString());
-//				}
-//				else {
-//					continue;
-//				}
-//				
-//				if (noteNum < instruments.size() && instruments.get(noteNum).getGrace()) {
-//					patternString.append(" " + (Integer.parseInt(instruments.get(noteNum).getInstrumentID().substring(4)) - 1) + "XA90");
-//					noteNum++;
-//				}
-//				
-//				if (nonRest_Note && currChord)
-//					patternString.append("+");
-//				else 
-//					patternString.append(" ");
-//			}
-			
+
 			Player player = new Player();
-			// get music and set its speed is 1x (100)
-			
+
 			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
 				if(score.getParts().get(0).getName().equals("Bass")) {
-					musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Acoustic_Bass");
+					musicXMLParttern = listner.getPattern().setInstrument("Acoustic_Bass");
 					instrument_type = 1;
 				}else {
-					musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Guitar");
+					musicXMLParttern = listner.getPattern().setInstrument("Guitar");
 					instrument_type = 2;
 				}
 			}else {
-				musicXMLParttern = new Pattern(patternString.toString()).setTempo(100);
-//				musicXMLParttern = listner.getPattern().setTempo(100).setInstrument("Steel_Drums");
+				drumString = " V9 V9 " + listner.getPattern().toString().substring(6);
+				drumpattern = new Pattern(drumString);
+				musicXMLParttern = drumpattern.getPattern();
 				instrument_type = 3;
 			}
 			
+			if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
+				tempoSpeed = Integer.parseInt(tempoInput.getText());
+			}
+			
 			play.setOnAction(e -> {
+				
+				if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
+					tempoSpeed = Integer.parseInt(tempoInput.getText());
+				}
+				
 				if(instrument_type == 1) {
+					musicXMLParttern.setTempo(tempoSpeed);
 					System.out.println("Bass is playing");
 					window.setTitle("Bass is playing");
 				}else if(instrument_type == 2){
+					musicXMLParttern.setTempo(tempoSpeed);
 					System.out.println("Guitar is playing");
 					window.setTitle("Guitar is playing");
 				}else if(instrument_type == 3){
+					musicXMLParttern.setTempo(tempoSpeed);
 					System.out.println("Drum is playing");
 					window.setTitle("Drum is playing");
 				}
@@ -457,15 +429,13 @@ public class MainViewController extends Application {
 						// do nothing
 					}else {
 						player.delayPlay(0, musicXMLParttern);
-						System.out.println(this.musicXMLParttern.getTokens().get(4));
 						if(player.getManagedPlayer().isFinished()) {
 							window.setTitle("Music sheet");
 							System.out.println("Music is finished");
 						}
 					}
 				}
-
-
+				System.out.println("The tempoSpeed is: " + tempoSpeed);
 			});
 			
 			pause.setOnAction(e -> {
@@ -493,6 +463,7 @@ public class MainViewController extends Application {
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);
 		}
 		// converter.getMusicXML() returns the MusicXML output as a String
+		
 	}
 	
 	public static void unImplementedFunctionOnClick(String functionName, String functionDesc) {

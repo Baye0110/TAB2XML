@@ -14,6 +14,7 @@ import javafx.scene.text.TextAlignment;
 
 // For ALL INSTRUMENTS
 public class SheetScore extends VBox{
+
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 
 	
