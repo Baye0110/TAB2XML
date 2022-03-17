@@ -1,12 +1,12 @@
 package GUI;
 
-import java.awt.TextArea;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +21,15 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.jfugue.integration.MusicXmlParser;
 import org.jfugue.pattern.Pattern;
+import org.jfugue.pattern.Token;
+import org.jfugue.pattern.Token.TokenType;
 import org.jfugue.player.Player;
 import org.staccato.StaccatoParserListener;
 
 import converter.Converter;
 import converter.measure.TabMeasure;
+import custom_component_data.Measure;
+import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_model.SheetScore;
 import javafx.application.Application;
@@ -69,11 +73,11 @@ public class MainViewController extends Application {
 	public Highlighter highlighter;
 	public Converter converter;
 	org.jfugue.pattern.Pattern musicXMLParttern;
-	org.jfugue.pattern.Pattern drumpattern;
 	int instrument_type = 0;
 	TextField tempoInput;
 	int tempoSpeed = 60;
 	String drumString;
+	Player player = new Player();
 
 	@FXML  Label mainViewState;
 	@FXML  TextField instrumentMode;
@@ -382,74 +386,108 @@ public class MainViewController extends Application {
 						
 			parser.parse(converter.getMusicXML());
 
-			Player player = new Player();
-//			System.out.println("Before set instrumment: " + listner.getPattern().toString());
-//			System.out.println("=============================================");
+			List<Note> noteList = new ArrayList<Note>();
+			
+			String stringInstrument ="";
+			
+			for(Measure measures: score.getParts().get(0).getMeasures()) {
+				for(Note notes: measures.getNotes()) {
+					noteList.add(notes);
+				}
+			}
+			
 			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
+				int count = 0;
+				for(Token tokens: listner.getPattern().getTokens()) {
+					if(tokens.getType() == TokenType.NOTE) {
+						if(noteList.get(count).getChord()) {
+							stringInstrument += "+" + tokens;
+						}else {
+							stringInstrument += " " + tokens;
+						}
+						count++;
+					}else {
+						stringInstrument += " " + tokens;
+					}
+				}
+				musicXMLParttern = new Pattern(stringInstrument);
 				if(score.getParts().get(0).getName().equals("Bass")) {
-					musicXMLParttern = listner.getPattern().setInstrument("Acoustic_Bass");
+					musicXMLParttern.setInstrument("Acoustic_Bass");
 					instrument_type = 1;
 				}else {
-					musicXMLParttern = listner.getPattern().setInstrument("Guitar");
+					musicXMLParttern.setInstrument("Guitar");
 					instrument_type = 2;
 				}
 			}else {
-				drumString = "V9 " + listner.getPattern().toString().substring(6);
+				
+				String drumSet ="";
+				int countDrum = 0;
+				for(Token tokens: listner.getPattern().getTokens()) {
+					if(tokens.getType() == TokenType.NOTE) {
+						if(noteList.get(countDrum).getChord()) {
+							
+							while(drumSet.charAt(drumSet.length() - 1) != ']') {
+								drumSet = drumSet.substring(0, drumSet.length() - 1);
+							}
+							
+							drumSet += "+" + tokens;
+						}else {
+							drumSet += " " + tokens;
+						}
+						countDrum++;
+					}else {
+						drumSet += " " + tokens;
+					}
+				}
+
+				
+				System.out.println("S1: " + drumSet);
+				drumString = "V9 " + drumSet.substring(7);
 				musicXMLParttern = new Pattern(drumString);
 				instrument_type = 3;
+				System.out.println("s2:" + drumString);
+
 			}
 			
 			if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
 				tempoSpeed = Integer.parseInt(tempoInput.getText());
 			}
-//			System.out.println("After set instrumment: " + musicXMLParttern.getPattern().toString());
-//			System.out.println("=============================================");
+			
+			
 			play.setOnAction(e -> {
-				System.out.println("1:" + musicXMLParttern.getPattern().toString());
 				// set tempo
 				if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
 					tempoSpeed = Integer.parseInt(tempoInput.getText());
 				}
-				
-				if(instrument_type == 1) {
-					musicXMLParttern.setTempo(tempoSpeed);
-					System.out.println("Bass is playing");
-					window.setTitle("Bass is playing");
-				}else if(instrument_type == 2){
-					musicXMLParttern.setTempo(tempoSpeed);
-					System.out.println("Guitar is playing");
-					window.setTitle("Guitar is playing");
-				}else if(instrument_type == 3){
-					musicXMLParttern.setTempo(tempoSpeed);
-					System.out.println("Drum is playing");
-					window.setTitle("Drum is playing");
-				}
-				System.out.println("2: "+ musicXMLParttern.getPattern().toString());
-				System.out.println("is paused: " + player.getManagedPlayer().isPaused());
-				System.out.println("is playing: " + player.getManagedPlayer().isPlaying());
-				System.out.println("is finished: " + player.getManagedPlayer().isFinished());
+				System.out.println("String1: " + musicXMLParttern);
+					if(instrument_type == 1) {
+						musicXMLParttern.setTempo(tempoSpeed);
+						System.out.println("Bass is playing");
+						window.setTitle("Bass is playing");
+					}else if(instrument_type == 2){
+						musicXMLParttern.setTempo(tempoSpeed);
+						System.out.println("Guitar is playing");
+						window.setTitle("Guitar is playing");		
+					}else if(instrument_type == 3){
+						musicXMLParttern.setTempo(tempoSpeed);
+						System.out.println("Drum is playing");
+						window.setTitle("Drum is playing");	
+					}
+					
+					System.out.println("String2: " + musicXMLParttern);
 				if(player.getManagedPlayer().isPaused()) {
-                    player.getManagedPlayer().resume();
-                }else {
-                    if(player.getManagedPlayer().isPlaying()) {
-                        // do nothing
-                    	 System.out.println("Music is Playing");
-                    }else {
-                        player.delayPlay(0, musicXMLParttern.toString());
-//                        System.out.println(this.musicXMLParttern.getTokens().get(4));
-                        if(player.getManagedPlayer().isFinished()) {
-                            window.setTitle("Music sheet");
-                            System.out.println("Music is finished");
-                        }
-                    }
-                }
-				System.out.println("====================================");
-				System.out.println("is paused: " + player.getManagedPlayer().isPaused());
-				System.out.println("is playing: " + player.getManagedPlayer().isPlaying());
-				System.out.println("is finished: " + player.getManagedPlayer().isFinished());
-				//System.out.println("After set tempo: " + musicXMLParttern.getPattern().toString());
+					player.getManagedPlayer().resume();
+					System.out.println("Music is resumed");
+				}else if(player.getManagedPlayer().isPlaying()) {
+					System.out.println("Music is Playing");
+				}else {
+					this.player = new Player();
+					player.delayPlay(0,musicXMLParttern.toString());
+				}
+				System.out.println("String3: " + musicXMLParttern);
 				System.out.println("The tempoSpeed is: " + tempoSpeed);
 			});
+			
 			
 			pause.setOnAction(e -> {
 				if(player.getManagedPlayer().isPlaying()) {
@@ -466,17 +504,20 @@ public class MainViewController extends Application {
 			});
 			
 
-			exit.setOnAction(e -> {window.hide();
+			exit.setOnAction(e -> {window.close();
 			if(player.getManagedPlayer().isPlaying()) {
 				player.getManagedPlayer().finish();
 			}
-				System.out.println("preview windows exited");});
-			window.show();
-			if(!window.isShowing()) {
-				player.getManagedPlayer().finish();
 				System.out.println("preview windows exited");
+			});
+			window.show();
+			window.setOnHiding(e -> {
+				if(player.getManagedPlayer().isPlaying()) {
+				player.getManagedPlayer().finish();
+				
 			}
-			
+				System.out.println("preview windows exited");
+				});
 			
 		} catch (Exception e) {
 			Logger logger = Logger.getLogger(getClass().getName());
