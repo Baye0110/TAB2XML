@@ -331,54 +331,53 @@ public class MainViewController extends Application {
 	private void previewButtonHandle() throws Exception {
 	
 		System.out.println("Preview Button Clicked!");
+		try {
 	
-	try {
-
-		Stage window = new Stage();
-		window.setTitle("Music sheet");
-		this.tempoInput = new TextField("60");
-		Label tempoLabel = new Label("Tempo:");
-		
-		Button play = new Button("Play");
-		Button pause = new Button("Pause");
-		Button exit = new Button("Exit");
-		
-		play.setTranslateX(100);
-		
-		tempoLabel.setTranslateX(150);
-		tempoLabel.setFont(new Font(15));
-		
-		tempoInput.setTranslateX(200);
-		
-		
-		pause.setTranslateX(500);
-		
-		exit.setTranslateX(1100);
-		
-		Score score = new Score(converter.getMusicXML());
-		SheetScore sheet = new SheetScore(score, 18, 1050);
-		sheet.setTranslateX(50);
-		
-		ScrollPane sp = new ScrollPane();
-		sp.setContent(sheet);
-		sp.setTranslateX(50);
-		sp.setMaxWidth(1150);
-		sp.setMaxHeight(600);
-		sp.setMinHeight(sheet.getChildren().get(0).minHeight(0)+50);
-		
-		
-		Pane PlayPane = new Pane();
-		
-		PlayPane.getChildren().add(play);
-		PlayPane.getChildren().add(tempoLabel);
-		PlayPane.getChildren().add(tempoInput);
-		PlayPane.getChildren().add(pause);
-		PlayPane.getChildren().add(exit);
-		
-		PlayPane.setTranslateY(25);
-		VBox root = new VBox(sp, PlayPane);
-		Scene scene = new Scene(root, 1250, 700);
-		window.setScene(scene);	
+			Stage window = new Stage();
+			window.setTitle("Music sheet");
+			this.tempoInput = new TextField("60");
+			Label tempoLabel = new Label("Tempo:");
+			
+			Button play = new Button("Play");
+			Button pause = new Button("Pause");
+			Button exit = new Button("Exit");
+			
+			play.setTranslateX(100);
+			
+			tempoLabel.setTranslateX(150);
+			tempoLabel.setFont(new Font(15));
+			
+			tempoInput.setTranslateX(200);
+			
+			
+			pause.setTranslateX(500);
+			
+			exit.setTranslateX(1100);
+			
+			Score score = new Score(converter.getMusicXML());
+			SheetScore sheet = new SheetScore(score, 18, 1050);
+			sheet.setTranslateX(50);
+			
+			ScrollPane sp = new ScrollPane();
+			sp.setContent(sheet);
+			sp.setTranslateX(50);
+			sp.setMaxWidth(1150);
+			sp.setMaxHeight(600);
+			sp.setMinHeight(sheet.getChildren().get(0).minHeight(0)+50);
+			
+			
+			Pane PlayPane = new Pane();
+			
+			PlayPane.getChildren().add(play);
+			PlayPane.getChildren().add(tempoLabel);
+			PlayPane.getChildren().add(tempoInput);
+			PlayPane.getChildren().add(pause);
+			PlayPane.getChildren().add(exit);
+			
+			PlayPane.setTranslateY(25);
+			VBox root = new VBox(sp, PlayPane);
+			Scene scene = new Scene(root, 1250, 700);
+			window.setScene(scene);	
 			
 			StaccatoParserListener listner = new StaccatoParserListener();
 			MusicXmlParser parser = new MusicXmlParser();
