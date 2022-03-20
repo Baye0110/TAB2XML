@@ -23,11 +23,11 @@ public class BoxedText extends Group{
 	BoxedText(String text, double size, double type, boolean chord, boolean grace) {
 		// Create the actual textbox with the given number in "String text" argument
 		Text label = new Text(text);
-		label.setFont(Font.font(size*0.675));	// Set the font size 
+		label.setFont(Font.font(size*0.85));	// Set the font size 
 		
 		// Set the position of text based on the padding on the top and on the sides of the box
 		label.setX((size + PADDING_LEFT - label.minWidth(0))/2.00);
-		label.setY((size*0.93 - label.minHeight(0)/2)/2 + label.minHeight(0)/2);
+		label.setY((size*0.95 - label.minHeight(0)/2)/2 + label.minHeight(0)/2);
 		
 		// Create a Rectangle which is a white background of the textbox
 		Rectangle container = new Rectangle();
