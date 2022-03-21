@@ -12,24 +12,7 @@ public class RepeatBarLine extends Group {
 	//constructor of gui element
 	RepeatBarLine(int lineSpacing, int numOfLines) {
 		Group gr = new Group();
-		
-		//drawing the staff lines
-		
-		//initial location for Y
 		int n = 50;
-		
-		for(int i=0; i<numOfLines; i++)
-		{
-			Line staff = new Line();
-			staff.setStartX(50);
-			staff.setStartY(n);
-			staff.setEndX(100);
-			staff.setEndY(n);	
-			
-			gr.getChildren().add(staff);
-			//draws the next line based on the spacing (new n)
-			n += lineSpacing;
-		}
 		
 		//drawing vertical lines
 		Line v1 = new Line();
