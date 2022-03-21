@@ -26,7 +26,7 @@ public class TabMeasure extends MusicMeasure {
 	// Store 2 objects:
 	//   1. labels = Store the textboxes with the numbers
 	//   2. stems  = Store the noteStems which are displayed under the staff
-	List<BoxedText> labels;
+	List<BoxedUnit> labels;
 	List<TabNoteStem> stems;
 	
 	/**
@@ -43,52 +43,104 @@ public class TabMeasure extends MusicMeasure {
 		List<Note> notes = m.getNotes();
 		
 		// Initialize the arrays
-		this.labels = new ArrayList<BoxedText>();
+		this.labels = new ArrayList<BoxedUnit>();
 		this.stems = new ArrayList<TabNoteStem>();
 		
 		// initialize the height of the staff based on the number of lines
 		this.maxHeight = size * (m.getStaffLines());
 		
+		// Reset the count of notes
+		BoxedUnit.currMeasureNoteNum = 0;
+		
 		// Create the BoxedTest for the guitar numbers for each Note.
 		for (int i = 0; i < notes.size(); i++) {
-			// Get the XML parsed note data
 			Note currentNote = notes.get(i);
 			
-			// Get the values of the note
-			double type = notes.get(i).getType() != 0 ? currentNote.getType() : 0.5;  // the duration of the note (inverse: small number = long duration)
-			boolean isChord = i + 1 < notes.size() && notes.get(i+1).getChord();      // is this note a chord			
+			List<Note> unitParts = new ArrayList<>();
+			unitParts.add(currentNote);
+			BoxedUnit boxedUnit = null;
 			
-			// set the height of the note to be small if it is a "Grace note"
-			double noteSize = currentNote.getGrace() ? size * 0.65 : size;			  
+			boolean isChord = i + 1 < notes.size() && notes.get(i + 1).getChord();
+			while(isChord) {
+				i++;
+				unitParts.add(notes.get(i));
+				isChord = i + 1 < notes.size() && notes.get(i + 1).getChord();
+			}
 			
-			// Create the BoxedText for the guitar number by giving the correct values
-			BoxedText fret = new BoxedText("" + currentNote.getNotation().getFret(), noteSize, type, isChord, currentNote.getGrace());
-			// Set the correct position of the BoxedText, and the correct String based on the space between staffLines
-			fret.setTranslateX(currentDistance);
-			fret.setTranslateY(size * (currentNote.getNotation().getString() - 1.5) + (size - noteSize)); 
-			labels.add(fret);
+			int string = currentNote.getNotation().getString();
+			if (unitParts.size() == 1) {
+				double type = currentNote.getType() != 0 ? currentNote.getType() : 0.5;
+				if (currentNote.getGrace()) {
+					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size*0.65, type, true, false, this.measureNum);
+					boxedUnit.setTranslateY(size * 0.35);
+				}
+				else {
+					System.out.println(currentNote.getNotation().getFret() + ": " + currentNote.getNotation().getString());
+					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size, type, false, false, this.measureNum);
+				}
+			}
+			else {
+				boxedUnit = new BoxedChord(size, unitParts, this.measureNum, unitParts.get(0).getGrace());
+				for (Note note: unitParts) {
+					if (note.getNotation().getString() < string) {
+						string = note.getNotation().getString();
+					}
+				}
+			}
 			
-			// For the all notes create the noteStem which is displayed under the staff
-			//    Exceptions: 'Grace Notes' and the 2nd,3rd,4th,.. notes in a chord
-			if (!currentNote.getChord() && !currentNote.getGrace()) {
-				
-				// Create the stem Object, set its position
+			if (!currentNote.getGrace()) {
 				TabNoteStem stem = new TabNoteStem(size, notes.get(i).getType(), notes.get(i).getDot());
-				stem.setTranslateX(currentDistance + (fret.minWidth(0)/2));
-				stem.setTranslateY(size * (m.getStaffLines()));
-				// Store the noteStem
+				stem.setTranslateX(currentDistance + (boxedUnit.minWidth(0)/2));
+				stem.setTranslateY(size * m.getStaffLines());
 				this.stems.add(stem);
 			}
 			
-			// NOTE: the variable currentDistance tracks the X position of the next note.
+			boxedUnit.setTranslateX(currentDistance);
+			boxedUnit.setTranslateY(size * (string - 1.5) + boxedUnit.getTranslateY());
+			this.labels.add(boxedUnit);
 			
-			// If the next note is a chord, then make sure this note is on top of the next note, NOT BESIDE IT
-			if (isChord) {
-				currentDistance += 0;
-			} else {
-				currentDistance += fret.minWidth(0) + wholeDistance/type;
-				this.spacing += wholeDistance/type;
-			}
+			double type = currentNote.getType() == 0 ? 0.5 : currentNote.getType();
+			currentDistance += boxedUnit.minWidth(0) + wholeDistance/type;
+			this.spacing += wholeDistance/type;
+//			// Get the XML parsed note data
+//			Note currentNote = notes.get(i);
+//			
+//			// Get the values of the note
+//			double type = notes.get(i).getType() != 0 ? currentNote.getType() : 0.5;  // the duration of the note (inverse: small number = long duration)
+//			boolean isChord = i + 1 < notes.size() && notes.get(i+1).getChord();      // is this note a chord			
+//			
+//			// set the height of the note to be small if it is a "Grace note"
+//			double noteSize = currentNote.getGrace() ? size * 0.65 : size;			  
+//			
+//			// Create the BoxedText for the guitar number by giving the correct values
+//			BoxedText fret = new BoxedText("" + currentNote.getNotation().getFret(), noteSize, type, isChord, currentNote.getGrace());
+//			// Set the correct position of the BoxedText, and the correct String based on the space between staffLines
+//			fret.setTranslateX(currentDistance);
+//			fret.setTranslateY(size * (currentNote.getNotation().getString() - 1.5) + (size - noteSize)); 
+//			labels.add(fret);
+//
+//			// For the all notes create the noteStem which is displayed under the staff
+//			//    Exceptions: 'Grace Notes' and the 2nd,3rd,4th,.. notes in a chord
+//			if (!currentNote.getChord() && !currentNote.getGrace()) {
+//				
+//				// Create the stem Object, set its position
+//				TabNoteStem stem = new TabNoteStem(size, notes.get(i).getType(), notes.get(i).getDot());
+//				stem.setTranslateX(currentDistance + (fret.minWidth(0)/2));
+//				stem.setTranslateY(size * (m.getStaffLines()));
+//				// Store the noteStem
+//				this.stems.add(stem);
+//			}
+//			
+//			
+//			// NOTE: the variable currentDistance tracks the X position of the next note.
+//			
+//			// If the next note is a chord, then make sure this note is on top of the next note, NOT BESIDE IT
+//			if (isChord) {
+//				currentDistance += 0;
+//			} else {
+//				currentDistance += fret.minWidth(0) + wholeDistance/type;
+//				this.spacing += wholeDistance/type;
+//			}
 			
 		}
 		// Get the whole width of the measure (added a little bit of padding)
@@ -124,7 +176,7 @@ public class TabMeasure extends MusicMeasure {
 		this.getChildren().add(end);
 		
 		// Attach all the BoxedText numbers, and the noteStems to the TabMeasure to display
-		for (BoxedText label: this.labels) {
+		for (BoxedUnit label: this.labels) {
 			this.getChildren().add(label);
 		}
 		
@@ -157,20 +209,18 @@ public class TabMeasure extends MusicMeasure {
 		// Set the correct spacing for each BoxedText number in "this.labels"
 		for (int i = 0; i < this.labels.size(); i++) {
 			// Get the ith textbox, and set the correct X position to put it
-			BoxedText currLabel = this.labels.get(i);
+			BoxedUnit currLabel = this.labels.get(i);
 			currLabel.setTranslateX(current);
 			
-			// If the current note is not a chord, then we calculate the new X position for the next note
-			if (!currLabel.chord) {
-				// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
-				if (!currLabel.grace) {
-					this.stems.get(stemNum).setTranslateX(current + (currLabel.minWidth(0)/2));
-					stemNum ++;
-				}
-				
-				current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.type);
-				this.spacing += this.wholeDistance/currLabel.type;
+			// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
+			System.out.println("is grace: " + currLabel.grace + " and fret" + currLabel.noteNum);
+			if (!currLabel.grace) {
+				this.stems.get(stemNum).setTranslateX(current + (currLabel.minWidth(0)/2));
+				stemNum ++;
 			}
+				
+			current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.spacingType);
+			this.spacing += this.wholeDistance/currLabel.spacingType;
 		}
 		
 		// add some extra padding for the end of the measure

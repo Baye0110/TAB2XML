@@ -9,12 +9,18 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 
 // GUITARS, DRUMS, BASS
 abstract public class MusicMeasure extends Pane {
 	// The amount of space before any element in a staff
 	public static final double START_DISTANCE = 30;
+	
+	// Measure Number
+	static int measureCount = 0;
+	int measureNum;
+	
 	// The barLines (the last one is always the barLine for the end of the staff)
 	List<Line> barLines;
 	
@@ -39,6 +45,16 @@ abstract public class MusicMeasure extends Pane {
 	public MusicMeasure(double size, Measure m, boolean start) {
 		// Set the initial distance to the start_distance constant.
 		this.currentDistance = START_DISTANCE;
+		
+		MusicMeasure.measureCount += 1;
+		this.measureNum = MusicMeasure.measureCount;
+		
+		Text measureNum = new Text(Integer.toString(this.measureNum));
+		measureNum.setFont(Font.font("Calibri", FontPosture.ITALIC, size*1.5));
+		measureNum.setTranslateY(0 - size * 0.5);
+		measureNum.setTranslateX(size * 0.5);
+		this.getChildren().add(measureNum);
+		
 		
 		// If this measure is the 1st in its line, then add the clef symbol
 		if (start) {
@@ -171,6 +187,10 @@ abstract public class MusicMeasure extends Pane {
 		for (Text t: list) {
 			t.setX(t.getX() + (max_width-t.minWidth(0))/2);
 		}
+	}
+	
+	public int getMeasureNume() {
+		return this.measureNum;
 	}
 
 }

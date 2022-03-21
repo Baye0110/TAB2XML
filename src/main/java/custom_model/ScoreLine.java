@@ -12,6 +12,7 @@ public class ScoreLine extends HBox{
 
 	// Stores the
 	List<Double> measureDistances;
+	List<MusicMeasure> measures;
 	// Stores the tallest measure in the List
 	double maxHeight;
 	
@@ -22,16 +23,22 @@ public class ScoreLine extends HBox{
 	 */
 	public ScoreLine(List<? extends MusicMeasure> measures, double pageWidth) {
 		this.measureDistances = new ArrayList<>();
+		this.measures = new ArrayList<>();
 		
 		// This variable tracks the length of all the measures combined
 		double current = 0;
 		// This variable tracks the AMOUNT OF SPACE BETWEEN NOTES ONLY
 		double spacing = 0;
 		
+		this.maxHeight = 0;
+		
 		// For each MusicMeasure, add it to the ScoreLine, and increment the 2 variables above
 		for (MusicMeasure m: measures) {
 			this.getChildren().add(m);
+			this.measures.add(m);
 			this.measureDistances.add(current);
+			
+			this.maxHeight = m.minHeight(0) > this.maxHeight ? m.minHeight(0) : this.maxHeight;
 			current += m.minWidth;
 			spacing += m.spacing; 
 		}

@@ -3,15 +3,13 @@ package custom_model;
 import javafx.scene.Group;
 
 // DRUMS ONLY
-public abstract class DisplayUnit extends Group{
+public abstract class DisplayUnit extends NoteUnit{
 	// ABSTRACT CLASS for the DisplayNote, and DisplayChord
 	
 	// All the instance variables which are common to both DisplayNote and DisplayChord
-	double width;
 	double top;
 	double bottom;
 	double height;
-	double spacingType;
 	int position;
 	
 	public double getWidth() {
