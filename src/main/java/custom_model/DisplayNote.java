@@ -241,4 +241,8 @@ public class DisplayNote extends DisplayUnit{
 			
 		}
 	}
+	
+	public void toggleHighlight() {
+		
+	}
 }
