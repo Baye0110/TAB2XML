@@ -68,19 +68,19 @@ public class TabMeasure extends MusicMeasure {
 			}
 			
 			int string = currentNote.getNotation().getString();
-			System.out.println("stem created");
 			if (unitParts.size() == 1) {
 				double type = currentNote.getType() != 0 ? currentNote.getType() : 0.5;
 				if (currentNote.getGrace()) {
-					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size*0.65, type, currentNote.getGrace(), false, this.measureNum);
+					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size*0.65, type, true, false, this.measureNum);
 					boxedUnit.setTranslateY(size * 0.35);
 				}
 				else {
-					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size, type, currentNote.getGrace(), false, this.measureNum);
+					System.out.println(currentNote.getNotation().getFret() + ": " + currentNote.getNotation().getString());
+					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size, type, false, false, this.measureNum);
 				}
 			}
 			else {
-				boxedUnit = new BoxedChord(size, unitParts, this.measureNum);
+				boxedUnit = new BoxedChord(size, unitParts, this.measureNum, unitParts.get(0).getGrace());
 				for (Note note: unitParts) {
 					if (note.getNotation().getString() < string) {
 						string = note.getNotation().getString();
@@ -209,6 +209,7 @@ public class TabMeasure extends MusicMeasure {
 			currLabel.setTranslateX(current);
 			
 			// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
+			System.out.println("is grace: " + currLabel.grace + " and fret" + currLabel.noteNum);
 			if (!currLabel.grace) {
 				this.stems.get(stemNum).setTranslateX(current + (currLabel.minWidth(0)/2));
 				stemNum ++;

@@ -18,7 +18,7 @@ public class BoxedText extends BoxedUnit{
 	BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure) {
 		// Create the actual textbox with the given number in "String text" argument
 		this.label = new Text(text);
-		label.setFont(Font.font(size*0.85));	// Set the font size 
+		label.setFont(Font.font(size*0.88));	// Set the font size 
 		
 		// Set the position of text based on the padding on the top and on the sides of the box
 		label.setX((size + PADDING_LEFT - label.minWidth(0))/2.00);
