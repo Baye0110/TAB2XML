@@ -92,7 +92,11 @@ public class TabMeasure extends MusicMeasure {
 			
 		}
 		// Get the whole width of the measure (added a little bit of padding)
-		this.minWidth = currentDistance + labels.get(0).minWidth(0)/2;
+		try {
+			this.minWidth = currentDistance + labels.get(0).minWidth(0)/2;
+		}catch(Exception e) {
+			System.out.println("Invalid input");
+		}
 		
 		// Create all the staff lines representing the strings.
 		this.barLines = new ArrayList<Line>();
