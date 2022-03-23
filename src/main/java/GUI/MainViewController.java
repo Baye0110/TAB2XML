@@ -8,8 +8,10 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -31,6 +33,7 @@ import converter.measure.TabMeasure;
 import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
+import custom_component_data.Tied;
 import custom_model.SheetScore;
 import javafx.application.Application;
 import javafx.concurrent.Task;
@@ -57,6 +60,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import models.measure.note.notations.Slide;
 import utility.Range;
 import utility.Settings;
 
@@ -355,7 +359,7 @@ public class MainViewController extends Application {
 			exit.setTranslateX(1100);
 			
 			Score score = new Score(converter.getMusicXML());
-			SheetScore sheet = new SheetScore(score, 18, 1050);
+			SheetScore sheet = new SheetScore(score, 10, 1050);
 			sheet.setTranslateX(50);
 			
 			ScrollPane sp = new ScrollPane();
@@ -365,6 +369,14 @@ public class MainViewController extends Application {
 			sp.setMaxHeight(600);
 			sp.setMinHeight(sheet.getChildren().get(0).minHeight(0)+50);
 			
+			TextField goToMeasure = new TextField("1");
+			Label measureLabel = new Label("Go to Measure: ");
+			measureLabel.setTranslateX(700);
+			measureLabel.setFont(Font.font(15));
+			goToMeasure.setTranslateX(840);
+			goToMeasure.setMaxWidth(80);
+			Button goButton = new Button("Go!");
+			goButton.setTranslateX(930);
 			
 			Pane PlayPane = new Pane();
 			
@@ -373,6 +385,9 @@ public class MainViewController extends Application {
 			PlayPane.getChildren().add(tempoInput);
 			PlayPane.getChildren().add(pause);
 			PlayPane.getChildren().add(exit);
+			PlayPane.getChildren().add(goToMeasure);
+			PlayPane.getChildren().add(measureLabel);
+			PlayPane.getChildren().add(goButton);
 			
 			PlayPane.setTranslateY(25);
 			VBox root = new VBox(sp, PlayPane);
@@ -388,22 +403,87 @@ public class MainViewController extends Application {
 			List<Note> noteList = new ArrayList<Note>();
 			
 			String stringInstrument ="";
-			
+			System.out.println("S0: " + listner.getPattern().toString());
 			for(Measure measures: score.getParts().get(0).getMeasures()) {
 				for(Note notes: measures.getNotes()) {
 					noteList.add(notes);
 				}
 			}
 			
+			String[] stepToNoteMap = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+			
 			if(score.getParts().get(0).getMeasures().get(0).getTab()) {
 				int count = 0;
+				
 				for(Token tokens: listner.getPattern().getTokens()) {
 					if(tokens.getType() == TokenType.NOTE) {
-						if(noteList.get(count).getChord()) {
-							stringInstrument += "+" + tokens;
-						}else {
-							stringInstrument += " " + tokens;
+								
+						double graceTime = 0.0;
+						Note current = noteList.get(count);
+						while (current.getGrace()) {
+							int stepIndex = mapToNote(current.getStep(), current.getAlter());
+							int octave = current.getOctave() - (stepIndex < 0 ? 1 : 0);
+							stringInstrument += " " + stepToNoteMap[stepIndex < 0 ? 11 : stepIndex % 12] + octave + "O.";
+							graceTime += (double)1/96;
+							current = noteList.get(++count);
 						}
+						
+						String duration = mapToDuration(current.getType());
+						if (count > 0 && noteList.get(count - 1).getGrace()) {
+							double durationCalculation = 1.0/current.getType();
+							double dotAddition = durationCalculation;
+							for (int i = 0; i < current.getDot(); i++) {
+								dotAddition /= 2.0;
+								durationCalculation += dotAddition;
+							}
+							durationCalculation -= graceTime;
+							duration = "/" + durationCalculation;
+						}
+						else {
+							for (int i = 0; i < current.getDot(); i++) {
+								duration += ".";
+							}
+						}
+						
+						List<Tied> tieds = current.getNotation().getTieds();
+						if (tieds.size() > 0) {
+							if (tieds.get(0).getType().equals("start") || (tieds.size() > 1 && tieds.get(1).getType().equals("start")) ) {
+								duration += "-";
+								System.out.println("Start the vote!");
+							}
+							if (tieds.get(0).getType().equals("stop") || (tieds.size() > 1 && tieds.get(1).getType().equals("stop")) ) {
+								duration = "-" + duration;
+								System.out.println("Stop the vote!");
+							}
+						}
+						
+						String slideStart = "";
+						String slideStop = "";
+						List<custom_component_data.Slide> slides = current.getNotation().getSlides();
+						if (slides.size() > 0 && slides.get(0).getType().equals("start")) {
+							int countAfterSlide = count + 1;
+							while(noteList.get(countAfterSlide).getNotation().getSlides().size() > 0 && !noteList.get(countAfterSlide).getNotation().getSlides().get(0).getType().equals("stop")) {
+								countAfterSlide ++;
+							}
+							stringInstrument += developSlideString(current, noteList.get(countAfterSlide));
+							
+//							if (slides.get(0).getType().equals("start")) {
+//								slideStart += " :CE(65,127) :CE(5,64)";
+//							}
+//							else if (slides.get(0).getType().equals("stop")) {
+//								slideStop += " :CE(65,0)";
+//							}
+						}
+									
+						int stepIndex = mapToNote(current.getStep(), current.getAlter());
+						int octave = current.getOctave() - (stepIndex < 0 ? 1 : 0);
+						
+						if(noteList.get(count).getChord()) {
+							stringInstrument += "+" + stepToNoteMap[stepIndex < 0 ? 11 : stepIndex % 12] + octave + duration + "A90";
+						}else {
+							stringInstrument += slideStart + " " + stepToNoteMap[stepIndex < 0 ? 11 : stepIndex % 12] + octave + duration + "A90" + slideStop;
+						}
+						
 						count++;
 					}else {
 						stringInstrument += " " + tokens;
@@ -419,32 +499,97 @@ public class MainViewController extends Application {
 				}
 			}else {
 				
-				String drumSet ="";
+				String drumSet = "V9 ";
 				int countDrum = 0;
-				for(Token tokens: listner.getPattern().getTokens()) {
-					if(tokens.getType() == TokenType.NOTE) {
-						if(noteList.get(countDrum).getChord()) {
-							
-							while(drumSet.charAt(drumSet.length() - 1) != ']') {
-								drumSet = drumSet.substring(0, drumSet.length() - 1);
+				
+				for (Measure m: score.getParts().get(0).getMeasures()) {
+					for (int i = 0; i < m.getNotes().size(); i++) {
+						Note n = m.getNotes().get(i);
+						if (i + 1 < m.getNotes().size() && m.getNotes().get(i+1).getChord()) {
+							String instrumentName = Integer.toString(score.getParts().get(0).getInstruments().get(n.getInstrumentID()).getMidiUnpitched() - 1);					
+							String duration = mapToDuration(n.getType());
+							for (int dot = 0; dot < n.getDot(); dot++) {
+								duration += ".";
+							}
+							drumSet += instrumentName + duration + "+";
+						}
+						else {
+							double graceTime = 0.0;
+							while (n.getGrace()) {
+								drumSet += Integer.toString(score.getParts().get(0).getInstruments().get(n.getInstrumentID()).getMidiUnpitched() - 1) + "X.A90 ";
+								graceTime += (double)1/48;
+								n = m.getNotes().get(++i);
 							}
 							
-							drumSet += "+" + tokens;
-						}else {
-							drumSet += " " + tokens;
+							String duration = mapToDuration(n.getType());
+							if (i > 0 && noteList.get(i - 1).getGrace()) {
+								double durationCalculation = 1.0/n.getType();
+								double dotAddition = durationCalculation;
+								for (int dot = 0; dot < n.getDot(); dot++) {
+									dotAddition /= 2.0;
+									durationCalculation += dotAddition;
+								}
+								durationCalculation -= graceTime;
+								duration = "/" + durationCalculation;
+							}
+							else {
+								for (int dot = 0; dot < n.getDot(); dot++) {
+									duration += ".";
+								}
+							}
+							
+							if (n.getRest()) {
+								drumSet += "R" + duration + " ";
+							}
+							else {
+								String instrumentName = Integer.toString(score.getParts().get(0).getInstruments().get(n.getInstrumentID()).getMidiUnpitched() - 1);
+								drumSet += instrumentName + duration + "A90 ";
+							}
 						}
-						countDrum++;
-					}else {
-						drumSet += " " + tokens;
+						System.out.println("left: " + (noteList.size() - i + 1));
 					}
+					
+					drumSet += "| ";
 				}
+				
+//				for(Token tokens: listner.getPattern().getTokens()) {
+//					if(tokens.getType() == TokenType.NOTE) {
+//						if (noteList.get(countDrum).getRest()) {
+//							drumSet += tokens + " ";
+//						}
+//						else if(countDrum + 1 < noteList.size() && noteList.get(countDrum + 1).getChord()) {
+////							while(drumSet.charAt(drumSet.length() - 1) != ']') {
+////								drumSet = drumSet.substring(0, drumSet.length() - 1);
+////							}
+//							
+//							String instrumentName = Integer.toString(score.getParts().get(0).getInstruments().get(noteList.get(countDrum).getInstrumentID()).getMidiUnpitched());							
+//							drumSet += instrumentName + "+";
+//						}
+//						else {
+//							String duration = mapToDuration(noteList.get(countDrum).getType());
+//							if (noteList.get(countDrum).getGrace()) {
+//								duration = "O.";
+//							} else {
+//								for (int dot = 0; dot < noteList.get(countDrum).getDot(); dot++) {
+//									duration += ".";
+//								}
+//							}
+//							
+//							String instrumentName = Integer.toString(score.getParts().get(0).getInstruments().get(noteList.get(countDrum).getInstrumentID()).getMidiUnpitched());							
+//							drumSet += instrumentName + duration + " ";
+//						}
+//						countDrum++;
+//					} else if (!(tokens.getType() == TokenType.INSTRUMENT)){
+//						drumSet += tokens + " ";
+//					}
+//					System.out.println(tokens.toString() + countDrum);
+//				}
 
 				
 				System.out.println("S1: " + drumSet);
-				drumString = "V9 " + drumSet.substring(7);
-				musicXMLParttern = new Pattern(drumString);
+				musicXMLParttern = new Pattern(drumSet);
 				instrument_type = 3;
-				System.out.println("s2:" + drumString);
+				System.out.println("s2:" + drumSet);
 
 			}
 			
@@ -503,20 +648,25 @@ public class MainViewController extends Application {
 			});
 			
 
-			exit.setOnAction(e -> {window.close();
-			if(player.getManagedPlayer().isPlaying()) {
-				player.getManagedPlayer().finish();
-			}
-				System.out.println("preview windows exited");
+			exit.setOnAction(e -> {
+				window.close();
+				if(player.getManagedPlayer().isPlaying()) {
+					player.getManagedPlayer().finish();
+				}
+					System.out.println("preview windows exited");
 			});
 			window.show();
 			window.setOnHiding(e -> {
 				if(player.getManagedPlayer().isPlaying()) {
-				player.getManagedPlayer().finish();
-				
-			}
+					player.getManagedPlayer().finish();
+				}
 				System.out.println("preview windows exited");
-				});
+			});
+			
+			goButton.setOnAction(e -> {
+				double valToSet = sheet.getMeasurePosition(Integer.parseInt(goToMeasure.getText())) / sheet.getHeight();
+				sp.setVvalue(valToSet);
+			});
 			
 		} catch (Exception e) {
 			Logger logger = Logger.getLogger(getClass().getName());
@@ -524,6 +674,74 @@ public class MainViewController extends Application {
 		}
 		// converter.getMusicXML() returns the MusicXML output as a String
 		
+	}
+	
+	public static String mapToDuration(int type) {
+		String s = null;
+		
+		switch(type) {
+		case 1:
+			s = "W";
+			break;
+		case 2:
+			s = "H";
+			break;
+		case 4:
+			s = "Q";
+			break;
+		case 8:
+			s = "I";
+			break;
+		case 16: 
+			s = "S";
+			break;
+		case 32:
+			s = "T";
+			break;
+		case 64:
+			s = "X";
+			break;
+		case 128:
+			s = "O";
+			break;
+		default:
+			s = "Q";
+		}
+			
+		return s;
+	}
+	
+	public int mapToNote(char step, int alter) {
+		HashMap<Character, Integer> mapping = new HashMap<>();
+		mapping.put('C', 0);
+		mapping.put('D', 2);
+		mapping.put('E', 4);
+		mapping.put('F', 5);
+		mapping.put('G', 7);
+		mapping.put('A', 9);
+		mapping.put('B', 11);
+		
+		int note = mapping.get(step) + alter;
+		return note;
+	}
+	
+	public String developSlideString(Note start, Note end) {
+		String slide = "";
+		
+		int startNote = (mapToNote(start.getStep(), start.getAlter()) + 12 * start.getOctave());
+		int endNote = (mapToNote(end.getStep(), end.getAlter()) + 12 * end.getOctave());
+		double durationCalculation = 1.0/start.getType();
+		double dotAddition = durationCalculation;
+		for (int i = 0; i < start.getDot(); i++) {
+			dotAddition /= 2.0;
+			durationCalculation += dotAddition;
+		}
+		double steps = endNote - startNote;
+		for (int i = startNote; i < endNote; i++) {
+			slide += " " + i + "/" + (durationCalculation/steps);
+		}
+		
+		return slide;
 	}
 	
 	public static void unImplementedFunctionOnClick(String functionName, String functionDesc) {

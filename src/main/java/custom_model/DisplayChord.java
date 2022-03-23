@@ -148,4 +148,8 @@ public class DisplayChord extends DisplayUnit{
 		
 		
 	}
+	
+	public void toggleHighlight() {
+		
+	}
 }
