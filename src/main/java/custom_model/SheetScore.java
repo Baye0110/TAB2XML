@@ -15,6 +15,8 @@ import javafx.scene.text.TextAlignment;
 // For ALL INSTRUMENTS
 public class SheetScore extends VBox{
 
+	List<ScoreLine> lines;
+	
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 
 	
@@ -25,6 +27,9 @@ public class SheetScore extends VBox{
 	 * @param pageWidth		The width of the page.
 	 */
 	public SheetScore(Score score, double lineSize, double pageWidth) {
+		MusicMeasure.measureCount = 0;
+		
+		this.lines = new ArrayList<>();
 		
 		// Creates an invisible rectangle to add empty space to the top.
 		Rectangle topBuffer = new Rectangle(pageWidth, lineSize * 2);
@@ -54,6 +59,7 @@ public class SheetScore extends VBox{
 			 */
 	        if (length >= pageWidth) {
 	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+	        	this.lines.add(sl1);
 	        	// Reset the cumulated ArrayList with the newly 'mGUI' as its first element and initialize the length
 	        	cumulated = new ArrayList<>();
 	        	cumulated.add(mGUI);
@@ -67,6 +73,7 @@ public class SheetScore extends VBox{
 	        else if (length + mGUI.minWidth >= pageWidth) {
 	        	cumulated.add(mGUI);
 	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+	        	this.lines.add(sl1);
 	        	// reset the cumulated array, and set the length to 0
 	        	cumulated = new ArrayList<>();
 	        	length = 0;
@@ -87,6 +94,7 @@ public class SheetScore extends VBox{
 		 */
 		if (!cumulated.isEmpty()) {
 			ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+			this.lines.add(sl1);
 			this.getChildren().add(sl1);
 		}
 		
@@ -98,5 +106,25 @@ public class SheetScore extends VBox{
 		
 		// Set the spacing between each line in the music.
 		this.setSpacing(lineSize * 2.5);
+	}
+	
+	
+	public double getMeasurePosition(int measureNum) {
+		double pos = 0;
+		
+		boolean measureFound = false;
+		for (int i = 0; i < this.lines.size() && !measureFound; i++) {
+			for (MusicMeasure m: this.lines.get(i).measures) {
+				if (m.measureNum == measureNum) {
+					measureFound = true;
+					break;
+				}
+			}
+			if (!measureFound) {
+				pos += this.lines.get(i).minHeight(0) + this.getSpacing() + 8;
+			}
+		}
+		
+		return pos;
 	}
 }
