@@ -57,6 +57,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import models.measure.barline.Repeat;
 import utility.Range;
 import utility.Settings;
 
@@ -382,7 +383,7 @@ public class MainViewController extends Application {
 			StaccatoParserListener listner = new StaccatoParserListener();
 			MusicXmlParser parser = new MusicXmlParser();
 			parser.addParserListener(listner);
-						
+		
 			parser.parse(converter.getMusicXML());
 
 			List<Note> noteList = new ArrayList<Note>();
@@ -451,8 +452,7 @@ public class MainViewController extends Application {
 			if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
 				tempoSpeed = Integer.parseInt(tempoInput.getText());
 			}
-			
-			
+
 			play.setOnAction(e -> {
 				// set tempo
 				if(tempoSpeed != Integer.parseInt(tempoInput.getText())) {
