@@ -11,8 +11,7 @@ public class RepeatBarLine extends Group {
 	
 	//constructor of gui element
 	RepeatBarLine(int lineSpacing, int numOfLines) {
-		Group gr = new Group();
-		int n = 50;
+		int n = numOfLines * lineSpacing;
 		
 		//drawing vertical lines
 		Line v1 = new Line();
@@ -22,7 +21,7 @@ public class RepeatBarLine extends Group {
 		v1.setEndY(n- lineSpacing);
 		v1.setStrokeWidth(2);
 		
-		gr.getChildren().add(v1);
+		this.getChildren().add(v1);
 		
 		//the second line has a higher Stroke Width
 		Line v2 = new Line();
@@ -32,7 +31,7 @@ public class RepeatBarLine extends Group {
 		v2.setEndY(n - lineSpacing);
 		v2.setStrokeWidth(5);
 		
-		gr.getChildren().add(v2);
+		this.getChildren().add(v2);
 		
 		//drawing the first dot (upper dot)
 		 Circle circle = new Circle();
@@ -41,7 +40,7 @@ public class RepeatBarLine extends Group {
 		 circle.setRadius(5);
 		 circle.setFill(Color.BLACK);
 
-		 gr.getChildren().add(circle);
+		 this.getChildren().add(circle);
 		 
 		 //drawing the second dot
 		 Circle circle2 = new Circle();
@@ -50,7 +49,7 @@ public class RepeatBarLine extends Group {
 		 circle2.setRadius(5);
 		 circle2.setFill(Color.BLACK);
 		 
-		 gr.getChildren().add(circle2);
+		 this.getChildren().add(circle2);
 	}
 	
 			
