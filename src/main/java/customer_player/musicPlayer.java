@@ -59,7 +59,7 @@ public class musicPlayer {
 			tempoSpeed = Integer.parseInt(tempoInput);
 		}
 		
-		if(tempoSpeed < 0) {
+		if(tempoSpeed <= 0) {
 			System.out.println("The tempo should not be lower than 0");
 			System.out.println("The tempo has been rechanged to 60 by default");
 			tempoSpeed = 60;
