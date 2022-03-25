@@ -42,7 +42,7 @@ public class musicPlayer {
 		parser.parse(s);	
 		setNoteList();
 		SetInstrumentType();
-		setMusicXMLPatern();
+		setInstrument();
 	}
 	public void setNoteList() {
 		for(Measure measures: score.getParts().get(0).getMeasures()) {
@@ -57,7 +57,7 @@ public class musicPlayer {
 		}
 		
 		musicXMLParttern.setTempo(tempoSpeed);
-		setInstrument();
+		
 		if(instrument_type == 1) {
 			System.out.println("Bass is playing");
 		}else if(instrument_type == 2) {
@@ -107,13 +107,6 @@ public class musicPlayer {
 	public void finish() {
 		player.getManagedPlayer().finish();
 	}
-	public void setMusicXMLPatern() {
-		if(instrument_type == 1 || instrument_type == 2) {
-			musicXMLParttern = new Pattern(stringInstrument);
-		}else if(instrument_type == 3) {
-			musicXMLParttern = new Pattern(drumSet);
-		}
-	}
 	
 	//1:BASS 2:GUITAR 3:DRUMS
 	public void SetInstrumentType() {
@@ -133,8 +126,10 @@ public class musicPlayer {
 	
 	public void setInstrument() {
 		if(instrument_type == 1) {
+			musicXMLParttern = new Pattern(stringInstrument);
 			musicXMLParttern.setInstrument("Acoustic_Bass");
 		}else if(instrument_type ==2) {
+			musicXMLParttern = new Pattern(stringInstrument);
 			musicXMLParttern.setInstrument("Guitar");
 		}else if(instrument_type == 3) {
 			musicXMLParttern = new Pattern(drumSet);
