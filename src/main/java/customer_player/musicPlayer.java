@@ -51,9 +51,18 @@ public class musicPlayer {
 			}
 		}
 	}
+	public int getTempo() {
+		return this.tempoSpeed;
+	}
 	public void play(String tempoInput) {
 		if(tempoSpeed != Integer.parseInt(tempoInput)) {
 			tempoSpeed = Integer.parseInt(tempoInput);
+		}
+		
+		if(tempoSpeed < 0) {
+			System.out.println("The tempo should not be lower than 0");
+			System.out.println("The tempo has been rechanged to 60 by default");
+			tempoSpeed = 60;
 		}
 		
 		musicXMLParttern.setTempo(tempoSpeed);

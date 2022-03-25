@@ -382,7 +382,7 @@ public class MainViewController extends Application {
 				System.out.println("String1: " + player.toString());
 				player.play(tempoInput.getText());
 				System.out.println("String2: " + player.toString());
-				System.out.println("The tempoSpeed is: " + tempoInput.getText());
+				System.out.println("The tempoSpeed is: " + player.getTempo());
 			});
 			
 			
