@@ -380,55 +380,27 @@ public class MainViewController extends Application {
 			
 			play.setOnAction(e -> {
 				System.out.println("String1: " + player.toString());
-					if(player.getInstrumentType() == 1) {
-						window.setTitle("Bass is playing");
-					}else if(player.getInstrumentType() == 2){
-						window.setTitle("Guitar is playing");		
-					}else if(player.getInstrumentType() == 3){
-						window.setTitle("Drum is playing");	
-					}
-					
-					System.out.println("String2: " + player.toString());
-				if(player.isPaused()) {
-					player.resume();
-					System.out.println("Music is resumed");
-				}else if(player.isPlaying()) {
-					System.out.println("Music is Playing");
-				}else {
-					player.play(tempoInput.getText());
-				}
-				System.out.println("String3: " + player.toString());
+				player.play(tempoInput.getText());
+				System.out.println("String2: " + player.toString());
 				System.out.println("The tempoSpeed is: " + tempoInput.getText());
 			});
 			
 			
 			pause.setOnAction(e -> {
-				if(player.isPlaying()) {
-					player.pause();
-					window.setTitle("Music Paused");
-					System.out.println("Music paused");
-				}else if(player.isFinished()){
-					window.setTitle("Music sheet");
-					System.out.println("playing a music first");
-				}else {
-					window.setTitle("Music sheet");
-					System.out.println("playing a music first");
-				}
+				player.pause();
 			});
 			
 
 			exit.setOnAction(e -> {
+				player.exit();
 				window.close();
-				if(player.isPlaying()) {
-					player.finish();
-				}
-					System.out.println("preview windows exited");
+				System.out.println("preview windows exited");
 			});
+			
 			window.show();
+			
 			window.setOnHiding(e -> {
-				if(player.isPlaying()) {
-					player.finish();
-				}
+				player.exit();
 				System.out.println("preview windows exited");
 			});
 			

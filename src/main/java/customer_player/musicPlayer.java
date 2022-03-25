@@ -52,7 +52,6 @@ public class musicPlayer {
 		}
 	}
 	public void play(String tempoInput) {
-		player = new Player();
 		if(tempoSpeed != Integer.parseInt(tempoInput)) {
 			tempoSpeed = Integer.parseInt(tempoInput);
 		}
@@ -67,7 +66,14 @@ public class musicPlayer {
 			System.out.println("Drum is playing");
 		}
 		
-		player.delayPlay(0, musicXMLParttern.toString());
+		if(isPaused()) {
+			resume();
+			System.out.println("Music is resumed");
+		}else if(isPlaying()) {
+			System.out.println("Music is Playing");
+		}else {
+			player.delayPlay(0, musicXMLParttern.toString());
+		}
 	}
 	
 	public boolean isPaused() {
@@ -80,9 +86,22 @@ public class musicPlayer {
 		player.getManagedPlayer().resume();
 	}
 	public void pause() {
-		player.getManagedPlayer().pause();
+		if(isPlaying()) {
+			player.getManagedPlayer().pause();
+			System.out.println("Music paused");
+		}else if(isFinished()){
+			System.out.println("playing a music first");
+		}else {
+			System.out.println("playing a music first");
+		}
+	}
+	public void exit() {
+		if(isPlaying()) {
+			finish();
+		}
 	}
 	public boolean isFinished() {
+		player = new Player();
 		return player.getManagedPlayer().isFinished();
 	}
 	public void finish() {
