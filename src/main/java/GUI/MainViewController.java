@@ -20,9 +20,6 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import converter.Converter;
 import converter.measure.TabMeasure;
-import custom_component_data.Score;
-import custom_model.SheetScore;
-import customer_player.musicPlayer;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -36,11 +33,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -315,100 +310,19 @@ public class MainViewController extends Application {
 	
 	@FXML
 	private void previewButtonHandle() throws Exception {
-	
 		System.out.println("Preview Button Clicked!");
+		Parent root;
 		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("GUI/previewGUI.fxml"));
+			root = loader.load();
+			PreviewController controller = loader.getController();
+			controller.setMainViewController(this);
+			controller.update();
+			convertWindow = this.openNewWindow(root, "Music Sheet");
+			convertWindow.setOnHidden(e->{
+				controller.exitHandler();
+			});
 	
-			Stage window = new Stage();
-			window.setTitle("Music sheet");
-			this.tempoInput = new TextField("60");
-			Label tempoLabel = new Label("Tempo:");
-			
-			Button play = new Button("Play");
-			Button pause = new Button("Pause");
-			Button exit = new Button("Exit");
-			
-			play.setTranslateX(100);
-			
-			tempoLabel.setTranslateX(150);
-			tempoLabel.setFont(new Font(15));
-			
-			tempoInput.setTranslateX(200);
-			
-			
-			pause.setTranslateX(500);
-			
-			exit.setTranslateX(1100);
-			
-			Score score = new Score(converter.getMusicXML());
-			SheetScore sheet = new SheetScore(score, 10, 1050);
-			sheet.setTranslateX(50);
-			
-			ScrollPane sp = new ScrollPane();
-			sp.setContent(sheet);
-			sp.setTranslateX(50);
-			sp.setMaxWidth(1150);
-			sp.setMaxHeight(600);
-			sp.setMinHeight(sheet.getChildren().get(0).minHeight(0)+50);
-			
-			TextField goToMeasure = new TextField("1");
-			Label measureLabel = new Label("Go to Measure: ");
-			measureLabel.setTranslateX(700);
-			measureLabel.setFont(Font.font(15));
-			goToMeasure.setTranslateX(840);
-			goToMeasure.setMaxWidth(80);
-			Button goButton = new Button("Go!");
-			goButton.setTranslateX(930);
-			
-			Pane PlayPane = new Pane();
-			
-			PlayPane.getChildren().add(play);
-			PlayPane.getChildren().add(tempoLabel);
-			PlayPane.getChildren().add(tempoInput);
-			PlayPane.getChildren().add(pause);
-			PlayPane.getChildren().add(exit);
-			PlayPane.getChildren().add(goToMeasure);
-			PlayPane.getChildren().add(measureLabel);
-			PlayPane.getChildren().add(goButton);
-			
-			PlayPane.setTranslateY(25);
-			VBox root = new VBox(sp, PlayPane);
-			Scene scene = new Scene(root, 1250, 700);
-			window.setScene(scene);	
-			
-			musicPlayer player = new musicPlayer(converter.getMusicXML());
-			
-			play.setOnAction(e -> {
-				System.out.println("String1: " + player.toString());
-				player.play(tempoInput.getText());
-				System.out.println("String2: " + player.toString());
-				System.out.println("The tempoSpeed is: " + player.getTempo());
-			});
-			
-			
-			pause.setOnAction(e -> {
-				player.pause();
-			});
-			
-
-			exit.setOnAction(e -> {
-				player.exit();
-				window.close();
-				System.out.println("preview windows exited");
-			});
-			
-			window.show();
-			
-			window.setOnHiding(e -> {
-				player.exit();
-				System.out.println("preview windows exited");
-			});
-			
-			goButton.setOnAction(e -> {
-				double valToSet = sheet.getMeasurePosition(Integer.parseInt(goToMeasure.getText())) / sheet.getHeight();
-				sp.setVvalue(valToSet);
-			});
-			
 		} catch (Exception e) {
 			Logger logger = Logger.getLogger(getClass().getName());
 			logger.log(Level.SEVERE, "Failed to create new Window.", e);

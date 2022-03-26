@@ -65,25 +65,25 @@ public class musicPlayer {
 			alert.setContentText("The tempo should bigger than 0");
 			alert.setHeaderText(null);
 			alert.show();
-		}
-		
-		musicXMLParttern.setTempo(tempoSpeed);
-		
-		if(instrument_type == 1) {
-			System.out.println("Bass is playing");
-		}else if(instrument_type == 2) {
-			System.out.println("Guitar is playing");
-		}else if(instrument_type == 3) {
-			System.out.println("Drum is playing");
-		}
-		
-		if(isPaused()) {
-			resume();
-			System.out.println("Music is resumed");
-		}else if(isPlaying()) {
-			System.out.println("Music is Playing");
+			System.out.println("please set valid tempo!");
 		}else {
-			player.delayPlay(0, musicXMLParttern.toString());
+			musicXMLParttern.setTempo(tempoSpeed);
+			if(instrument_type == 1) {
+				System.out.println("Bass is playing");
+			}else if(instrument_type == 2) {
+				System.out.println("Guitar is playing");
+			}else if(instrument_type == 3) {
+				System.out.println("Drum is playing");
+			}
+			
+			if(isPaused()) {
+				resume();
+				System.out.println("Music is resumed");
+			}else if(isPlaying()) {
+				System.out.println("Music is Playing");
+			}else {
+				player.delayPlay(0, musicXMLParttern.toString());
+			}
 		}
 	}
 	
