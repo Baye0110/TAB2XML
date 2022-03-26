@@ -18,6 +18,7 @@ import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_component_data.Tied;
+import javafx.scene.control.Alert;
 import nu.xom.ParsingException;
 import nu.xom.ValidityException;
 
@@ -59,10 +60,11 @@ public class musicPlayer {
 			tempoSpeed = Integer.parseInt(tempoInput);
 		}
 		
-		if(tempoSpeed <= 0) {
-			System.out.println("The tempo should not be lower than 0");
-			System.out.println("The tempo has been rechanged to 60 by default");
-			tempoSpeed = 60;
+		if (tempoSpeed <= 0) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("The tempo should bigger than 0");
+			alert.setHeaderText(null);
+			alert.show();
 		}
 		
 		musicXMLParttern.setTempo(tempoSpeed);
