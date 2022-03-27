@@ -46,7 +46,7 @@ public class PreviewController extends Application{
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score, 10, 1050);
 		 sp.setContent(sheet);
-		 player = new musicPlayer(mvc.converter.getMusicXML());
+		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
 	 }
 	
 	public void playHandler() {

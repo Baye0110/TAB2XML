@@ -18,6 +18,8 @@ import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_component_data.Tied;
+import custom_model.NoteUnit;
+import custom_model.SheetScore;
 import javafx.scene.control.Alert;
 import nu.xom.ParsingException;
 import nu.xom.ValidityException;
@@ -35,15 +37,18 @@ public class musicPlayer {
 	String[] stepToNoteMap = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	int instrument_type = -1;
 	int tempoSpeed = 60;
+	SheetScore sheet;
 	
-	public musicPlayer(String s) throws ParserConfigurationException, ValidityException, ParsingException, IOException {
-		this.score = new Score(s);
+	public musicPlayer(Score score, SheetScore sheet, String s) throws ParserConfigurationException, ValidityException, ParsingException, IOException {
+		this.score = score;
+		this.sheet = sheet;
 		listner = new StaccatoParserListener();
 		parser.addParserListener(listner); 
 		parser.parse(s);	
 		setNoteList();
 		SetInstrumentType();
 		setInstrument();
+		this.sheet.generateBasePlayTimings(score);
 	}
 	public void setNoteList() {
 		for(Measure measures: score.getParts().get(0).getMeasures()) {
@@ -68,6 +73,7 @@ public class musicPlayer {
 			System.out.println("please set valid tempo!");
 		}else {
 			musicXMLParttern.setTempo(tempoSpeed);
+			this.sheet.setTempoOnTimings(tempoSpeed);
 			if(instrument_type == 1) {
 				System.out.println("Bass is playing");
 			}else if(instrument_type == 2) {
@@ -76,12 +82,20 @@ public class musicPlayer {
 				System.out.println("Drum is playing");
 			}
 			
+			if (this.isFinished()) {
+				if (NoteUnit.pressed != null)
+					NoteUnit.pressed.toggleHighlight();
+				NoteUnit.pressed = null;
+			}
+			
 			if(isPaused()) {
 				resume();
+				this.sheet.startHighlight();
 				System.out.println("Music is resumed");
 			}else if(isPlaying()) {
 				System.out.println("Music is Playing");
 			}else {
+				this.sheet.startHighlight();
 				player.delayPlay(0, musicXMLParttern.toString());
 			}
 		}
@@ -99,6 +113,7 @@ public class musicPlayer {
 	public void pause() {
 		if(isPlaying()) {
 			player.getManagedPlayer().pause();
+			this.sheet.stopHighLight();
 			System.out.println("Music paused");
 		}else if(isFinished()){
 			System.out.println("playing a music first");
