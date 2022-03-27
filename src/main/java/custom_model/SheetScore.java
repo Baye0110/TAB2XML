@@ -6,6 +6,7 @@ import java.util.List;
 import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
+import custom_model.note.NoteUnit;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -188,8 +189,8 @@ public class SheetScore extends VBox{
 			notePressed = measureOfNote = 0;
 		}
 		else {
-			notePressed = NoteUnit.pressed.noteNum - 1;
-			measureOfNote = NoteUnit.pressed.measure - 1;
+			notePressed = NoteUnit.pressed.getNoteNum() - 1;
+			measureOfNote = NoteUnit.pressed.getMeasure() - 1;
 			NoteUnit.pressed.toggleHighlight();
 		}
 		

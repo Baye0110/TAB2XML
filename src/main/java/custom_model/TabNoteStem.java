@@ -1,5 +1,6 @@
 package custom_model;
 
+import custom_model.note.NoteTail;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;

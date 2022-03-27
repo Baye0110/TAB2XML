@@ -1,4 +1,4 @@
-package custom_model;
+package custom_model.note;
 
 import java.util.ArrayList;
 import java.util.List;

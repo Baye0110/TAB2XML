@@ -1,4 +1,4 @@
-package custom_model;
+package custom_model.note;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -21,6 +21,14 @@ abstract public class NoteUnit extends Group{
 	
 	public int getMeasure() {
 		return this.measure;
+	}
+	
+	public boolean getGrace() {
+		return this.grace;
+	}
+	
+	public double getSpacingType() {
+		return this.spacingType;
 	}
 	
 }

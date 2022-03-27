@@ -5,6 +5,7 @@ import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
+import custom_model.note.NoteUnit;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;

@@ -1,4 +1,4 @@
-package custom_model;
+package custom_model.note;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -15,7 +15,7 @@ public class BoxedText extends BoxedUnit{
 	Text label;
 	Rectangle container;
 	
-	BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure) {
+	public BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure) {
 		// Create the actual textbox with the given number in "String text" argument
 		this.label = new Text(text);
 		label.setFont(Font.font(size*0.88));	// Set the font size 

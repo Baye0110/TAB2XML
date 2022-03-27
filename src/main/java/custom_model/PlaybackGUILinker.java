@@ -2,6 +2,8 @@ package custom_model;
 
 import java.util.List;
 
+import custom_model.note.NoteUnit;
+
 public class PlaybackGUILinker extends Thread {
 	SheetScore sheet;
 	int measureOfNote;

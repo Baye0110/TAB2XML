@@ -5,6 +5,10 @@ import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
+import custom_model.note.BoxedChord;
+import custom_model.note.BoxedText;
+import custom_model.note.BoxedUnit;
+import custom_model.note.NoteUnit;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -211,13 +215,13 @@ public class TabMeasure extends MusicMeasure {
 			currLabel.setTranslateX(current);
 			
 			// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
-			if (!currLabel.grace) {
+			if (!currLabel.getGrace()) {
 				this.stems.get(stemNum).setTranslateX(current + (currLabel.minWidth(0)/2));
 				stemNum ++;
 			}
 				
-			current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.spacingType);
-			this.spacing += this.wholeDistance/currLabel.spacingType;
+			current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.getSpacingType());
+			this.spacing += this.wholeDistance/currLabel.getSpacingType();
 		}
 		
 		// add some extra padding for the end of the measure

@@ -1,4 +1,4 @@
-package custom_model;
+package custom_model.note;
 
 import javafx.scene.Group;
 
@@ -21,8 +21,12 @@ public abstract class DisplayUnit extends NoteUnit{
 		return this.position;
 	}
 	
-	public double getSpacingType() {
-		return this.spacingType;
+	public double getTop() {
+		return this.top;
+	}
+	
+	public double getHeight() {
+		return this.height;
 	}
 
 	public abstract void extendStaff(int positions, double height);

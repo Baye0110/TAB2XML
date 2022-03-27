@@ -1,4 +1,4 @@
-package custom_model;
+package custom_model.note;
 
 import custom_component_data.Note;
 import custom_model.notehead.NoteHead;

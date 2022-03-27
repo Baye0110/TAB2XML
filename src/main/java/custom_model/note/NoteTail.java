@@ -1,4 +1,4 @@
-package custom_model;
+package custom_model.note;
 
 import java.io.FileInputStream;
 import java.io.IOException;
