@@ -203,8 +203,6 @@ public class DisplayNote extends DisplayUnit{
 	 */
 	public void extendStaff(int positions, double height) {
 		for (int i = 0; i < (this.position - positions)/2; i ++) {
-			System.out.println(positions);
-			System.out.println("my_pos: " + this.position);
 			double start_x = this.preceding + (this.isNormalSide ? 0 - this.noteHeadWidth * 0.25 : this.noteHeadWidth * 0.75);
 			double end_x = start_x + this.noteHeadWidth * 1.5;
 			double pos_y = position%2 == 0 ? height * (0.5+i) : height * (1+i);

@@ -52,9 +52,11 @@ public class BoxedText extends BoxedUnit{
 				else {
 					this.toggleHighlight();
 					NoteUnit.pressed = this;
-					System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
 				}
 			});
+		} else {
+			this.measure = -1;
+			this.noteNum = -1;
 		}
 	}
 	
@@ -67,6 +69,9 @@ public class BoxedText extends BoxedUnit{
 			this.highlighted = true;
 			if (pressed != null) {
 				pressed.toggleHighlight();
+			}	
+			if (this.noteNum > -1) {
+				System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
 			}
 		}
 		else {
@@ -75,8 +80,6 @@ public class BoxedText extends BoxedUnit{
 			this.container.setStroke(null);
 			this.highlighted = false;
 		}
-		
-		
 		
 	}
 }

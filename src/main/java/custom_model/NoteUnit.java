@@ -7,10 +7,11 @@ abstract public class NoteUnit extends Group{
 	double width;
 	double spacingType;
 	boolean highlighted;
+	boolean grace;
 	int noteNum;
 	int measure;
 	
-	static NoteUnit pressed = null;
+	public static NoteUnit pressed = null;
 	
 	abstract public void toggleHighlight();
 	
@@ -21,6 +22,5 @@ abstract public class NoteUnit extends Group{
 	public int getMeasure() {
 		return this.measure;
 	}
-	
 	
 }

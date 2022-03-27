@@ -63,8 +63,6 @@ public class StaffMeasure extends MusicMeasure{
 			else 
 				currentUnit.setTranslateY(currentUnit.getTranslateY() + pos_y);
 			
-			System.out.println(currentUnit.height);
-			
 			//System.out.println(currentUnit.getPosition());
 			
 			currentDistance += currentUnit.getWidth() + wholeDistance/currentUnit.getSpacingType();

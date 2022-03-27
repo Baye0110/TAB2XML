@@ -44,7 +44,6 @@ public class BoxedChord extends BoxedUnit{
 			else {
 				this.toggleHighlight();
 				pressed = this;
-				System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
 			}
 		});
 	}
@@ -65,6 +64,7 @@ public class BoxedChord extends BoxedUnit{
 			if (originalPressed != null) {
 				originalPressed.toggleHighlight();
 			}
+			System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
 		}		
 	}
 }

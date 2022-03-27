@@ -23,6 +23,8 @@ abstract public class MusicMeasure extends Pane {
 	
 	// The barLines (the last one is always the barLine for the end of the staff)
 	List<Line> barLines;
+	// The notes
+	List<NoteUnit> notes;
 	
 	// The dimensions of the measure
 	double maxHeight;
