@@ -18,6 +18,7 @@ import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_component_data.Tied;
+import javafx.scene.control.Alert;
 import nu.xom.ParsingException;
 import nu.xom.ValidityException;
 
@@ -59,29 +60,30 @@ public class musicPlayer {
 			tempoSpeed = Integer.parseInt(tempoInput);
 		}
 		
-		if(tempoSpeed <= 0) {
-			System.out.println("The tempo should not be lower than 0");
-			System.out.println("The tempo has been rechanged to 60 by default");
-			tempoSpeed = 60;
-		}
-		
-		musicXMLParttern.setTempo(tempoSpeed);
-		
-		if(instrument_type == 1) {
-			System.out.println("Bass is playing");
-		}else if(instrument_type == 2) {
-			System.out.println("Guitar is playing");
-		}else if(instrument_type == 3) {
-			System.out.println("Drum is playing");
-		}
-		
-		if(isPaused()) {
-			resume();
-			System.out.println("Music is resumed");
-		}else if(isPlaying()) {
-			System.out.println("Music is Playing");
+		if (tempoSpeed <= 0) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("The tempo should bigger than 0");
+			alert.setHeaderText(null);
+			alert.show();
+			System.out.println("please set valid tempo!");
 		}else {
-			player.delayPlay(0, musicXMLParttern.toString());
+			musicXMLParttern.setTempo(tempoSpeed);
+			if(instrument_type == 1) {
+				System.out.println("Bass is playing");
+			}else if(instrument_type == 2) {
+				System.out.println("Guitar is playing");
+			}else if(instrument_type == 3) {
+				System.out.println("Drum is playing");
+			}
+			
+			if(isPaused()) {
+				resume();
+				System.out.println("Music is resumed");
+			}else if(isPlaying()) {
+				System.out.println("Music is Playing");
+			}else {
+				player.delayPlay(0, musicXMLParttern.toString());
+			}
 		}
 	}
 	
