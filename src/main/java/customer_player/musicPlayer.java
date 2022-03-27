@@ -26,7 +26,7 @@ public class musicPlayer {
 	List<Note> noteList = new ArrayList<Note>();
 	Score score;
 	StaccatoParserListener listner = new StaccatoParserListener();
-	MusicXmlParser parser = new MusicXmlParser();;
+	MusicXmlParser parser = new MusicXmlParser();
 	Player player = new Player();
 	org.jfugue.pattern.Pattern musicXMLParttern;
 	String stringInstrument ="";
@@ -110,7 +110,6 @@ public class musicPlayer {
 		}
 	}
 	public boolean isFinished() {
-		player = new Player();
 		return player.getManagedPlayer().isFinished();
 	}
 	public void finish() {
@@ -179,11 +178,9 @@ public class musicPlayer {
 				if (tieds.size() > 0) {
 					if (tieds.get(0).getType().equals("start") || (tieds.size() > 1 && tieds.get(1).getType().equals("start")) ) {
 						duration += "-";
-						System.out.println("Start the vote!");
 					}
 				if (tieds.get(0).getType().equals("stop") || (tieds.size() > 1 && tieds.get(1).getType().equals("stop")) ) {
 						duration = "-" + duration;
-						System.out.println("Stop the vote!");
 					}
 				}
 					
@@ -203,22 +200,26 @@ public class musicPlayer {
 //						else if (slides.get(0).getType().equals("stop")) {
 //							slideStop += " :CE(65,0)";
 //						}
-					}
-								
-					int stepIndex = mapToNote(current.getStep(), current.getAlter());
-					int octave = current.getOctave() - (stepIndex < 0 ? 1 : 0);
-					
-					if(noteList.get(count).getChord()) {
-						stringInstrument += "+" + stepToNoteMap[stepIndex < 0 ? 11 : stepIndex % 12] + octave + duration + "A90";
-					}else {
-						stringInstrument += slideStart + " " + stepToNoteMap[stepIndex < 0 ? 11 : stepIndex % 12] + octave + duration + "A90" + slideStop;
-					}
-					
-					count++;
-				}else {
-					stringInstrument += " " + tokens;
 				}
+				
+				
+					
+								
+				int stepIndex = mapToNote(current.getStep(), current.getAlter());
+				int octave = current.getOctave() - (stepIndex < 0 ? 1 : 0);
+				String timeMod = this.generateTimeModString(current.getTimeModification());
+				
+				if(noteList.get(count).getChord()) {
+					stringInstrument += "+" + stepToNoteMap[stepIndex < 0 ? 11 : stepIndex % 12] + octave + duration + timeMod + "A90";
+				}else {
+					stringInstrument += slideStart + " " + stepToNoteMap[stepIndex < 0 ? 11 : stepIndex % 12] + octave + duration + timeMod + "A90" + slideStop;
+				}
+				
+				count++;
+			}else {
+				stringInstrument += " " + tokens;
 			}
+		}
 	}
 	
 	public void setDrumSet() {
@@ -266,7 +267,6 @@ public class musicPlayer {
 						drumSet += instrumentName + duration + "A90 ";
 					}
 				}
-				System.out.println("left: " + (noteList.size() - i + 1));
 			}
 			
 			drumSet += "| ";
@@ -353,5 +353,14 @@ public class musicPlayer {
 	}
 	public List<Note> getNote(){
 		return this.noteList;
+	}
+	
+	public String generateTimeModString(HashMap<String, Integer> modification) {
+		String timeMod = "";
+		if (modification == null)
+			return timeMod;
+		
+		timeMod = "*" + modification.get("actual") + ":" + modification.get("normal");		
+		return timeMod;
 	}
 }
