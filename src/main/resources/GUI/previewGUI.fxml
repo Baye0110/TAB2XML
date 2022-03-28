@@ -2,10 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -15,7 +13,7 @@
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="666.0" BorderPane.alignment="CENTER">
             <children>
-            <ScrollPane fx:id="sp" layoutX="25.0" layoutY="30.0" prefHeight="536.0" prefWidth="1075.0">
+            <ScrollPane fx:id="sp" layoutX="25.0" layoutY="30.0" prefHeight="600.0" prefWidth="1075.0">
                <content> 
                </content>
                </ScrollPane>
@@ -23,40 +21,33 @@
                 <AnchorPane layoutX="12.0" layoutY="614.0" prefHeight="122.0" prefWidth="976.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0">
                     <children>
                         <HBox layoutY="11.0" spacing="5.0" AnchorPane.leftAnchor="690.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
-                           <children>
-                                <Label text="Tempo:">
-                                    <padding>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                    </padding>
-                                </Label>
-                                <TextField fx:id="tempoField" prefHeight="25.0" prefWidth="55.0" />                                
-                                <Button fx:id="playButton" mnemonicParsing="false" onAction="#playHandler" prefHeight="25.0" prefWidth="42.0" text="Play" />                                
-                            	<Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseHandler" prefHeight="25.0" prefWidth="50.0" text="Pause" />
-								<Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitHandler" prefHeight="25.0" prefWidth="50.0" text="Exit" />                            
-                            </children>
                             <padding>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </HBox>
                         <HBox layoutX="14.0" layoutY="8.0" spacing="5.0" AnchorPane.leftAnchor="14.0">
-                            <children>
-                                <Label text="Go To Measure">
-                                    <padding>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                    </padding>
-                                </Label>
-                                <TextField fx:id="gotoMeasureField" prefHeight="25.0" prefWidth="55.0" />                                
-                                <Button fx:id="goButton" mnemonicParsing="false" onAction="#goHandler" prefHeight="25.0" prefWidth="42.0" text="Go!" />                                                            </children>
                             <padding>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </HBox>
-                  <Separator layoutX="3.0" layoutY="56.0" prefHeight="11.0" prefWidth="970.0" />
-               <Button layoutX="862.0" layoutY="80.0" mnemonicParsing="false" onAction="#apply" prefHeight="23.0" prefWidth="100.0" text="Apply" />
-               <ChoiceBox fx:id="values" layoutX="744.0" layoutY="81.0" prefHeight="23.0" prefWidth="108.0" />
-               <Label layoutX="707.0" layoutY="85.0" text="value:" />
-               <ChoiceBox fx:id="Customize" layoutX="582.0" layoutY="81.0" prefHeight="23.0" prefWidth="108.0" />
-               <Label layoutX="534.0" layoutY="80.0" prefHeight="28.0" prefWidth="60.0" text="Display:" />
+                          <Label layoutX="19.0" layoutY="80.0" text="Go To Measure:">
+                              <padding>
+                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              </padding>
+                          </Label>
+                          <TextField fx:id="gotoMeasureField" layoutX="115.0" layoutY="80.0" prefHeight="25.0" prefWidth="55.0" />                                
+                          <Button fx:id="goButton" layoutX="175.0" layoutY="80.0" mnemonicParsing="false" onAction="#goHandler" prefHeight="25.0" prefWidth="42.0" text="Go!" />
+                          <Label layoutX="819.0" layoutY="80.0" text="Tempo:" >
+                              <padding>
+                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              </padding>
+                          </Label>
+                          <TextField fx:id="tempoField" layoutX="874.0" layoutY="80.0" prefHeight="25.0" prefWidth="55.0" />                                
+                          	<Button fx:id="playButton" layoutX="934.0" layoutY="80.0" mnemonicParsing="false" onAction="#playHandler" prefHeight="25.0" prefWidth="42.0" text="Play" />                                
+                      		<Button fx:id="pauseButton" layoutX="981.0" layoutY="80.0" mnemonicParsing="false" onAction="#pauseHandler" prefHeight="25.0" prefWidth="50.0" text="Pause" />
+							<Button fx:id="exitButton" layoutX="1036.0" layoutY="80.0" mnemonicParsing="false" onAction="#exitHandler" prefHeight="25.0" prefWidth="50.0" text="Exit" />
+                  			<Button fx:id="displayButton" layoutX="228.0" layoutY="80.0" mnemonicParsing="false" onAction="#displayHandler" prefHeight="25.0" text="Customize Display" />
+                  			<Button fx:id="exportButton" layoutX="351.0" layoutY="80.0" mnemonicParsing="false" onAction="#expotHandler" prefHeight="25.0" text="Export PDF" />
                     </children>
                 </AnchorPane>
             </children>
