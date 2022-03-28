@@ -29,9 +29,19 @@ public class Measure {
 	boolean percussion; // Is this a percussion instrument?
 	boolean tab; // Is this a TAB clef (for guitar/string instruments)?
 	
+	boolean isRepeatStart;
+	boolean isRepeatStop;
 	BarLine barLineLeft;
 	BarLine barLineRight;
 	List<Direction> directions;
+	
+	public boolean getIsRepeatStart() {
+		return this.isRepeatStart;
+	}
+	
+	public boolean getIsRepeatStop() {
+		return this.isRepeatStop;
+	}
 	
 	public BarLine getBarLineLeft() {
 		return this.barLineLeft;
@@ -180,13 +190,17 @@ public class Measure {
 			}
 			
 			NodeList barLines = measure.getElementsByTagName("barline");
+			this.isRepeatStart = this.isRepeatStop = false;
 			for (int i = 0; i < barLines.getLength(); i++) {
 				Element barLine = (Element) barLines.item(i);
 				if (barLine.getAttribute("location").equals("left")) {
 					this.barLineLeft = new BarLine(barLine);
+					this.isRepeatStart = true;
+					
 				}
 				else if (barLine.getAttribute("location").equals("right")) {
 					this.barLineRight = new BarLine(barLine);
+					this.isRepeatStop = true;
 				}
 			}
 			

@@ -5,6 +5,9 @@ import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
+import custom_model.note.DisplayChord;
+import custom_model.note.DisplayNote;
+import custom_model.note.DisplayUnit;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -59,11 +62,9 @@ public class StaffMeasure extends MusicMeasure{
 			
 			double pos_y = height*(measure.getStaffLines() + UPPER_PADDING-1.5) - (height/2)*currentUnit.getPosition();
 			if (notes.get(i).getRest())
-				currentUnit.setTranslateY(height*UPPER_PADDING + (height*(measure.getStaffLines()-1) - currentUnit.height)/2);
+				currentUnit.setTranslateY(height*UPPER_PADDING + (height*(measure.getStaffLines()-1) - currentUnit.getHeight())/2);
 			else 
 				currentUnit.setTranslateY(currentUnit.getTranslateY() + pos_y);
-			
-			System.out.println(currentUnit.height);
 			
 			//System.out.println(currentUnit.getPosition());
 			
@@ -75,7 +76,7 @@ public class StaffMeasure extends MusicMeasure{
 		this.minWidth = currentDistance;
 		
 		for (DisplayUnit note: this.noteUnits) {
-			this.maxHeight = note.getTranslateY() + note.top > this.maxHeight ? note.getTranslateY() + note.top : this.maxHeight;
+			this.maxHeight = note.getTranslateY() + note.getTop() > this.maxHeight ? note.getTranslateY() + note.getTop() : this.maxHeight;
 			this.getChildren().add(note);
 		}
 		
@@ -114,8 +115,8 @@ public class StaffMeasure extends MusicMeasure{
 		for (int i = 0; i < this.noteUnits.size(); i++) {
 			DisplayUnit currNote = this.noteUnits.get(i);
 			currNote.setTranslateX(current);
-			current += currNote.width + (this.wholeDistance/currNote.spacingType);
-			this.spacing += this.wholeDistance/currNote.spacingType;
+			current += currNote.getWidth() + (this.wholeDistance/currNote.getSpacingType());
+			this.spacing += this.wholeDistance/currNote.getSpacingType();
 		}
 		
 		for (int i = 0; i < this.barLines.size()-1; i++) {

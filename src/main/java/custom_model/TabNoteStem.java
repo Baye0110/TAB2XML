@@ -1,5 +1,6 @@
 package custom_model;
 
+import custom_model.note.NoteTail;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -65,7 +66,6 @@ public class TabNoteStem extends Group {
 		// For the number of dots specified, create the black circle at the appropriate position
 		for (int i = 0; i < dot; i++) {
 			Ellipse circle = new Ellipse(baseDotDistance*(i + 1), height/2 + (type <= 2 ? height: 0), dotRad, dotRad);
-			System.out.print(height*0.5 + baseDotDistance*(i+1));
 			this.getChildren().add(circle);
 		}
 		System.out.println("");

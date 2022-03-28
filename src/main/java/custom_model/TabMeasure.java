@@ -5,6 +5,10 @@ import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
+import custom_model.note.BoxedChord;
+import custom_model.note.BoxedText;
+import custom_model.note.BoxedUnit;
+import custom_model.note.NoteUnit;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -26,7 +30,6 @@ public class TabMeasure extends MusicMeasure {
 	// Store 2 objects:
 	//   1. labels = Store the textboxes with the numbers
 	//   2. stems  = Store the noteStems which are displayed under the staff
-	List<BoxedUnit> labels;
 	List<TabNoteStem> stems;
 	
 	/**
@@ -43,7 +46,7 @@ public class TabMeasure extends MusicMeasure {
 		List<Note> notes = m.getNotes();
 		
 		// Initialize the arrays
-		this.labels = new ArrayList<BoxedUnit>();
+		this.notes = new ArrayList<NoteUnit>();
 		this.stems = new ArrayList<TabNoteStem>();
 		
 		// initialize the height of the staff based on the number of lines
@@ -75,7 +78,6 @@ public class TabMeasure extends MusicMeasure {
 					boxedUnit.setTranslateY(size * 0.35);
 				}
 				else {
-					System.out.println(currentNote.getNotation().getFret() + ": " + currentNote.getNotation().getString());
 					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size, type, false, false, this.measureNum);
 				}
 			}
@@ -97,7 +99,7 @@ public class TabMeasure extends MusicMeasure {
 			
 			boxedUnit.setTranslateX(currentDistance);
 			boxedUnit.setTranslateY(size * (string - 1.5) + boxedUnit.getTranslateY());
-			this.labels.add(boxedUnit);
+			this.notes.add(boxedUnit);
 			
 			double type = currentNote.getType() == 0 ? 0.5 : currentNote.getType();
 			currentDistance += boxedUnit.minWidth(0) + wholeDistance/type;
@@ -145,7 +147,7 @@ public class TabMeasure extends MusicMeasure {
 		}
 		// Get the whole width of the measure (added a little bit of padding)
 		try {
-			this.minWidth = currentDistance + labels.get(0).minWidth(0)/2;
+			this.minWidth = currentDistance + this.notes.get(0).minWidth(0)/2;
 		}catch(Exception e) {
 			System.out.println("Invalid input");
 		}
@@ -176,7 +178,7 @@ public class TabMeasure extends MusicMeasure {
 		this.getChildren().add(end);
 		
 		// Attach all the BoxedText numbers, and the noteStems to the TabMeasure to display
-		for (BoxedUnit label: this.labels) {
+		for (NoteUnit label: this.notes) {
 			this.getChildren().add(label);
 		}
 		
@@ -198,7 +200,7 @@ public class TabMeasure extends MusicMeasure {
 	 */
 	public void setSpacing(double scale) {
 		// Gets the X position for the first Note
-		double current = this.labels.get(0).getTranslateX();
+		double current = this.notes.get(0).getTranslateX();
 		
 		// Redoes the spacing for this measure
 		this.spacing = 0;
@@ -207,24 +209,23 @@ public class TabMeasure extends MusicMeasure {
 		int stemNum = 0;
 		
 		// Set the correct spacing for each BoxedText number in "this.labels"
-		for (int i = 0; i < this.labels.size(); i++) {
+		for (int i = 0; i < this.notes.size(); i++) {
 			// Get the ith textbox, and set the correct X position to put it
-			BoxedUnit currLabel = this.labels.get(i);
+			NoteUnit currLabel = this.notes.get(i);
 			currLabel.setTranslateX(current);
 			
 			// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
-			System.out.println("is grace: " + currLabel.grace + " and fret" + currLabel.noteNum);
-			if (!currLabel.grace) {
+			if (!currLabel.getGrace()) {
 				this.stems.get(stemNum).setTranslateX(current + (currLabel.minWidth(0)/2));
 				stemNum ++;
 			}
 				
-			current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.spacingType);
-			this.spacing += this.wholeDistance/currLabel.spacingType;
+			current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.getSpacingType());
+			this.spacing += this.wholeDistance/currLabel.getSpacingType();
 		}
 		
 		// add some extra padding for the end of the measure
-		current += this.labels.get(0).minWidth(0)/2;
+		current += this.notes.get(0).minWidth(0)/2;
 		
 		// extend the X positions of the staff barLines to match the new width of the measure
 		for (int i = 0; i < this.barLines.size()-1; i++) {
