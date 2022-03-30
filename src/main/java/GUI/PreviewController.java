@@ -1,5 +1,6 @@
 package GUI;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,7 +11,7 @@ import org.fxmisc.richtext.CodeArea;
 
 import custom_component_data.Score;
 import custom_model.SheetScore;
-import customer_player.musicPlayer;
+import custom_player.musicPlayer;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +33,7 @@ public class PreviewController extends Application{
 	private Score score;
 	private SheetScore sheet;
 	public Window displayWindow;
-	 
+	public File saveFile;
 	@FXML public CodeArea mxlText;
 	@FXML ScrollPane sp;
 	@FXML TextField tempoField;
@@ -102,7 +103,6 @@ public class PreviewController extends Application{
 	
 	public void expotHandler(){
 		System.out.println("Export PDF Button Clicked!");
-		//To-Be-Continue!
 	}
 	
 	private Window openNewWindow(Parent root, String windowName) {
@@ -120,7 +120,6 @@ public class PreviewController extends Application{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 

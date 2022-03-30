@@ -1,4 +1,4 @@
-package customer_player;
+package custom_player;
 
 import java.io.IOException;
 import java.util.ArrayList;
