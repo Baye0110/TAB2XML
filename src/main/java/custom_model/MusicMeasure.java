@@ -37,7 +37,7 @@ abstract public class MusicMeasure extends Pane {
 	double currentDistance;
 	
 	// The amount of distance between whole notes (smaller for short notes, longer spacing distance for long notes)
-	public double wholeDistance = 400;
+	public double wholeNoteSpacing = 400;
 	
 	/**
 	 * 
@@ -118,7 +118,7 @@ abstract public class MusicMeasure extends Pane {
 	
 	public void setBaseDistance(double scale) {
 		// Change the base spacing (the spacing between whole notes)
-		this.wholeDistance *= scale;
+		this.wholeNoteSpacing *= scale;
 	}
 	
 	// The abstract method so that StaffMeasure and TabMeasure can set the spacing between notes, but the implementation is done in the StaffMeasure/TabMeasure Classes

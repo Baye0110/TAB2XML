@@ -29,18 +29,18 @@ public class PlaybackGUILinker extends Thread {
 			diff = measureSum - (System.currentTimeMillis() - current);
 			measureSum = 0;
 			current = System.currentTimeMillis();
-			sheet.timings.set(timingsNumber, sheet.timings.get(timingsNumber) + diff);
+			sheet.noteTimings.set(timingsNumber, sheet.noteTimings.get(timingsNumber) + diff);
 			
 			int j = (i == measureOfNote) ? notePressed : 0;
-			for (; j < measure.notes.size() && sheet.playing; j++) {
+			for (; j < measure.notes.size() && sheet.isPlaying; j++) {
 				measure.notes.get(j).toggleHighlight();
 				if (j == ((i == measureOfNote) ? notePressed : 0)) {
-					sheet.timings.set(timingsNumber, sheet.timings.get(timingsNumber) - diff);
+					sheet.noteTimings.set(timingsNumber, sheet.noteTimings.get(timingsNumber) - diff);
 					diff = 0;
 				}
 				try {
-					Thread.sleep((long) ((double) sheet.timings.get(timingsNumber)));
-					measureSum += sheet.timings.get(timingsNumber);
+					Thread.sleep((long) ((double) sheet.noteTimings.get(timingsNumber)));
+					measureSum += sheet.noteTimings.get(timingsNumber);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

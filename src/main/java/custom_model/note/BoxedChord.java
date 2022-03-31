@@ -33,8 +33,8 @@ public class BoxedChord extends BoxedUnit{
 		this.spacingType = notes.get(0).getType();
 		this.measure = measure;
 		
-		BoxedUnit.currMeasureNoteNum ++;
-		this.noteNum = currMeasureNoteNum;
+		BoxedUnit.noteCounter ++;
+		this.noteNum = noteCounter;
 		
 		this.setOnMouseClicked(e -> {
 			if (this == NoteUnit.pressed) {
@@ -56,11 +56,11 @@ public class BoxedChord extends BoxedUnit{
 			fret.toggleHighlight();
 		}
 		
-		if (this.highlighted) {
-			this.highlighted = false;
+		if (this.isHighlighted) {
+			this.isHighlighted = false;
 		}
 		else {
-			this.highlighted = true;
+			this.isHighlighted = true;
 			if (originalPressed != null) {
 				originalPressed.toggleHighlight();
 			}

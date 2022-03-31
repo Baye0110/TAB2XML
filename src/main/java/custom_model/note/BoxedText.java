@@ -40,10 +40,15 @@ public class BoxedText extends BoxedUnit{
 		this.grace = grace;
 		this.measure = measure;
 
+		// If this is not part of a chord, (it is an individual note) then track its number and
+		// attach an function which is activated when the note is clicked.
 		if (!chord) {
-			BoxedUnit.currMeasureNoteNum ++;
-			this.noteNum = BoxedUnit.currMeasureNoteNum;
+			BoxedUnit.noteCounter ++;
+			this.noteNum = BoxedUnit.noteCounter;
 			
+			// creates the function which will highlight this note when clicked, and if this note 
+			// is double-clicked, it will toggle the highlight. Also keeps track of the latest highlighted
+			// note in the "NoteUnit.pressed" variable.
 			this.setOnMouseClicked(e -> {
 				if (this == NoteUnit.pressed) {
 					NoteUnit.pressed = null;
@@ -60,13 +65,15 @@ public class BoxedText extends BoxedUnit{
 		}
 	}
 	
+	// Highlight the note on and off, depending on if it was already highlighted before, or has yet to be highlighted
+	// "this.highlighted" is a boolean value storing whether or not this note has already been highlighted.
 	public void toggleHighlight() {
-		if (!this.highlighted) {
+		if (!this.isHighlighted) {
 			this.label.setStroke(Color.DEEPSKYBLUE);
 			this.label.setStrokeWidth(1.0);
 			this.container.setStroke(Color.DEEPSKYBLUE);
 			this.container.setStrokeWidth(1.0);
-			this.highlighted = true;
+			this.isHighlighted = true;
 			if (pressed != null) {
 				pressed.toggleHighlight();
 			}	
@@ -78,7 +85,7 @@ public class BoxedText extends BoxedUnit{
 			this.label.setStroke(null);
 			this.label.setStrokeWidth(1.0);
 			this.container.setStroke(null);
-			this.highlighted = false;
+			this.isHighlighted = false;
 		}
 		
 	}

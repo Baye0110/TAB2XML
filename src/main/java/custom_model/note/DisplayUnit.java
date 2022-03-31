@@ -10,8 +10,7 @@ public abstract class DisplayUnit extends NoteUnit{
 	double top;
 	double bottom;
 	double height;
-	int position;
-	double grace;
+	int position; // IMPORTANT
 	
 	public double getWidth() {
 		return this.width;

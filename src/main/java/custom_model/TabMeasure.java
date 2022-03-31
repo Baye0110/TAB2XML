@@ -53,7 +53,7 @@ public class TabMeasure extends MusicMeasure {
 		this.maxHeight = size * (m.getStaffLines());
 		
 		// Reset the count of notes
-		BoxedUnit.currMeasureNoteNum = 0;
+		BoxedUnit.noteCounter = 0;
 		
 		// Create the BoxedTest for the guitar numbers for each Note.
 		for (int i = 0; i < notes.size(); i++) {
@@ -102,8 +102,8 @@ public class TabMeasure extends MusicMeasure {
 			this.notes.add(boxedUnit);
 			
 			double type = currentNote.getType() == 0 ? 0.5 : currentNote.getType();
-			currentDistance += boxedUnit.minWidth(0) + wholeDistance/type;
-			this.spacing += wholeDistance/type;
+			currentDistance += boxedUnit.minWidth(0) + wholeNoteSpacing/type;
+			this.spacing += wholeNoteSpacing/type;
 //			// Get the XML parsed note data
 //			Note currentNote = notes.get(i);
 //			
@@ -220,8 +220,8 @@ public class TabMeasure extends MusicMeasure {
 				stemNum ++;
 			}
 				
-			current += currLabel.minWidth(0) + (this.wholeDistance/currLabel.getSpacingType());
-			this.spacing += this.wholeDistance/currLabel.getSpacingType();
+			current += currLabel.minWidth(0) + (this.wholeNoteSpacing/currLabel.getSpacingType());
+			this.spacing += this.wholeNoteSpacing/currLabel.getSpacingType();
 		}
 		
 		// add some extra padding for the end of the measure

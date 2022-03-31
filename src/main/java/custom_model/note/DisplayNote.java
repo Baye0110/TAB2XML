@@ -12,15 +12,18 @@ import javafx.scene.shape.Line;
 
 // DRUMS
 public class DisplayNote extends DisplayUnit{
-	double preceding;
-	double trailing;
+	double preceding; // IMPORTANT : space in front
+	double trailing; // IMPORTANT : space after
+	double noteHeadWidth; // IMPORTANT : width of the Notehead
+	boolean isChord; // IMPORTANT : true if chord
+	
 	double parenthesesDisplacement;
 	
-	boolean isChord;
+	
 	boolean isNormalSide;
 	static double dotScale = 3;
 	static double dotDistanceScale = 1.5;
-	double noteHeadWidth;
+	
 	
 	/**
 	 * 
@@ -35,7 +38,14 @@ public class DisplayNote extends DisplayUnit{
 		this.bottom = 0;
 		
 		// The spacingType is (0.5 = breve, 1 = whole, 2 = half, 4 = quarter, 8 = 8th, ...)
-		this.spacingType = note.getType() != 0 ? note.getType() : 0.5;
+		if (note.getGrace()) {
+			this.spacingType = 64;
+			this.grace = true;
+		}
+		else {
+			this.spacingType = note.getType() != 0 ? note.getType() : 0.5;
+		}
+		
 		// This is the position on the staff which was already calculated during the XML parsing.
 		this.position = note.getPosition();
 		
@@ -219,8 +229,13 @@ public class DisplayNote extends DisplayUnit{
 	public void addTails(double height, boolean stemDown) {
 		if (this.spacingType >= 8) {
 			int log_spacingType = 0;
-			for (; this.spacingType > Math.pow(2, log_spacingType); log_spacingType++);
-			log_spacingType -= 2;
+			if (this.grace) {
+				log_spacingType = 1;
+			}
+			else {
+				for (; this.spacingType > Math.pow(2, log_spacingType); log_spacingType++);
+				log_spacingType -= 2;
+			}
 			
 			NoteTail nt = new NoteTail(height, log_spacingType, stemDown);
 			nt.setTranslateY(top);

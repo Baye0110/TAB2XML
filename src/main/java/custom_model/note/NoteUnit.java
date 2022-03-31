@@ -6,12 +6,12 @@ import javafx.scene.Node;
 abstract public class NoteUnit extends Group{
 	double width;
 	double spacingType;
-	boolean highlighted;
+	boolean isHighlighted; // IMPORTANT
 	boolean grace;
-	int noteNum;
-	int measure;
+	int noteNum; // IMPORTANT
+	int measure; // IMPORTANT
 	
-	public static NoteUnit pressed = null;
+	public static NoteUnit pressed = null; // IMPORTANT
 	
 	abstract public void toggleHighlight();
 	
