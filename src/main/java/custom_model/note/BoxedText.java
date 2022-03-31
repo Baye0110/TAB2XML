@@ -1,9 +1,6 @@
 package custom_model.note;
 
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -35,10 +32,10 @@ public class BoxedText extends BoxedUnit{
 		this.getChildren().add(label);	
 		
 		// Set the fields based on the arguments
-		this.width = container.getWidth();
-		this.spacingType = type;
-		this.grace = grace;
-		this.measure = measure;
+		this.setWidth(container.getWidth());
+		this.setSpacingType(type);
+		this.setGrace(grace);
+		this.setMeasure(measure);
 
 		// If this is not part of a chord, (it is an individual note) then track its number and
 		// attach an function which is activated when the note is clicked.
@@ -60,8 +57,8 @@ public class BoxedText extends BoxedUnit{
 				}
 			});
 		} else {
-			this.measure = -1;
-			this.noteNum = -1;
+			this.setMeasure(-1);
+			this.setNoteNum(-1);
 		}
 	}
 	
@@ -77,8 +74,8 @@ public class BoxedText extends BoxedUnit{
 			if (pressed != null) {
 				pressed.toggleHighlight();
 			}	
-			if (this.noteNum > -1) {
-				System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
+			if (this.getNoteNum() > -1) {
+				System.out.println("Selected Note: \t Measure - " + this.getMeasure() + ",  Note - " + this.getNoteNum());
 			}
 		}
 		else {

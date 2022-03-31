@@ -1,6 +1,7 @@
 package custom_model;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,6 +26,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+
 
 public class MainGraphicsTest extends Application {
 	/**
@@ -108,7 +111,7 @@ public class MainGraphicsTest extends Application {
         
         
         // Creating a text element
-        Text msg = new Text("Hi!");  // The message is set in the constructor or can be set by: msg.setText("Hello! ...");
+        /*Text msg = new Text("Hi!");  // The message is set in the constructor or can be set by: msg.setText("Hello! ...");
         msg.setFont(Font.font(70));  // Set the fontsize of the text
         msg.setTranslateX(100);		 // Set the X co-ordinate
         msg.setTranslateY(400);      // Set the Y co-ordinate 
@@ -160,13 +163,16 @@ public class MainGraphicsTest extends Application {
         /*
          * Getting the height and width of the element:  (Always give the argument '0')
          */
-        double heightOfEllipse = e1.minHeight(0);
+        /*double heightOfEllipse = e1.minHeight(0);
         double widthOfEllipse = e1.minWidth(0);
-        System.out.println("Height: " + heightOfEllipse + "\nWidth: " + widthOfEllipse);
+        System.out.println("Height: " + heightOfEllipse + "\nWidth: " + widthOfEllipse);*/
+        
+        
         
   	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+	/*public static void main(String[] args) {
+		launch();
+	}*/
 }
+

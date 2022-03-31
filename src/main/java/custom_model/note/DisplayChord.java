@@ -54,13 +54,13 @@ public class DisplayChord extends DisplayUnit{
 		boolean stemDown = notes.get(0).getStem() != null && notes.get(0).getStem().equals("down");
 
 		double noteheadWidth = displayNotes.get(0).noteHeadWidth;
-		this.width = max_preceding + noteheadWidth + max_trailing;
+		this.setWidth(max_preceding + noteheadWidth + max_trailing);
 		
 		if (notes.get(0).getType() <= 1) {
-			this.spacingType = notes.get(0).getType() != 0 ? notes.get(0).getType() : 0.5;
-			this.position = min_position;
-			this.height = this.minHeight(0);
-			this.top = 0 - (height*0.5)*(max_position - min_position);
+			this.setSpacingType(notes.get(0).getType() != 0 ? notes.get(0).getType() : 0.5);
+			this.setPosition(min_position);
+			this.setHeight(this.minHeight(0));
+			this.setTop(0 - (height*0.5)*(max_position - min_position));
 			return;
 		}
 		
@@ -97,7 +97,7 @@ public class DisplayChord extends DisplayUnit{
 			double start_y = stemDown ? height : 0;
 			double end_y = start_y - (max_position - min_position)*0.5*height;
 			if (!stemDown) {
-				this.top = 0 - ((max_position - min_position)*0.5 + 3)*height;
+				this.setTop(0 - ((max_position - min_position)*0.5 + 3)*height);
 			}
 			
 			Line staff = new Line(pos_x, start_y, pos_x, end_y);
@@ -107,9 +107,9 @@ public class DisplayChord extends DisplayUnit{
 			
 		}
 		
-		this.spacingType = notes.get(0).getType() != 0 ? notes.get(0).getType() : 0.5;
-		this.position = min_position;
-		this.height = this.minHeight(0);			
+		this.setSpacingType(notes.get(0).getType() != 0 ? notes.get(0).getType() : 0.5);
+		this.setPosition(min_position);
+		this.setHeight(this.minHeight(0));			
 	}
 	
 	public static void sortNotes(List<Note> notes) {

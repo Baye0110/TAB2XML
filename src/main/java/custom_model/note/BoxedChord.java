@@ -28,10 +28,10 @@ public class BoxedChord extends BoxedUnit{
 			this.getChildren().add(fret);
 		}
 		
-		this.width = frets.get(0).width;
-		this.grace = isGrace;
-		this.spacingType = notes.get(0).getType();
-		this.measure = measure;
+		this.setWidth(frets.get(0).getWidth());
+		this.setGrace(isGrace);
+		this.setSpacingType(notes.get(0).getType());
+		this.setMeasure(measure);
 		
 		BoxedUnit.noteCounter ++;
 		this.noteNum = noteCounter;
@@ -64,7 +64,7 @@ public class BoxedChord extends BoxedUnit{
 			if (originalPressed != null) {
 				originalPressed.toggleHighlight();
 			}
-			System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
+			System.out.println("Selected Note: \t Measure - " + this.getMeasure() + ",  Note - " + this.getNoteNum());
 		}		
 	}
 }
