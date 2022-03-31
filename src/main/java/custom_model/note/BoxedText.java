@@ -35,14 +35,14 @@ public class BoxedText extends BoxedUnit{
 		this.getChildren().add(label);	
 		
 		// Set the fields based on the arguments
-		this.width = container.getWidth();
-		this.spacingType = type;
-		this.grace = grace;
-		this.measure = measure;
+		this.setWidth(container.getWidth());
+		this.setSpacingType(type);
+		this.setGrace(grace);
+		this.setMeasure(measure);
 
 		if (!chord) {
 			BoxedUnit.currMeasureNoteNum ++;
-			this.noteNum = BoxedUnit.currMeasureNoteNum;
+			this.setNoteNum(BoxedUnit.currMeasureNoteNum);
 			
 			this.setOnMouseClicked(e -> {
 				if (this == NoteUnit.pressed) {
@@ -55,8 +55,8 @@ public class BoxedText extends BoxedUnit{
 				}
 			});
 		} else {
-			this.measure = -1;
-			this.noteNum = -1;
+			this.setMeasure(-1);
+			this.setNoteNum(-1);
 		}
 	}
 	
@@ -70,8 +70,8 @@ public class BoxedText extends BoxedUnit{
 			if (pressed != null) {
 				pressed.toggleHighlight();
 			}	
-			if (this.noteNum > -1) {
-				System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
+			if (this.getNoteNum() > -1) {
+				System.out.println("Selected Note: \t Measure - " + this.getMeasure() + ",  Note - " + this.getNoteNum());
 			}
 		}
 		else {

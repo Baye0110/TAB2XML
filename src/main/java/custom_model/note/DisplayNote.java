@@ -31,20 +31,20 @@ public class DisplayNote extends DisplayUnit{
 	 */
 	public DisplayNote(double height, Note note, boolean hasFlip, boolean isFlip) {
 		// Set the basic values
-		this.top = 0;
-		this.bottom = 0;
+		this.setTop(0);
+		this.setBottom(0);
 		
 		// The spacingType is (0.5 = breve, 1 = whole, 2 = half, 4 = quarter, 8 = 8th, ...)
-		this.spacingType = note.getType() != 0 ? note.getType() : 0.5;
+		this.setSpacingType(note.getType() != 0 ? note.getType() : 0.5);
 		// This is the position on the staff which was already calculated during the XML parsing.
-		this.position = note.getPosition();
+		this.setPosition(note.getPosition());
 		
 		// If the note was a rest note
 		if (note.getRest()) {
 			// Generate the rest note, and set the dimensions for the note
 			Rest rest = new Rest(height, note.getType());
-			this.height = rest.getHeight();
-			this.width = rest.getWidth();
+			this.setHeight(rest.getHeight());
+			this.setWidth(rest.getWidth());
 			this.getChildren().add(rest);
 			
 			// Add the number of dots that are needed for this rest.
@@ -53,8 +53,8 @@ public class DisplayNote extends DisplayUnit{
 			return;
 		}
 		
-		this.width = 0;
-		this.height = 0;
+		this.setWidth(0);
+		this.setHeight(0);
 		
 		// If this note is parenthesized add the Left-size parentheses
 		if (note.getParentheses()) {
@@ -71,13 +71,13 @@ public class DisplayNote extends DisplayUnit{
 		
 		// If the note is supposed to be on the opposite side as normal
 		if ((isFlip && !stemDown) || (hasFlip && !isFlip && stemDown)) {
-			head.setTranslateX(this.width + head.getWidth());
-			this.width += head.getWidth() * 2;
+			head.setTranslateX(this.getWidth() + head.getWidth());
+			this.setWidth(this.getWidth() + head.getWidth() * 2);
 		}
 		// Otherwise for a normal note, increment the width of the this object, and set the X position of the notehead
 		else {
-			head.setTranslateX(this.width);
-			this.width += head.getWidth();
+			head.setTranslateX(this.getWidth());
+			this.setWidth(this.getWidth() + head.getWidth());
 		}
 		
 		// Add the notehead to the object.
@@ -90,10 +90,10 @@ public class DisplayNote extends DisplayUnit{
 		if (stemType != null && !stemType.equals("none") && note.getType() != 0 && note.getType() != 1 &&  !hasFlip) {
 			// Creating the stem going up
 			if (stemType.equals("up")) {
-				Line stem = new Line(this.width, 0 - 3*height, this.width, head.getStemPosition());
+				Line stem = new Line(this.getWidth(), 0 - 3*height, this.getWidth(), head.getStemPosition());
 				stem.setStrokeWidth(height/15);
 				stem.setTranslateX(0 - stem.minWidth(0)*1.25);
-				this.width += stem.minWidth(0);
+				this.setWidth(this.getWidth() + stem.minWidth(0));
 				this.getChildren().add(stem);
 			}
 			// Creating the stem going down
@@ -101,7 +101,7 @@ public class DisplayNote extends DisplayUnit{
 				Line stem = new Line(0, 4*height, 0, head.getStemPosition());
 				stem.setStrokeWidth(height/15);
 				stem.setTranslateX(0 - stem.minWidth(0)*1.25);
-				this.width += stem.minWidth(0);
+				this.setWidth(this.getWidth() + stem.minWidth(0));
 				this.getChildren().add(stem);
 			}
 		}
@@ -109,10 +109,10 @@ public class DisplayNote extends DisplayUnit{
 		// Set the value for the edge of the note stem.
 		if (stemType != null && !stemType.equals("none") && note.getType() != 0 && note.getType() != 1) {
 			if (stemType.equals("up")) {
-				this.top = 0 - 3*height;
+				this.setTop(0 - 3*height);
 			}
 			else {
-				this.top = 4 * height;
+				this.setTop(4 * height);
 			}
 		}
 		
@@ -121,7 +121,7 @@ public class DisplayNote extends DisplayUnit{
 		
 		// If this is a normal note, but is part of a chord that has a flipped note, then accord for that in the width and the trailing
 		if (this.isNormalSide && hasFlip) {
-			this.width += head.getWidth();
+			this.setWidth(this.getWidth() + head.getWidth());
 			this.trailing += head.getWidth();
 		}
 		
@@ -134,8 +134,8 @@ public class DisplayNote extends DisplayUnit{
 		}
 		
 		// Set the dimensions of the note
-		this.width = this.minWidth(0);
-		this.height = this.minHeight(0);
+		this.setWidth(this.minWidth(0));
+		this.setHeight(this.minHeight(0));
 	}
 	
 	/** Add the parentheses (type==1 : left,  type==2 : right)
@@ -163,11 +163,11 @@ public class DisplayNote extends DisplayUnit{
 		shadow.setLength(90);
 		shadow.setFill(Color.WHITE);
 		
-		parentheses.setTranslateX(this.width);
+		parentheses.setTranslateX(this.getWidth());
 		this.parenthesesDisplacement = (parentheses.minHeight(0) - height)/2;
 		this.getChildren().add(parentheses);
 
-		this.width += parentheses.minWidth(0);
+		this.setWidth(this.getWidth() + parentheses.minWidth(0));
 		
 		if (type == 1) {
 			this.preceding = parentheses.minWidth(0);
@@ -185,9 +185,9 @@ public class DisplayNote extends DisplayUnit{
 	 */
 	public void addDots(double height, Note note) {
 		for (int i = 0; i < note.getDot(); i++) {
-			double pos_x = this.width + height/dotScale*(1.5); 
+			double pos_x = this.getWidth() + height/dotScale*(1.5); 
 			double radius = (height/dotScale) / 2;
-			this.width += (height/dotScale)*2;
+			this.setWidth(this.getWidth() + (height/dotScale)*2);
 			this.trailing += (height/dotScale)*2;
 			
 			Ellipse dot = new Ellipse(pos_x, height/2, radius, radius);
@@ -202,10 +202,10 @@ public class DisplayNote extends DisplayUnit{
 	 * Extends the staff to support notes which are too hight
 	 */
 	public void extendStaff(int positions, double height) {
-		for (int i = 0; i < (this.position - positions)/2; i ++) {
+		for (int i = 0; i < (this.getPosition() - positions)/2; i ++) {
 			double start_x = this.preceding + (this.isNormalSide ? 0 - this.noteHeadWidth * 0.25 : this.noteHeadWidth * 0.75);
 			double end_x = start_x + this.noteHeadWidth * 1.5;
-			double pos_y = position%2 == 0 ? height * (0.5+i) : height * (1+i);
+			double pos_y = this.getPosition()%2 == 0 ? height * (0.5+i) : height * (1+i);
 			
 			Line extension = new Line(start_x, pos_y, end_x, pos_y);
 			extension.setStrokeWidth(height/15);
@@ -217,21 +217,21 @@ public class DisplayNote extends DisplayUnit{
 	 * 
 	 */
 	public void addTails(double height, boolean stemDown) {
-		if (this.spacingType >= 8) {
+		if (this.getSpacingType() >= 8) {
 			int log_spacingType = 0;
-			for (; this.spacingType > Math.pow(2, log_spacingType); log_spacingType++);
+			for (; this.getSpacingType() > Math.pow(2, log_spacingType); log_spacingType++);
 			log_spacingType -= 2;
 			
 			NoteTail nt = new NoteTail(height, log_spacingType, stemDown);
-			nt.setTranslateY(top);
+			nt.setTranslateY(this.getTop());
 			
 			if (!stemDown) {
 				nt.setTranslateX(this.preceding + this.noteHeadWidth - height/15);
-				this.width += nt.width > this.trailing ? nt.width - this.trailing : 0;
+				this.setWidth(this.getWidth() + (nt.width > this.trailing ? nt.width - this.trailing : 0));
 				this.trailing = nt.width > this.trailing ? nt.width : this.trailing;
 			}
 			else {
-				this.width += nt.width > this.preceding ? nt.width - this.preceding : 0;
+				this.setWidth(this.getWidth() + (nt.width > this.preceding ? nt.width - this.preceding : 0));
 				this.preceding = nt.width > this.preceding ? nt.width : this.preceding;
 			}
 			
