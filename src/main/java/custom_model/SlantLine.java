@@ -1,12 +1,8 @@
 package custom_model;
 
-import java.awt.Color;
 
 import javafx.scene.*;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
 
 public class SlantLine extends Group {
 	
