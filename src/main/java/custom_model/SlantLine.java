@@ -11,10 +11,10 @@ public class SlantLine extends Group {
 		
 		Polygon slant = new Polygon();
 		slant.getPoints().addAll(new Double[] {
-				100.0, 100.0,
-				100.0, 100.0 + slantWidth,
-				100.0 + slantLength, 70.0 + slantWidth,
-				100.0 + slantLength, 70.0,
+				0.0, 0.0,
+				0.0, slantWidth,
+				slantLength, slantWidth,
+				slantLength, 0.0,
 		});
 		
 		if(rotation.equals("right")) {
