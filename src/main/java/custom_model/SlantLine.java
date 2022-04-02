@@ -6,8 +6,7 @@ import javafx.scene.shape.Polygon;
 
 public class SlantLine extends Group {
 	
-	// spacing between 2 connected notes = slant length
-	// height difference between 2 connected notes = x-coordinate rotation degree
+	// for Rotation parameter, input either "left" or "right" depends on the side of the slant
 	public SlantLine(double slantLength, double slantWidth, String rotation) {
 		
 		Polygon slant = new Polygon();
