@@ -146,7 +146,7 @@ public class MainGraphicsTest extends Application {
         imageDisplay.setFitWidth(250);			// Set the width of the image
         g1.getChildren().add(imageDisplay);		// Add the image GUI element to the Group
         
-
+*/
         // Testing your own Class without running the TAB2XML Gradle Project (Simply run this file like a normal Java Class)
         QuarterRest qr = new QuarterRest(100);    // Create an object instance of your class
         g1.getChildren().add(qr); 				  // Add it to the group
@@ -167,6 +167,11 @@ public class MainGraphicsTest extends Application {
         double widthOfEllipse = e1.minWidth(0);
         System.out.println("Height: " + heightOfEllipse + "\nWidth: " + widthOfEllipse);*/
         
+        SlantLine sl = new SlantLine(100, 10);
+        sl.setTranslateX(400);
+        sl.setTranslateY(90);
+        g1.getChildren().add(sl);
+       
         
         
   	}
