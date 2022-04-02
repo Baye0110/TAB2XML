@@ -13,15 +13,17 @@ public class BoxedChord extends BoxedUnit{
 		this.frets = new ArrayList<>();
 		
 		int min = notes.get(0).getNotation().getString();
+		this.data = notes.get(0);
 		for (int i = 1; i < notes.size(); i++) {
 			if (notes.get(i).getNotation().getString() < min) {
 				min = notes.get(i).getNotation().getString();
+				this.data = notes.get(i);
 			}
 		}
 		
 		for (int i = 0; i < notes.size(); i++) {
 			Note note = notes.get(i);
-			BoxedText fret = new BoxedText("" + note.getNotation().getFret(), isGrace ? size * 0.65 : size, note.getType() == 0 ? 0.5 : note.getType(), false, true, 0);
+			BoxedText fret = new BoxedText("" + note.getNotation().getFret(), isGrace ? size * 0.65 : size, note.getType() == 0 ? 0.5 : note.getType(), false, true, 0, notes.get(i));
 			fret.setTranslateY(size * (notes.get(i).getNotation().getString() - min));
 			
 			this.frets.add(fret);

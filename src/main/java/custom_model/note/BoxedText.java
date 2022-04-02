@@ -1,5 +1,6 @@
 package custom_model.note;
 
+import custom_component_data.Note;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -12,9 +13,10 @@ public class BoxedText extends BoxedUnit{
 	Text label;
 	Rectangle container;
 	
-	public BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure) {
+	public BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure, Note data) {
 		// Create the actual textbox with the given number in "String text" argument
 		this.label = new Text(text);
+		this.data = data;
 		label.setFont(Font.font(size*0.88));	// Set the font size 
 		
 		// Set the position of text based on the padding on the top and on the sides of the box

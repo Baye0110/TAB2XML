@@ -8,6 +8,7 @@ import custom_component_data.Note;
 import custom_model.note.NoteUnit;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -26,6 +27,9 @@ abstract public class MusicMeasure extends Pane {
 	List<Line> barLines;
 	// The notes
 	List<NoteUnit> notes;
+	// The connectors of notes: curved lines, slides, etc
+	List<NoteLinker> links;
+	
 	
 	// The dimensions of the measure
 	double maxHeight;
@@ -39,6 +43,8 @@ abstract public class MusicMeasure extends Pane {
 	// The amount of distance between whole notes (smaller for short notes, longer spacing distance for long notes)
 	public double wholeNoteSpacing = 400;
 	
+	List<Node> endRepeat;
+	
 	/**
 	 * 
 	 * @param size    The spacing between the lines of the staff
@@ -46,6 +52,16 @@ abstract public class MusicMeasure extends Pane {
 	 * @param start   Does this measure start on a new line on the sheet music?
 	 */
 	public MusicMeasure(double size, Measure m, boolean start) {
+		if (m.getNotes().size() == 0) {
+			this.currentDistance = 200;
+			this.minWidth = 200;
+			this.spacing = 200;
+			MusicMeasure.measureCount += 1;
+			this.measureNum = MusicMeasure.measureCount;
+			this.notes = new ArrayList<>();
+		}
+		
+		
 		// Set the initial distance to the start_distance constant.
 		this.currentDistance = START_DISTANCE;
 		
@@ -58,6 +74,12 @@ abstract public class MusicMeasure extends Pane {
 		measureNum.setTranslateX(size * 0.5);
 		this.getChildren().add(measureNum);
 		
+		if (m.getIsRepeatStart()) {
+			RepeatBarLine repeat = new RepeatBarLine(size, m.getStaffLines());
+			repeat.setTranslateX(repeat.getFirstLineWidth()/2);
+			this.getChildren().add(repeat);
+			this.currentDistance += repeat.minWidth(0);
+		}
 		
 		// If this measure is the 1st in its line, then add the clef symbol
 		if (start) {
@@ -195,5 +217,50 @@ abstract public class MusicMeasure extends Pane {
 	public int getMeasureNume() {
 		return this.measureNum;
 	}
+	
+	public void generateBarLines(double size, int staffLines) {
+		this.barLines = new ArrayList<Line>();
+		for (int i = 0; i < staffLines; i++) {
+			Line barLine = new Line();
+			barLine.setStartX(0);
+			barLine.setStartY(size * i);
+			barLine.setEndX(this.minWidth);
+			barLine.setEndY(size * i);
+			barLine.setStroke(Paint.valueOf("0x777"));
+			barLine.setStrokeWidth(0.6);
+			
+			this.barLines.add(barLine);
+			this.getChildren().add(barLine);
+		}
+		
+		// Create the line at the end of the measure (to show that the measure has ended
+		Line end = new Line();
+		end.setStartX(this.minWidth);
+		end.setStartY(0);
+		end.setEndX(this.minWidth);
+		end.setEndY((staffLines - 1) * size);
+		end.setStrokeWidth(2);
+		this.barLines.add(end);
+		this.getChildren().add(end);
+	}
 
+	public void generateEndRepeat(double size, int staffLines, int repeatNumber) {
+		endRepeat = new ArrayList<>();
+		
+		Text times = new Text();
+		times.setText("x" + repeatNumber);
+		times.setFont(Font.font("Calibri", size));
+		times.setTranslateX(this.currentDistance);
+		this.getChildren().add(times);
+		
+		RepeatBarLine repeat = new RepeatBarLine(size, staffLines);
+		repeat.setScaleX(-1);
+		repeat.setTranslateX(this.currentDistance);
+		this.currentDistance += repeat.minWidth(0) + repeat.getFirstLineWidth()/2;
+		this.getChildren().add(repeat);
+		
+		endRepeat.add(times);
+		endRepeat.add(repeat);
+		
+	}
 }

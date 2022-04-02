@@ -128,7 +128,7 @@ public class SheetScore extends VBox{
 				}
 			}
 			if (!measureFound) {
-				pos += this.lines.get(i).minHeight(0) + this.getSpacing() + 8;
+				pos += this.lines.get(i).minHeight(0) + this.getSpacing();
 			}
 		}
 		

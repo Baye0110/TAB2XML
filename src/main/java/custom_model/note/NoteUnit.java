@@ -1,5 +1,6 @@
 package custom_model.note;
 
+import custom_component_data.Note;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -10,6 +11,7 @@ abstract public class NoteUnit extends Group{
 	protected boolean grace;
 	protected int noteNum; // IMPORTANT
 	protected int measure; // IMPORTANT
+	protected Note data;
 	
 	public static NoteUnit pressed = null; // IMPORTANT
 	
@@ -53,6 +55,10 @@ abstract public class NoteUnit extends Group{
 	
 	public void setSpacingType(double spacingType) {
 		this.spacingType = spacingType;
+	}
+	
+	public Note getData() {
+		return this.data;
 	}
 	
 }

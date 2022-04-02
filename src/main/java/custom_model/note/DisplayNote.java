@@ -83,6 +83,7 @@ public class DisplayNote extends DisplayUnit{
 		if ((isFlip && !stemDown) || (hasFlip && !isFlip && stemDown)) {
 			head.setTranslateX(this.getWidth() + head.getWidth());
 			this.setWidth(this.getWidth() + head.getWidth() * 2);
+			this.trailing = head.getWidth();
 		}
 		// Otherwise for a normal note, increment the width of the this object, and set the X position of the notehead
 		else {
