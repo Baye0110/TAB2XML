@@ -6,17 +6,23 @@ import javafx.scene.shape.Polygon;
 
 public class SlantLine extends Group {
 	
-	// spacing between 2 connected notes = slant length
-	// height difference between 2 connected notes = x-coordinate rotation degree
-	public SlantLine(double slantLength, double slantWidth) {
+	/*
+	 *  for Rotation parameter, input either "true" or "false". Input "false" as default option, 
+	 *  "true" will flip to the opposite side
+	 */
+	public SlantLine(double slantLength, double slantWidth, boolean rotation) {
 		
 		Polygon slant = new Polygon();
 		slant.getPoints().addAll(new Double[] {
-				100.0, 100.0,
-				100.0, 100.0 + slantWidth,
-				100.0 + slantLength, 70.0 + slantWidth,
-				100.0 + slantLength, 70.0,
+				0.0, 0.0,
+				0.0, slantWidth,
+				slantLength, 20.0 + slantWidth,
+				slantLength, 20.0,
 		});
+		
+		if(rotation == true) {
+			slant.setScaleX(-1);
+		}
 		this.getChildren().add(slant);
 		
 	}
