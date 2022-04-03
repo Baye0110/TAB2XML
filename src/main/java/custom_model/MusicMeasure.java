@@ -19,7 +19,7 @@ abstract public class MusicMeasure extends Pane {
 	public static final double START_DISTANCE = 30;
 	
 	// Measure Number
-	static int measureCount = 0;
+	public static int measureCount = 0;
 	int measureNum;
 	
 	// The barLines (the last one is always the barLine for the end of the staff)

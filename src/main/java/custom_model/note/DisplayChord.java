@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import custom_component_data.Note;
+import custom_model.MusicMeasure;
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class DisplayChord extends DisplayUnit{
@@ -27,11 +30,11 @@ public class DisplayChord extends DisplayUnit{
 		for (int i = 0; i < notes.size(); i++) {
 			DisplayNote note = null;
 			if (flipDone) {
-				note = new DisplayNote(height, notes.get(i), hasFlip, false);
+				note = new DisplayNote(height, notes.get(i), hasFlip, false, true);
 				flipDone = false;
 			}
 			else {
-				note = new DisplayNote(height, notes.get(i), hasFlip, i>0 && notes.get(i).getPosition() - notes.get(i-1).getPosition() == 1);
+				note = new DisplayNote(height, notes.get(i), hasFlip, i>0 && notes.get(i).getPosition() - notes.get(i-1).getPosition() == 1, true);
 				flipDone = i>0 && notes.get(i).getPosition() - notes.get(i-1).getPosition() == 1;
 			}
 			
@@ -109,7 +112,27 @@ public class DisplayChord extends DisplayUnit{
 		
 		this.spacingType = notes.get(0).getType() != 0 ? notes.get(0).getType() : 0.5;
 		this.position = min_position;
-		this.height = this.minHeight(0);			
+		this.height = this.minHeight(0);	
+		
+		
+		DisplayUnit.currMeasureNoteNum ++;
+		this.noteNum = DisplayUnit.currMeasureNoteNum;
+		this.measure = MusicMeasure.measureCount;
+		
+		this.setOnMouseClicked(e -> {
+			if (this == NoteUnit.pressed) {
+				NoteUnit.pressed = null;
+				this.toggleHighlight();
+			}
+			else {
+				this.toggleHighlight();
+				NoteUnit.pressed = this;
+			}
+		});
+		
+		this.generateBox();
+		this.getChildren().add(box);
+		this.box.setOpacity(0.0);
 	}
 	
 	public static void sortNotes(List<Note> notes) {
@@ -150,6 +173,34 @@ public class DisplayChord extends DisplayUnit{
 	}
 	
 	public void toggleHighlight() {
+		if (!this.highlighted) {
+			this.highlighted = true;
+			this.box.setOpacity(1.0);
+			
+			if (pressed != null) {
+				pressed.toggleHighlight();
+			}	
+			if (this.noteNum > -1) {
+				System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
+			}
+		}
+		else {
+			this.box.setOpacity(0.0);
+			this.highlighted = false;
+		}
 		
+	}
+	
+	public void generateBox() {
+		Line left = new Line(0 - 2, 0 - this.minHeight(0), 0 - 2, this.displayNotes.get(0).noteHeadWidth * 2);
+		Line top = new Line(0 - 2, 0 - this.minHeight(0), this.minWidth(0) + 2, 0 - this.minHeight(0));
+		Line bottom = new Line(0 - 2, this.displayNotes.get(0).noteHeadWidth * 2, this.minWidth(0) + 2, this.displayNotes.get(0).noteHeadWidth * 2);
+		Line right = new Line(this.minWidth(0) + 2, 0 - this.minHeight(0), this.minWidth(0) + 2, this.displayNotes.get(0).noteHeadWidth * 2);
+		left.setStroke(Color.DEEPSKYBLUE);
+		top.setStroke(Color.DEEPSKYBLUE);
+		bottom.setStroke(Color.DEEPSKYBLUE);
+		right.setStroke(Color.DEEPSKYBLUE);
+		
+		this.box = new Group(left, top, bottom, right);
 	}
 }

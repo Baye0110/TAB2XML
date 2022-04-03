@@ -8,6 +8,7 @@ import custom_component_data.Note;
 import custom_model.note.DisplayChord;
 import custom_model.note.DisplayNote;
 import custom_model.note.DisplayUnit;
+import custom_model.note.NoteUnit;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -20,14 +21,14 @@ import javafx.scene.shape.Line;
 public class StaffMeasure extends MusicMeasure{
 	
 	public static final int UPPER_PADDING = 0;
-
-	List<DisplayUnit> noteUnits;
 	
 	public StaffMeasure(double height, Measure measure, boolean start) {
 		super(height, measure, start);
 		
+		DisplayUnit.currMeasureNoteNum = 0;
+		
 		List<Note> notes = measure.getNotes();
-		this.noteUnits = new ArrayList<>();
+		this.notes = new ArrayList<>();
 		measure.generatePositions();
 		
 		for (int i = 0; i < notes.size(); i++) {
@@ -51,8 +52,10 @@ public class StaffMeasure extends MusicMeasure{
 				currentUnit = new DisplayChord(height, chordNotes);
 			}
 			else {
-				currentUnit = new DisplayNote(height, notes.get(i), false, false);	
+				currentUnit = new DisplayNote(height, notes.get(i), false, false, false);	
 				currentUnit.addTails(height, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
+				currentUnit.generateBox();
+				currentUnit.getChildren().add(currentUnit.getBox());
 			}
 			
 			
@@ -70,12 +73,13 @@ public class StaffMeasure extends MusicMeasure{
 			
 			currentDistance += currentUnit.getWidth() + wholeDistance/currentUnit.getSpacingType();
 			this.spacing += wholeDistance/currentUnit.getSpacingType();
-			this.noteUnits.add(currentUnit);
+			this.notes.add(currentUnit);
 		}
 		
 		this.minWidth = currentDistance;
 		
-		for (DisplayUnit note: this.noteUnits) {
+		for (NoteUnit noteUnit: this.notes) {
+			DisplayUnit note = (DisplayUnit) noteUnit;
 			this.maxHeight = note.getTranslateY() + note.getTop() > this.maxHeight ? note.getTranslateY() + note.getTop() : this.maxHeight;
 			this.getChildren().add(note);
 		}
@@ -106,14 +110,14 @@ public class StaffMeasure extends MusicMeasure{
 	}
 	
 	public void setSpacing(double scale) {
-		if (this.noteUnits.size() == 0)
+		if (this.notes.size() == 0)
 			return;
 		
-		double current = this.noteUnits.get(0).getTranslateX();
+		double current = this.notes.get(0).getTranslateX();
 		this.spacing = 0;
 		
-		for (int i = 0; i < this.noteUnits.size(); i++) {
-			DisplayUnit currNote = this.noteUnits.get(i);
+		for (int i = 0; i < this.notes.size(); i++) {
+			DisplayUnit currNote = (DisplayUnit) this.notes.get(i);
 			currNote.setTranslateX(current);
 			current += currNote.getWidth() + (this.wholeDistance/currNote.getSpacingType());
 			this.spacing += this.wholeDistance/currNote.getSpacingType();

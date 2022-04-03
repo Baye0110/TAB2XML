@@ -140,9 +140,12 @@ public class SheetScore extends VBox{
 		int counter = 0;
 		
 		for (Measure m: score.getParts().get(0).getMeasures()) {
+			double graceTime = 0.0;
+			
 			for (Note n: m.getNotes()) {
-				if (n.getGrace()) {
-					timings.add(1.0/96);
+				if (n.getGrace() && !n.getChord()) {
+					timings.add(1.0/48.0);
+					graceTime += 1.0/48.0;
 					counter ++;
 				}
 				else if (!n.getChord()) {
@@ -151,6 +154,10 @@ public class SheetScore extends VBox{
 					for (int i = 0; i < n.getDot(); i++) {
 						duration += dotDuration;
 						dotDuration /= 2.0;
+					}
+					if (graceTime != 0.0) {
+						duration -= graceTime;
+						graceTime = 0.0;
 					}
 					timings.add(duration);
 					
