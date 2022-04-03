@@ -11,10 +11,10 @@ public class ScoreLine extends HBox{
 	// Create a Line of TabMeasures or StaffMeasures given a List
 
 	// Stores the
-	List<Double> measureDistances;
+	List<Double> measureHorizontalPositions;
 	List<MusicMeasure> measures;
 	// Stores the tallest measure in the List
-	double maxHeight;
+	double maxMeasureHeight;
 	
 	/** Create a ScoreLine with the given List of MusicMeasures and the width of the pagee
 	 * 
@@ -22,7 +22,7 @@ public class ScoreLine extends HBox{
 	 * @param pageWidth		The width of the page.
 	 */
 	public ScoreLine(List<? extends MusicMeasure> measures, double pageWidth) {
-		this.measureDistances = new ArrayList<>();
+		this.measureHorizontalPositions = new ArrayList<>();
 		this.measures = new ArrayList<>();
 		
 		// This variable tracks the length of all the measures combined
@@ -30,15 +30,15 @@ public class ScoreLine extends HBox{
 		// This variable tracks the AMOUNT OF SPACE BETWEEN NOTES ONLY
 		double spacing = 0;
 		
-		this.maxHeight = 0;
+		this.maxMeasureHeight = 0;
 		
 		// For each MusicMeasure, add it to the ScoreLine, and increment the 2 variables above
 		for (MusicMeasure m: measures) {
 			this.getChildren().add(m);
 			this.measures.add(m);
-			this.measureDistances.add(current);
+			this.measureHorizontalPositions.add(current);
 			
-			this.maxHeight = m.minHeight(0) > this.maxHeight ? m.minHeight(0) : this.maxHeight;
+			this.maxMeasureHeight = m.minHeight(0) > this.maxMeasureHeight ? m.minHeight(0) : this.maxMeasureHeight;
 			current += m.minWidth;
 			spacing += m.spacing; 
 		}

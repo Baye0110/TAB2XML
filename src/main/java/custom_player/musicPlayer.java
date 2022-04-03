@@ -49,6 +49,8 @@ public class musicPlayer {
 		setNoteList();
 		SetInstrumentType();
 		setInstrument();
+		getRepeat();
+		System.out.println("String 2 :" + musicXMLParttern.toString());
 		this.sheet.generateBasePlayTimings(score);
 	}
 	public void setNoteList() {
@@ -462,5 +464,57 @@ public class musicPlayer {
 		System.out.println(measure + ": " + note);
 		return str.toString();
 	}
+	
+	public void getRepeat() {
+		Boolean sameMeasure = true;
+		List<Measure> measures = new ArrayList<>();
+		Scanner scan = new Scanner(musicXMLParttern.toString());
+		System.out.println("xml: " + musicXMLParttern.toString());
+		List<String> scan2 = new ArrayList<String>();
+		String scan1 = "";
+		while(scan.hasNext()) {
+			String s = scan.next();
+			if(s.equals("|")) {
+				scan1 += "| ";
+				scan2.add(scan1);
+				scan1 = "";
+			}else {
+				scan1 += (s + " ");
+			}
+			
+		}
+		measures = score.getParts().get(0).getMeasures();
+		
+		StringBuilder repeat = new StringBuilder();
+		StringBuilder string = new StringBuilder();
+	
+		for(int i = 0; i < measures.size(); i++) {
+			
+			if(measures.get(i).getIsRepeatStart()) {
+				repeat.append(scan2.get(i));
+				sameMeasure = false;
 
+			}
+			if(sameMeasure) {
+				string.append(scan2.get(i));
+			}
+
+			if(measures.get(i).getIsRepeatStop()) {
+				sameMeasure = true;
+				String copy = repeat.toString();
+				for(int j = 1; j < measures.get(i).getBarLineRight().getRepeatNum(); j++) {
+					repeat.append(copy);
+				}
+				string.append(repeat);
+			}
+		}
+		
+		String s = string.toString();
+		musicXMLParttern = new Pattern(s);
+	}
+//V0 A3H.A90+E3H.A90+A2H.A90 | G5SA90 E5SA90 D5SA90 C#5SA90 E5SA90 D5SA90 A#4SA90 A4SA90 C5SA90 A#4SA90 G4SA90 E4SA90 |
+//V0 A3H.A90+E3H.A90+A2H.A90 
+//G5SA90 E5SA90 D5SA90 C#5SA90 E5SA90 D5SA90 A#4SA90 A4SA90 C5SA90 A#4SA90 G4SA90 E4SA90
+
+	//V0 A3H.A90+E3H.A90+A2H.A90 G5SA90 E5SA90 D5SA90 C#5SA90 E5SA90 D5SA90 A#4SA90 A4SA90 C5SA90 A#4SA90 G4SA90 E4SA90
 }

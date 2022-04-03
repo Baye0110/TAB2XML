@@ -11,7 +11,9 @@ public abstract class DisplayUnit extends NoteUnit{
 	private double bottom;
 	private double height;
 	private int position;
-	private double grace;
+	boolean grace;
+	public static int currMeasureNoteNum = 0;
+	Group box;
 	
 	
 	public int getPosition() {
@@ -45,8 +47,19 @@ public abstract class DisplayUnit extends NoteUnit{
 	public void setHeight(double height) {
 		this.height = height;
 	}
+	
+
+	public Group getBox() {
+		return this.box;
+	}
 
 	public abstract void extendStaff(int positions, double height);
 	
 	public abstract void addTails(double height, boolean stemDown);
+	
+	public boolean getGrace() {
+		return this.grace;
+	}
+
+	public abstract void generateBox();
 }

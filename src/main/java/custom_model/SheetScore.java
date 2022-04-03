@@ -18,9 +18,9 @@ import javafx.scene.text.TextAlignment;
 public class SheetScore extends VBox{
 
 	List<ScoreLine> lines;
-	List<Double> timings;
-	boolean playing;
-	double originalTempo;
+	List<Double> noteTimings;
+	boolean isPlaying;
+	double songTempo;
 	
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 
@@ -34,7 +34,7 @@ public class SheetScore extends VBox{
 	public SheetScore(Score score, double lineSize, double pageWidth) {
 		MusicMeasure.measureCount = 0;
 		NoteUnit.pressed = null;
-		this.originalTempo = 60;
+		this.songTempo = 60;
 		
 		this.lines = new ArrayList<>();
 		
@@ -128,7 +128,7 @@ public class SheetScore extends VBox{
 				}
 			}
 			if (!measureFound) {
-				pos += this.lines.get(i).minHeight(0) + this.getSpacing() + 8;
+				pos += this.lines.get(i).minHeight(0) + this.getSpacing();
 			}
 		}
 		
@@ -136,13 +136,16 @@ public class SheetScore extends VBox{
 	}
 	
 	public void generateBasePlayTimings(Score score) {
-		this.timings = new ArrayList<>();
+		this.noteTimings = new ArrayList<>();
 		int counter = 0;
 		
 		for (Measure m: score.getParts().get(0).getMeasures()) {
+			double graceTime = 0.0;
+			
 			for (Note n: m.getNotes()) {
-				if (n.getGrace()) {
-					timings.add(1.0/96);
+				if (n.getGrace() && !n.getChord()) {
+					this.noteTimings.add(1.0/48.0);
+					graceTime += 1.0/48.0;
 					counter ++;
 				}
 				else if (!n.getChord()) {
@@ -152,37 +155,41 @@ public class SheetScore extends VBox{
 						duration += dotDuration;
 						dotDuration /= 2.0;
 					}
-					timings.add(duration);
+					if (graceTime != 0.0) {
+						duration -= graceTime;
+						graceTime = 0.0;
+					}
+					this.noteTimings.add(duration);
 					
 					if (n.getTimeModification() != null) {
 						double scaleFactor =  ((double) n.getTimeModification().get("normal")) / n.getTimeModification().get("actual");
-						timings.set(counter, timings.get(counter) * scaleFactor);
+						noteTimings.set(counter, noteTimings.get(counter) * scaleFactor);
 					}
 					counter ++;
 				}
 			}
 			if (m.getNotes().size() < 1) {
 				double measureLength = m.getTimeSignature()[0] / (double) m.getTimeSignature()[1];
-				timings.set(counter - 1, timings.get(counter - 1) + measureLength);
+				noteTimings.set(counter - 1, noteTimings.get(counter - 1) + measureLength);
 			}
 		}
 		
-		for (int i = 0; i < this.timings.size(); i++) {
-			timings.set(i, timings.get(i) * 4000);
+		for (int i = 0; i < this.noteTimings.size(); i++) {
+			noteTimings.set(i, noteTimings.get(i) * 4000);
 		}
 	}
 	
 	public void setTempoOnTimings(int tempo) {
-		double wholenoteToMillisecond = this.originalTempo/tempo;
-		for (int i = 0; i < this.timings.size(); i++) {
-			this.timings.set(i, this.timings.get(i) * wholenoteToMillisecond);
+		double wholenoteToMillisecond = this.songTempo/tempo;
+		for (int i = 0; i < this.noteTimings.size(); i++) {
+			this.noteTimings.set(i, this.noteTimings.get(i) * wholenoteToMillisecond);
 		}
-		this.originalTempo = tempo;
-		System.out.println(this.timings);
+		this.songTempo = tempo;
+		System.out.println(this.noteTimings);
 	}
 	
 	public void startHighlight() {
-		this.playing = true;
+		this.isPlaying = true;
 		
 		int notePressed; int measureOfNote;
 		if (NoteUnit.pressed == null) {
@@ -215,7 +222,7 @@ public class SheetScore extends VBox{
 	}
 	
 	public void stopHighLight() {
-		this.playing = false;
+		this.isPlaying = false;
 	}
 	
 	public List<MusicMeasure> getMeasureList() {

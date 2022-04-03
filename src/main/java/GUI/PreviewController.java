@@ -78,7 +78,8 @@ public class PreviewController extends Application{
 	}
 	public void goHandler(){
 		System.out.println("Go Button Clicked!");
-		double valToSet = sheet.getMeasurePosition(Integer.parseInt(gotoMeasureField.getText())) / sheet.getHeight();
+		this.sp.setVmax(this.sheet.minHeight(0) + this.sp.minHeight(0));
+		double valToSet = sheet.getMeasurePosition(Integer.parseInt(gotoMeasureField.getText()));
 		sp.setVvalue(valToSet);
 	}
 	

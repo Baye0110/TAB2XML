@@ -1,6 +1,7 @@
 package custom_model.note;
 
 import custom_component_data.Note;
+import custom_model.MusicMeasure;
 import custom_model.notehead.NoteHead;
 import custom_model.rest.Rest;
 import javafx.scene.Group;
@@ -12,15 +13,18 @@ import javafx.scene.shape.Line;
 
 // DRUMS
 public class DisplayNote extends DisplayUnit{
-	double preceding;
-	double trailing;
+	double preceding; // IMPORTANT : space in front
+	double trailing; // IMPORTANT : space after
+	double noteHeadWidth; // IMPORTANT : width of the Notehead
+	boolean isChord; // IMPORTANT : true if chord
+	
 	double parenthesesDisplacement;
 	
-	boolean isChord;
+	
 	boolean isNormalSide;
 	static double dotScale = 3;
 	static double dotDistanceScale = 1.5;
-	double noteHeadWidth;
+	
 	
 	/**
 	 * 
@@ -29,13 +33,20 @@ public class DisplayNote extends DisplayUnit{
 	 * @param hasFlip		Is this Note in a chord with a flipped note (advanced - don't need to know)
 	 * @param isFlip		Is this Note a flipped note (advanced - don't need to know)
 	 */
-	public DisplayNote(double height, Note note, boolean hasFlip, boolean isFlip) {
+	public DisplayNote(double height, Note note, boolean hasFlip, boolean isFlip, boolean isChord) {
 		// Set the basic values
 		this.setTop(0);
 		this.setBottom(0);
 		
 		// The spacingType is (0.5 = breve, 1 = whole, 2 = half, 4 = quarter, 8 = 8th, ...)
-		this.setSpacingType(note.getType() != 0 ? note.getType() : 0.5);
+		if (note.getGrace()) {
+			this.setSpacingType(64);
+			this.grace = true;
+		}
+		else {
+			this.setSpacingType(note.getType() != 0 ? note.getType() : 0.5);
+		}
+		
 		// This is the position on the staff which was already calculated during the XML parsing.
 		this.setPosition(note.getPosition());
 		
@@ -49,6 +60,22 @@ public class DisplayNote extends DisplayUnit{
 			
 			// Add the number of dots that are needed for this rest.
 			this.addDots(height, note);
+			
+			DisplayUnit.currMeasureNoteNum ++;
+			this.noteNum = DisplayUnit.currMeasureNoteNum;
+			this.measure = MusicMeasure.measureCount;
+			
+			this.setOnMouseClicked(e -> {
+				if (this == NoteUnit.pressed) {
+					NoteUnit.pressed = null;
+					this.toggleHighlight();
+				}
+				else {
+					this.toggleHighlight();
+					NoteUnit.pressed = this;
+				}
+			});
+			
 			// Don't do anything else for rest notes.
 			return;
 		}
@@ -73,6 +100,7 @@ public class DisplayNote extends DisplayUnit{
 		if ((isFlip && !stemDown) || (hasFlip && !isFlip && stemDown)) {
 			head.setTranslateX(this.getWidth() + head.getWidth());
 			this.setWidth(this.getWidth() + head.getWidth() * 2);
+			this.trailing = head.getWidth();
 		}
 		// Otherwise for a normal note, increment the width of the this object, and set the X position of the notehead
 		else {
@@ -136,6 +164,27 @@ public class DisplayNote extends DisplayUnit{
 		// Set the dimensions of the note
 		this.setWidth(this.minWidth(0));
 		this.setHeight(this.minHeight(0));
+		this.isChord = isChord;
+		
+		if (!this.isChord) {
+			DisplayUnit.currMeasureNoteNum ++;
+			this.noteNum = DisplayUnit.currMeasureNoteNum;
+			this.measure = MusicMeasure.measureCount;
+			
+			this.setOnMouseClicked(e -> {
+				if (this == NoteUnit.pressed) {
+					NoteUnit.pressed = null;
+					this.toggleHighlight();
+				}
+				else {
+					this.toggleHighlight();
+					NoteUnit.pressed = this;
+				}
+			});
+		} else {
+			this.measure = -1;
+			this.noteNum = -1;
+		}
 	}
 	
 	/** Add the parentheses (type==1 : left,  type==2 : right)
@@ -170,10 +219,10 @@ public class DisplayNote extends DisplayUnit{
 		this.setWidth(this.getWidth() + parentheses.minWidth(0));
 		
 		if (type == 1) {
-			this.preceding = parentheses.minWidth(0);
+			this.preceding += parentheses.minWidth(0);
 		}		
 		else if (type == 2) {
-			this.trailing = parentheses.minWidth(0);
+			this.trailing += parentheses.minWidth(0);
 			parentheses.setRotate(180);
 		}
 	}
@@ -219,8 +268,13 @@ public class DisplayNote extends DisplayUnit{
 	public void addTails(double height, boolean stemDown) {
 		if (this.getSpacingType() >= 8) {
 			int log_spacingType = 0;
-			for (; this.getSpacingType() > Math.pow(2, log_spacingType); log_spacingType++);
-			log_spacingType -= 2;
+			if (this.grace) {
+				log_spacingType = 1;
+			}
+			else {
+				for (; this.getSpacingType() > Math.pow(2, log_spacingType); log_spacingType++);
+				log_spacingType -= 2;
+			}
 			
 			NoteTail nt = new NoteTail(height, log_spacingType, stemDown);
 			nt.setTranslateY(this.getTop());
@@ -229,6 +283,7 @@ public class DisplayNote extends DisplayUnit{
 				nt.setTranslateX(this.preceding + this.noteHeadWidth - height/15);
 				this.setWidth(this.getWidth() + (nt.width > this.trailing ? nt.width - this.trailing : 0));
 				this.trailing = nt.width > this.trailing ? nt.width : this.trailing;
+				System.out.println(trailing);
 			}
 			else {
 				this.setWidth(this.getWidth() + (nt.width > this.preceding ? nt.width - this.preceding : 0));
@@ -236,11 +291,38 @@ public class DisplayNote extends DisplayUnit{
 			}
 			
 			this.getChildren().add(nt);
-			
 		}
 	}
 	
 	public void toggleHighlight() {
+		if (!this.isHighlighted) {
+			this.isHighlighted = true;
+			this.box.setOpacity(1.0);
+			if (pressed != null) {
+				pressed.toggleHighlight();
+			}	
+			if (this.noteNum > -1) {
+				System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
+			}
+		}
+		else {
+			this.box.setOpacity(0.0);
+			this.isHighlighted = false;
+		}
 		
+	}
+	
+	public void generateBox() {
+		Line left = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), 0 - this.preceding - 2, this.noteHeadWidth * 2);
+		Line top = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0));
+		Line bottom = new Line(0 - this.preceding - 2, this.noteHeadWidth * 2, this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+		Line right = new Line(this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+		left.setStroke(Color.DEEPSKYBLUE);
+		top.setStroke(Color.DEEPSKYBLUE);
+		bottom.setStroke(Color.DEEPSKYBLUE);
+		right.setStroke(Color.DEEPSKYBLUE);
+		
+		this.box = new Group(left, top, bottom, right);
+		this.box.setOpacity(0.0);
 	}
 }
