@@ -24,12 +24,12 @@ public class StaffMeasure extends MusicMeasure{
 	
 	public StaffMeasure(double height, Measure measure, boolean start) {
 		super(height, measure, start);
-		
 		if (measure.getNotes().size() == 0) {
 			this.generateBarLines(height, measure.getStaffLines());
 			this.maxHeight = height * (measure.getStaffLines());
 			return;
 		}
+		DisplayUnit.currMeasureNoteNum = 0;
 		
 		List<Note> notes = measure.getNotes();
 		this.notes = new ArrayList<>();
@@ -57,8 +57,10 @@ public class StaffMeasure extends MusicMeasure{
 			}
 			else {
 				double noteHeight = notes.get(i).getGrace() ? height * 0.65 : height;
-				currentUnit = new DisplayNote(noteHeight , notes.get(i), false, false);	
-				currentUnit.addTails(noteHeight, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
+				currentUnit = new DisplayNote(height, notes.get(i), false, false, false);	
+				currentUnit.addTails(height, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
+				currentUnit.generateBox();
+				currentUnit.getChildren().add(currentUnit.getBox());
 			}
 			
 			
@@ -92,7 +94,7 @@ public class StaffMeasure extends MusicMeasure{
 				System.out.println("Invalid note!");
 			}
 		}
-		
+
 		for (NoteUnit noteUnit: this.notes) {
 			DisplayUnit note = (DisplayUnit) noteUnit;
 			this.maxHeight = note.getTranslateY() + note.getTop() > this.maxHeight ? note.getTranslateY() + note.getTop() : this.maxHeight;

@@ -1,6 +1,7 @@
 package custom_model.note;
 
 import custom_component_data.Note;
+import custom_model.MusicMeasure;
 import custom_model.notehead.NoteHead;
 import custom_model.rest.Rest;
 import javafx.scene.Group;
@@ -32,7 +33,7 @@ public class DisplayNote extends DisplayUnit{
 	 * @param hasFlip		Is this Note in a chord with a flipped note (advanced - don't need to know)
 	 * @param isFlip		Is this Note a flipped note (advanced - don't need to know)
 	 */
-	public DisplayNote(double height, Note note, boolean hasFlip, boolean isFlip) {
+	public DisplayNote(double height, Note note, boolean hasFlip, boolean isFlip, boolean isChord) {
 		// Set the basic values
 		this.setTop(0);
 		this.setBottom(0);
@@ -59,6 +60,22 @@ public class DisplayNote extends DisplayUnit{
 			
 			// Add the number of dots that are needed for this rest.
 			this.addDots(height, note);
+			
+			DisplayUnit.currMeasureNoteNum ++;
+			this.noteNum = DisplayUnit.currMeasureNoteNum;
+			this.measure = MusicMeasure.measureCount;
+			
+			this.setOnMouseClicked(e -> {
+				if (this == NoteUnit.pressed) {
+					NoteUnit.pressed = null;
+					this.toggleHighlight();
+				}
+				else {
+					this.toggleHighlight();
+					NoteUnit.pressed = this;
+				}
+			});
+			
 			// Don't do anything else for rest notes.
 			return;
 		}
@@ -147,6 +164,27 @@ public class DisplayNote extends DisplayUnit{
 		// Set the dimensions of the note
 		this.setWidth(this.minWidth(0));
 		this.setHeight(this.minHeight(0));
+		this.isChord = isChord;
+		
+		if (!this.isChord) {
+			DisplayUnit.currMeasureNoteNum ++;
+			this.noteNum = DisplayUnit.currMeasureNoteNum;
+			this.measure = MusicMeasure.measureCount;
+			
+			this.setOnMouseClicked(e -> {
+				if (this == NoteUnit.pressed) {
+					NoteUnit.pressed = null;
+					this.toggleHighlight();
+				}
+				else {
+					this.toggleHighlight();
+					NoteUnit.pressed = this;
+				}
+			});
+		} else {
+			this.measure = -1;
+			this.noteNum = -1;
+		}
 	}
 	
 	/** Add the parentheses (type==1 : left,  type==2 : right)
@@ -181,10 +219,10 @@ public class DisplayNote extends DisplayUnit{
 		this.setWidth(this.getWidth() + parentheses.minWidth(0));
 		
 		if (type == 1) {
-			this.preceding = parentheses.minWidth(0);
+			this.preceding += parentheses.minWidth(0);
 		}		
 		else if (type == 2) {
-			this.trailing = parentheses.minWidth(0);
+			this.trailing += parentheses.minWidth(0);
 			parentheses.setRotate(180);
 		}
 	}
@@ -245,6 +283,7 @@ public class DisplayNote extends DisplayUnit{
 				nt.setTranslateX(this.preceding + this.noteHeadWidth - height/15);
 				this.setWidth(this.getWidth() + (nt.width > this.trailing ? nt.width - this.trailing : 0));
 				this.trailing = nt.width > this.trailing ? nt.width : this.trailing;
+				System.out.println(trailing);
 			}
 			else {
 				this.setWidth(this.getWidth() + (nt.width > this.preceding ? nt.width - this.preceding : 0));
@@ -252,11 +291,38 @@ public class DisplayNote extends DisplayUnit{
 			}
 			
 			this.getChildren().add(nt);
-			
 		}
 	}
 	
 	public void toggleHighlight() {
+		if (!this.isHighlighted) {
+			this.isHighlighted = true;
+			this.box.setOpacity(1.0);
+			if (pressed != null) {
+				pressed.toggleHighlight();
+			}	
+			if (this.noteNum > -1) {
+				System.out.println("Selected Note: \t Measure - " + this.measure + ",  Note - " + this.noteNum);
+			}
+		}
+		else {
+			this.box.setOpacity(0.0);
+			this.isHighlighted = false;
+		}
 		
+	}
+	
+	public void generateBox() {
+		Line left = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), 0 - this.preceding - 2, this.noteHeadWidth * 2);
+		Line top = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0));
+		Line bottom = new Line(0 - this.preceding - 2, this.noteHeadWidth * 2, this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+		Line right = new Line(this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+		left.setStroke(Color.DEEPSKYBLUE);
+		top.setStroke(Color.DEEPSKYBLUE);
+		bottom.setStroke(Color.DEEPSKYBLUE);
+		right.setStroke(Color.DEEPSKYBLUE);
+		
+		this.box = new Group(left, top, bottom, right);
+		this.box.setOpacity(0.0);
 	}
 }

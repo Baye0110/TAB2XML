@@ -140,9 +140,12 @@ public class SheetScore extends VBox{
 		int counter = 0;
 		
 		for (Measure m: score.getParts().get(0).getMeasures()) {
+			double graceTime = 0.0;
+			
 			for (Note n: m.getNotes()) {
-				if (n.getGrace()) {
-					noteTimings.add(1.0/96);
+				if (n.getGrace() && !n.getChord()) {
+					this.noteTimings.add(1.0/48.0);
+					graceTime += 1.0/48.0;
 					counter ++;
 				}
 				else if (!n.getChord()) {
@@ -152,7 +155,11 @@ public class SheetScore extends VBox{
 						duration += dotDuration;
 						dotDuration /= 2.0;
 					}
-					noteTimings.add(duration);
+					if (graceTime != 0.0) {
+						duration -= graceTime;
+						graceTime = 0.0;
+					}
+					this.noteTimings.add(duration);
 					
 					if (n.getTimeModification() != null) {
 						double scaleFactor =  ((double) n.getTimeModification().get("normal")) / n.getTimeModification().get("actual");
