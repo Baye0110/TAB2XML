@@ -210,13 +210,6 @@ public class musicPlayer {
 						countAfterSlide ++;
 					}
 					stringInstrument += developSlideString(current, noteList.get(countAfterSlide));
-						
-//						if (slides.get(0).getType().equals("start")) {
-//							slideStart += " :CE(65,127) :CE(5,64)";
-//						}
-//						else if (slides.get(0).getType().equals("stop")) {
-//							slideStop += " :CE(65,0)";
-//						}
 				}
 				
 				
@@ -380,4 +373,5 @@ public class musicPlayer {
 		timeMod = "*" + modification.get("actual") + ":" + modification.get("normal");		
 		return timeMod;
 	}
+	
 }
