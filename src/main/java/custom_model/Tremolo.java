@@ -5,30 +5,6 @@ import javafx.scene.shape.Polygon;
 
 public class Tremolo extends Group{
 	public Tremolo(double slantLength, double slantWidth, double rotateDeg, boolean rotation, int numLines) {
-		/*Polygon slant1 = new Polygon();
-		slant1.getPoints().addAll(new Double[] {
-				0.0, 0.0,
-				0.0, slantWidth,
-				slantLength, rotateDeg + slantWidth,
-				slantLength, rotateDeg,
-		});
-		
-		Polygon slant2 = new Polygon();
-		slant2.getPoints().addAll(new Double[] {
-				0.0, slantWidth + 15.0,
-				0.0, 2*slantWidth + 15.0,
-				slantLength, rotateDeg + 2*slantWidth + 15.0,
-				slantLength, rotateDeg + slantWidth + 15.0,
-		});
-		
-		Polygon slant3 = new Polygon();
-		slant3.getPoints().addAll(new Double[] {
-				0.0, 2*slantWidth + 30.0,
-				0.0, 3*slantWidth + 30.0,
-				slantLength, rotateDeg + 3*slantWidth + 30.0,
-				slantLength, rotateDeg + 2*slantWidth + 30.0,
-		});*/
-		
 		Polygon slant1 = new Polygon();
 		slant1.getPoints().addAll(new Double[] {
 				0.0, 0.0,
@@ -41,32 +17,25 @@ public class Tremolo extends Group{
 			slant1.setScaleX(-1);
 		}
 		
+		// 15.0 is the fixed distance between each slant, could be changed later
 		double shift = slantWidth + 15.0;
-		for(int i = 0; i < numLines-1; i++) {
-			Polygon slant = new Polygon();
-			slant.getPoints().addAll(slant1.getPoints());
-			slant.setTranslateY(shift);
+		for(int i = 0; i < numLines; i++) {
+			// create a copy of the original slant
+			Polygon slantCopy = new Polygon();
+			slantCopy.getPoints().addAll(slant1.getPoints());
+			// shift down the copy by a fixed distance
+			slantCopy.setTranslateY(shift);
+			// rotate if needed
 			if(rotation == true) {
-				slant.setScaleX(-1);
+				slantCopy.setScaleX(-1);
 			}
-			this.getChildren().add(slant);
+			// add to scene
+			this.getChildren().add(slantCopy);
+			/*
+			 *  the original slant is always the starting point so each copy will be shifted further 
+			 *  => shift distance increases per copy
+			 */
 			shift +=  slantWidth + 15.0;
 		}
-		
-		/*Polygon slant2 = new Polygon();
-		slant2.getPoints().addAll(slant1.getPoints());
-		slant2.setTranslateY(slantWidth + 15.0);
-		
-		
-		if(rotation == true) {
-			slant1.setScaleX(-1);
-			slant2.setScaleX(-1);
-			//slant3.setScaleX(-1);
-		}
-		this.getChildren().add(slant1);
-		this.getChildren().add(slant2);
-		//this.getChildren().add(slant3);*/
-		
 	}
-
 }
