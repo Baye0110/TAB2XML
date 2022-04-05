@@ -5,7 +5,7 @@ import javafx.scene.shape.Polygon;
 
 public class Tremolo extends Group{
 	public Tremolo(double slantLength, double slantWidth, double rotateDeg, boolean rotation, int numLines) {
-		Polygon slant1 = new Polygon();
+		/*Polygon slant1 = new Polygon();
 		slant1.getPoints().addAll(new Double[] {
 				0.0, 0.0,
 				0.0, slantWidth,
@@ -27,9 +27,9 @@ public class Tremolo extends Group{
 				0.0, 3*slantWidth + 30.0,
 				slantLength, rotateDeg + 3*slantWidth + 30.0,
 				slantLength, rotateDeg + 2*slantWidth + 30.0,
-		});
+		});*/
 		
-		/*Polygon slant1 = new Polygon();
+		Polygon slant1 = new Polygon();
 		slant1.getPoints().addAll(new Double[] {
 				0.0, 0.0,
 				0.0, slantWidth,
@@ -37,17 +37,35 @@ public class Tremolo extends Group{
 				slantLength, rotateDeg,
 		});
 		
-		Polygon slant2 = new Polygon();
-		slant2.getPoints().addAll(slant1.getPoints() + (slantWidth + 15.0));
+		if(rotation == true) {
+			slant1.setScaleX(-1);
+		}
+		
+		double shift = slantWidth + 15.0;
+		for(int i = 0; i < numLines-1; i++) {
+			Polygon slant = new Polygon();
+			slant.getPoints().addAll(slant1.getPoints());
+			slant.setTranslateY(shift);
+			if(rotation == true) {
+				slant.setScaleX(-1);
+			}
+			this.getChildren().add(slant);
+			shift +=  slantWidth + 15.0;
+		}
+		
+		/*Polygon slant2 = new Polygon();
+		slant2.getPoints().addAll(slant1.getPoints());
+		slant2.setTranslateY(slantWidth + 15.0);
+		
 		
 		if(rotation == true) {
 			slant1.setScaleX(-1);
 			slant2.setScaleX(-1);
-			slant3.setScaleX(-1);
-		}*/
+			//slant3.setScaleX(-1);
+		}
 		this.getChildren().add(slant1);
 		this.getChildren().add(slant2);
-		this.getChildren().add(slant3);
+		//this.getChildren().add(slant3);*/
 		
 	}
 
