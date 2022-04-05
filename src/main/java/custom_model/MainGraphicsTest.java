@@ -167,10 +167,15 @@ public class MainGraphicsTest extends Application {
         double widthOfEllipse = e1.minWidth(0);
         System.out.println("Height: " + heightOfEllipse + "\nWidth: " + widthOfEllipse);*/
         
-        SlantLine sl = new SlantLine(100, 14, false);
+        SlantLine sl = new SlantLine(100, 14, 20.0, false);
         sl.setTranslateX(400);
         sl.setTranslateY(90);
         g1.getChildren().add(sl);
+        
+        /*Tremolo t = new Tremolo(100, 14, true, 3);
+        t.setTranslateX(400);
+        t.setTranslateY(90);
+        g1.getChildren().add(t);*/
        
         
         
