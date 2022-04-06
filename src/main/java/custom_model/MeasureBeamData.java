@@ -82,7 +82,9 @@ public class MeasureBeamData {
             NoteUnit currNote = notes.get(i);
             Note data = currNote.getData();
 
-            duration += this.calculateNoteDuration(currNote);
+            if (!data.getGrace()) {
+            	duration += this.calculateNoteDuration(currNote);
+            }
             boolean notEligible = currNote.getSpacingType() < 8 || data.getRest() || data.getGrace();
             if (notEligible) {
                 this.beamNumbers.add(0);
@@ -217,7 +219,9 @@ public class MeasureBeamData {
             dotDuration /= 2;
         }
         if (data.getTimeModification() != null) {
-            duration *= (data.getTimeModification().get("normal") / data.getTimeModification().get("actual"));
+            duration *= ((double) data.getTimeModification().get("normal") / data.getTimeModification().get("actual"));
+            System.out.println((double) data.getTimeModification().get("normal") / data.getTimeModification().get("actual"));
+            duration += 0.0005;
         }
         return duration;
     }
