@@ -23,7 +23,7 @@ public class Tremolo extends Group{
 		return rotateDeg;
 	}
 
-	public int getLines() {
+	public int getnumLines() {
 		return numlines;
 	}
 
@@ -69,7 +69,7 @@ public class Tremolo extends Group{
 	
 	public double calculatePosition(double totalHeight) {
 		double startDist = 0.0;
-		double TremoloHeight = this.getWidth() + this.getRotateDeg();
+		double TremoloHeight = (this.getWidth() * this.getnumLines()) + (12.0 * (this.getnumLines()-1)) + this.getRotateDeg();
 		startDist = (totalHeight - TremoloHeight) / 2;
 		return startDist;
 	}
