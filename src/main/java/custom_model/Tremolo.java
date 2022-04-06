@@ -43,10 +43,11 @@ public class Tremolo extends Group{
 		if(rotation == true) {
 			slant1.setScaleX(-1);
 		}
+		this.getChildren().add(slant1);
 		
 		// 12.0 is the fixed distance between each slant, could be changed later
 		double shift = slantWidth + 12.0;
-		for(int i = 0; i < numLines; i++) {
+		for(int i = 0; i < numLines-1; i++) {
 			// create a copy of the original slant
 			Polygon slantCopy = new Polygon();
 			slantCopy.getPoints().addAll(slant1.getPoints());
