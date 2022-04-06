@@ -54,4 +54,8 @@ public class ScoreLine extends HBox{
 			m.setSpacing(scale);
 		}
 	}
+	
+	public List<MusicMeasure> getMeasures() {
+		return this.measures;
+	}
 }

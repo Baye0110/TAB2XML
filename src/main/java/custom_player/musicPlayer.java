@@ -19,6 +19,7 @@ import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_component_data.Tied;
+import custom_model.MusicMeasure;
 import custom_model.SheetScore;
 import custom_model.note.NoteUnit;
 import javafx.scene.control.Alert;
@@ -86,9 +87,12 @@ public class musicPlayer {
 			}
 			
 			if (this.isFinished()) {
-				if (NoteUnit.pressed != null)
+				List<MusicMeasure> measures = sheet.getMeasureList();
+				List<NoteUnit> last = measures.get(measures.size()-1).getNotes();
+				if (NoteUnit.pressed == last.get(last.size()-1)) {
 					NoteUnit.pressed.toggleHighlight();
-				NoteUnit.pressed = null;
+					NoteUnit.pressed = null;
+				}
 			}
 			
 //			if(isPaused()) {
@@ -438,14 +442,16 @@ public class musicPlayer {
 
 	public String generateSpecificPattern() {
 		StringBuilder str = new StringBuilder("T" + this.tempoSpeed + " ");
-		if (this.instrument_type == 3)
-			str.append("V9 ");
+		if (this.instrument_type == 3) {str.append("V9 ");}
+		else if (this.instrument_type == 2) {str.append("I[Guitar] ");}
+		else if (this.instrument_type == 1) {str.append("I[Acoustic_Bass] ");}
 		
 		int measure = 1;
 		int note = 1;
 		
 		Scanner tokens = new Scanner(this.musicXMLParttern.toString());
 		System.out.println(this.musicXMLParttern.toString());
+		
 		while (tokens.hasNext()) {
 			String token = tokens.next();
 			if (measure == NoteUnit.pressed.getMeasure()) {

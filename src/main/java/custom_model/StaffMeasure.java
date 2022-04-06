@@ -89,7 +89,7 @@ public class StaffMeasure extends MusicMeasure{
 		}
 		else {
 			try {
-				this.minWidth = currentDistance + this.notes.get(0).minWidth(0)/2;
+				this.minWidth = currentDistance + this.notes.get(0).getWidth()/2;
 			}catch(Exception e) {
 				System.out.println("Invalid note!");
 			}
@@ -149,7 +149,7 @@ public class StaffMeasure extends MusicMeasure{
 		for (int i = 0; i < this.notes.size(); i++) {
 			NoteUnit currNote = this.notes.get(i);
 			currNote.setTranslateX(current);
-			current += currNote.minWidth(0) + (this.wholeNoteSpacing/currNote.getSpacingType());
+			current += currNote.getWidth() + (this.wholeNoteSpacing/currNote.getSpacingType());
 			this.spacing += this.wholeNoteSpacing/currNote.getSpacingType();
 		}
 		
@@ -176,6 +176,11 @@ public class StaffMeasure extends MusicMeasure{
 			end.setStartX(current);
 			end.setEndX(current);
 		}
+		this.minWidth = current;
+		
+		MeasureBeamData mbd = new MeasureBeamData(this.notes, 4);
+		BeamInfoProcessor bip = new BeamInfoProcessor(mbd.getBeamNumbers() , mbd.beamInfos);
+		System.out.println(bip.toString());
 	}
 
 }

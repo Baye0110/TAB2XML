@@ -22,6 +22,8 @@ public class DisplayChord extends DisplayUnit{
 		this.min_position = notes.get(0).getPosition();
 		this.max_position = notes.get(notes.size()-1).getPosition();
 		
+		this.data = notes.get(notes.size()-1);
+		
 		this.displayNotes = new ArrayList<>();
 		double max_preceding = 0;
 		double max_trailing = 0;

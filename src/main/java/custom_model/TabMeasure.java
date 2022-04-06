@@ -312,7 +312,6 @@ public class TabMeasure extends MusicMeasure {
 					}
 					SlideLink slide = (SlideLink) link;
 					slide.setLength(current - slide.getTranslateX());
-					System.out.println("end: " + slide.endVal);
 				}
 				if (init) {
 					this.links.get(linkNum).setTranslateX(current + currLabel.getWidth());
@@ -347,6 +346,10 @@ public class TabMeasure extends MusicMeasure {
 		if (this.endRepeat != null) {
 			this.getChildren().remove(end);
 		}
+		
+		MeasureBeamData mbd = new MeasureBeamData(this.notes, 4);
+		BeamInfoProcessor processor = new BeamInfoProcessor(mbd.beamNumbers, mbd.beamInfos);
+		System.out.println(processor.toString()); 
 	}
 
 }
