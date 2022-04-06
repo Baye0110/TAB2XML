@@ -68,7 +68,6 @@ public class TabNoteStem extends Group {
 			Ellipse circle = new Ellipse(baseDotDistance*(i + 1), height/2 + (type <= 2 ? height: 0), dotRad, dotRad);
 			this.getChildren().add(circle);
 		}
-		System.out.println("");
 	}
 
 }
