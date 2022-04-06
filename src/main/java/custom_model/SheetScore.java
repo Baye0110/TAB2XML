@@ -21,6 +21,8 @@ public class SheetScore extends VBox{
 	List<Double> noteTimings;
 	boolean isPlaying;
 	double songTempo;
+	static double lineSize = 10; 
+	static double pageWidth = 1050;
 	
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 
@@ -28,10 +30,8 @@ public class SheetScore extends VBox{
 	/** Creates the SheetScore object
 	 * 
 	 * @param score			The Score XML parsing object which has all the data for the entire music piece.
-	 * @param lineSize		The spacing between the staffLines (the height of the noteheads)
-	 * @param pageWidth		The width of the page.
 	 */
-	public SheetScore(Score score, double lineSize, double pageWidth) {
+	public SheetScore(Score score) {
 		MusicMeasure.measureCount = 0;
 		NoteUnit.pressed = null;
 		this.songTempo = 60;
@@ -39,7 +39,7 @@ public class SheetScore extends VBox{
 		this.lines = new ArrayList<>();
 		
 		// Creates an invisible rectangle to add empty space to the top.
-		Rectangle topBuffer = new Rectangle(pageWidth, lineSize * 2);
+		Rectangle topBuffer = new Rectangle(pageWidth, lineSize * 2.5);
 		topBuffer.setStroke(Color.WHITE);
 		topBuffer.setOpacity(0);
 		this.getChildren().add(topBuffer);
@@ -253,4 +253,5 @@ public class SheetScore extends VBox{
 	public void resetLinker() {
 		NoteUnit.pressed = null;
 	}
+	
 }
