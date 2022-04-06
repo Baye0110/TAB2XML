@@ -1,15 +1,26 @@
 package GUI;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.fxmisc.richtext.CodeArea;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
 
 import custom_component_data.Score;
+import custom_model.MusicMeasure;
 import custom_model.SheetScore;
 import custom_player.musicPlayer;
 import javafx.application.Application;
@@ -17,14 +28,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import nu.xom.ParsingException;
 import nu.xom.ValidityException;
+import javafx.embed.swing.SwingFXUtils;
 
 public class PreviewController extends Application{
 	
@@ -44,6 +58,7 @@ public class PreviewController extends Application{
 	@FXML Button exitButton;
 	@FXML Button displayButton;
 	@FXML Button exportButton;
+	List<BufferedImage> bufferedimage = new ArrayList<BufferedImage>();
 	
 	public PreviewController() {}
 	
@@ -54,11 +69,18 @@ public class PreviewController extends Application{
 	 public void update() throws ValidityException, ParserConfigurationException, ParsingException, IOException {
 		 tempoField.setText("60");
 		 score = new Score(mvc.converter.getMusicXML());
-		 sheet = new SheetScore(score, 10, 1050);
+		 sheet = new SheetScore(score);
 		 sp.setContent(sheet);
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
+		 getBufferimage();
 	 }
 	
+	private void getBufferimage() {
+		for(MusicMeasure mm: sheet.getMeasureList()) {
+			bufferedimage.add(SwingFXUtils.fromFXImage(mm.snapshot(new SnapshotParameters(), null), null));
+		}
+	}
+
 	public void playHandler() {
 		System.out.println("Play Button Clicked!");
 		System.out.println("String1: " + player.toString());
@@ -104,6 +126,31 @@ public class PreviewController extends Application{
 	
 	public void expotHandler(){
 		System.out.println("Export PDF Button Clicked!");
+			
+		FileChooser fileChooser = new FileChooser();
+	    fileChooser.setTitle("Save As");
+	    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("pdf file", "*.pdf");
+	    fileChooser.getExtensionFilters().add(extFilter);
+	    File file = fileChooser.showSaveDialog(mvc.convertWindow);
+	      if(file != null) {
+	    	  try {
+	    		  PdfWriter writer = new PdfWriter(file); 
+	    		  PdfDocument pdf = new PdfDocument(writer);
+	    		  Document doc = new Document(pdf); 
+	    		  for(int i = 0; i < bufferedimage.size(); i ++) {
+	    			  File outputFile = new File("image" + i + ".png");
+	    			  ImageIO.write(bufferedimage.get(i), "png", outputFile);
+	    			  ImageData imgD = ImageDataFactory.create(outputFile.getPath());
+	  	              Image image = new Image(imgD);
+	  	              doc.add(image);
+	    		 }
+	    		  doc.close();
+	  			
+	    		  System.out.println("PDF saved successfully, File path: " + file.getPath());
+		        } catch (Exception e) {
+		        	System.out.println("PDF saved failed");
+		        }
+	      }
 	}
 	
 	private Window openNewWindow(Parent root, String windowName) {
