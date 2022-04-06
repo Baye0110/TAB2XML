@@ -263,4 +263,16 @@ abstract public class MusicMeasure extends Pane {
 		endRepeat.add(repeat);
 		
 	}
+	
+	public List<NoteUnit> getNotes() {
+		return this.notes;
+	}
+	
+	public double getMeasureWidth() {
+		return this.minWidth;
+	}
+	
+	public double getMeasureHeight() {
+		return this.maxHeight;
+	}
 }

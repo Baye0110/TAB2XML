@@ -37,6 +37,7 @@ public class DisplayNote extends DisplayUnit{
 		// Set the basic values
 		this.setTop(0);
 		this.setBottom(0);
+		this.data = note;
 		
 		// The spacingType is (0.5 = breve, 1 = whole, 2 = half, 4 = quarter, 8 = 8th, ...)
 		if (note.getGrace()) {
@@ -162,7 +163,6 @@ public class DisplayNote extends DisplayUnit{
 		}
 		
 		// Set the dimensions of the note
-		this.setWidth(this.minWidth(0));
 		this.setHeight(this.minHeight(0));
 		this.isChord = isChord;
 		
@@ -283,7 +283,6 @@ public class DisplayNote extends DisplayUnit{
 				nt.setTranslateX(this.preceding + this.noteHeadWidth - height/15);
 				this.setWidth(this.getWidth() + (nt.width > this.trailing ? nt.width - this.trailing : 0));
 				this.trailing = nt.width > this.trailing ? nt.width : this.trailing;
-				System.out.println(trailing);
 			}
 			else {
 				this.setWidth(this.getWidth() + (nt.width > this.preceding ? nt.width - this.preceding : 0));

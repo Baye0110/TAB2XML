@@ -235,6 +235,10 @@ public class SheetScore extends VBox{
 		return measures;
 	}
 	
+	public List<ScoreLine> getScoreLines() {
+		return this.lines;
+	}
+	
 	public int getTimingOfNote(int measureNum, int noteNum, List<MusicMeasure> measures) {
 		int timingCount = 0;
 		
