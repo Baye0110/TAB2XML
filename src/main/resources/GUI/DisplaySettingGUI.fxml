@@ -43,17 +43,17 @@
                   <Label text="Line Space:" />
                   <ChoiceBox fx:id="lineSpaceValue" prefHeight="25.0" prefWidth="85.0" value="--Choose--">
                      <HBox.margin>
-                        <Insets left="19.0" />
+                        <Insets left="18.0" />
                      </HBox.margin>
                   </ChoiceBox>
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" layoutX="30.0" layoutY="118.0" prefHeight="25.0" prefWidth="222.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="115.0">
                <children>
-                  <Label text="Notes Size:" />
-                  <ChoiceBox fx:id="noteSizeValue" prefHeight="25.0" prefWidth="85.0" value="--Choose--">
+                  <Label text="Table Widtch:" />
+                  <ChoiceBox fx:id="taleWidthValue" prefHeight="25.0" prefWidth="85.0" value="--Choose--">
                      <HBox.margin>
-                        <Insets left="19.0" />
+                        <Insets left="6.0" />
                      </HBox.margin>
                   </ChoiceBox>
                </children>

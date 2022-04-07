@@ -19,7 +19,7 @@ public class DisplaySettingController{
 	ObservableList<String> fontValues = FXCollections.observableArrayList();
 	ObservableList<String> noteSpaceValues = FXCollections.observableArrayList();
 	ObservableList<String> lineSpaceValues = FXCollections.observableArrayList();
-	ObservableList<String> noteSizeValues = FXCollections.observableArrayList();
+	ObservableList<String> taleWidthValues = FXCollections.observableArrayList();
 	
 	@FXML Button applyButton;
 	@FXML Button resetButton;
@@ -31,7 +31,7 @@ public class DisplaySettingController{
 	@FXML 
 	private ChoiceBox<String> lineSpaceValue;
 	@FXML 
-	private ChoiceBox<String> noteSizeValue;
+	private ChoiceBox<String> taleWidthValue;
 	
 	
 	 public void setPreviewController(PreviewController pcInput) {
@@ -47,19 +47,41 @@ public class DisplaySettingController{
 	
 	public void ApplyHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("Apply Button Clicked!");
+		boolean change = false;
+		String lsv = lineSpaceValue.getValue();
+		String fv = fontValue.getValue();
+		String nsv = noteSpaceValue.getValue();
+		String tw = taleWidthValue.getValue();
 		
-		if(!lineSpaceValue.getValue().equals("--Choose--")) {
-			SheetScore.lineSize = Double.parseDouble(lineSpaceValue.getValue());
-			System.out.println("Loading...");
+		if(!lsv.equals("--Choose--")) {
+			if(SheetScore.lineSize != Double.parseDouble(lsv)) {
+				SheetScore.lineSize = Double.parseDouble(lsv);
+				change = true;
+			}
+		}
+		if(!fv.equals("--Choose--")) {
+
+		}
+		if(!noteSpaceValue.getValue().equals("--Choose--")) {
+			
+		}
+		if(!tw.equals("--Choose--")) {
+			if(SheetScore.pageWidth != Double.parseDouble(tw)) {
+				SheetScore.pageWidth = Double.parseDouble(tw);
+				change = true;
+			}
+		}
+		if(change) {
 			pc.update();
-			System.out.println("Now the line space has been changed to: " + SheetScore.lineSize);
 		}
 	}
 	
 	public void resetHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("Rest Button Clicked!");
-		SheetScore.lineSize = 10;
-		pc.update();
+		lineSpaceValue.setValue("10");
+		taleWidthValue.setValue("1045");
+		ApplyHandler();
+		System.out.println("Rest Complete!");
 	}
 
 	public void applyandexitHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
@@ -70,6 +92,7 @@ public class DisplaySettingController{
 	
 	private void loadFonts() {
 		fontValues.removeAll(fontValues);
+		lineSpaceValues.add("--Choose--");
 		String a = "font1";
 		String b = "font2";
 		String c = "font3";
@@ -79,19 +102,9 @@ public class DisplaySettingController{
 		
 		
 	}
-	private void loadNoteSize() {
-		noteSizeValues.removeAll(noteSizeValues);
-		String a = "1";
-		String b = "2";
-		String c = "3";
-		String d = "4";
-		noteSizeValues.addAll(a,b,c,d);
-		noteSizeValue.getItems().addAll(noteSizeValues);
-		
-		
-	}
 	private void loadNoteSpace() {
 		noteSpaceValues.removeAll(noteSpaceValues);
+		lineSpaceValues.add("--Choose--");
 		String a = "1";
 		String b = "2";
 		String c = "3";
@@ -104,10 +117,21 @@ public class DisplaySettingController{
 	private void loadLineSpace() {
 		//5 - 30
 		lineSpaceValues.removeAll(lineSpaceValues);
+		lineSpaceValues.add("--Choose--");
 		for(int i = 5; i <= 30; i+=5) {
 			lineSpaceValues.add(i+"");
 		}
 		lineSpaceValue.getItems().addAll(lineSpaceValues);
+	}
+	
+	private void loadNoteSize() {
+		taleWidthValues.removeAll(taleWidthValues);
+		taleWidthValues.add("--Choose--");
+		for(int i = 645; i <= 1045; i+=100) {
+			taleWidthValues.add(i+"");
+		}
+		taleWidthValue.getItems().addAll(taleWidthValues);
+		
 		
 		
 	}
