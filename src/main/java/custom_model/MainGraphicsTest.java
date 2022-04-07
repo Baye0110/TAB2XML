@@ -177,7 +177,10 @@ public class MainGraphicsTest extends Application {
         t.setTranslateY(19);
         g1.getChildren().add(t);
        
-        
+        Bend b = new Bend(200, 200, "full");
+        b.setTranslateX(700);
+        b.setTranslateY(50);
+        g1.getChildren().add(b);
         
   	}
 
