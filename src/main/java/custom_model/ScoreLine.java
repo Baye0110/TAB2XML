@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Line;
 
 // FOR ALL INSTRUMENTS
 public class ScoreLine extends HBox{

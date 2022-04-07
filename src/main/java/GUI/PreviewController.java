@@ -22,6 +22,7 @@ import com.itextpdf.layout.element.Image;
 import custom_component_data.Score;
 import custom_model.MusicMeasure;
 import custom_model.SheetScore;
+import custom_model.note.BoxedText;
 import custom_player.musicPlayer;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -45,7 +46,7 @@ public class PreviewController extends Application{
 	private MainViewController mvc;
 	private musicPlayer player;
 	private Score score;
-	private SheetScore sheet;
+	public SheetScore sheet;
 	public Window displayWindow;
 	public File saveFile;
 	@FXML public CodeArea mxlText;
@@ -95,6 +96,7 @@ public class PreviewController extends Application{
 	public void exitHandler(){
 		System.out.println("Exit Button Clicked!");
 		player.exit();
+		initialValue();
 		mvc.convertWindow.hide();
 		System.out.println("preview windows exited");
 	}
@@ -151,6 +153,14 @@ public class PreviewController extends Application{
 		        	System.out.println("PDF saved failed");
 		        }
 	      }
+	}
+	
+	private void initialValue() {
+		SheetScore.lineSize = 10.0;
+		SheetScore.pageWidth = 1045.0;
+		BoxedText.customizefont = "Calibri";
+		MusicMeasure.customizefont = "Calibri";
+		MusicMeasure.scale = 400;
 	}
 	
 	private Window openNewWindow(Parent root, String windowName) {

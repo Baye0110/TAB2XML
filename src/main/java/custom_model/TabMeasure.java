@@ -9,15 +9,7 @@ import custom_component_data.Slide;
 import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.BoxedUnit;
-import custom_model.note.DisplayUnit;
 import custom_model.note.NoteUnit;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 // For GUITAR, BASS

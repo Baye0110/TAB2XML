@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import custom_model.MusicMeasure;
 import custom_model.SheetScore;
+import custom_model.note.BoxedText;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -60,10 +62,18 @@ public class DisplaySettingController{
 			}
 		}
 		if(!fv.equals("--Choose--")) {
+			if(!MusicMeasure.customizefont.equalsIgnoreCase(fv)) {
+				MusicMeasure.customizefont = fv;
+				BoxedText.customizefont = fv;
+				change = true;
+			}
 
 		}
-		if(!noteSpaceValue.getValue().equals("--Choose--")) {
-			
+		if(!nsv.equals("--Choose--")) {
+			if(MusicMeasure.scale != Double.parseDouble(nsv)) {
+				MusicMeasure.scale = Double.parseDouble(nsv);
+				change = true;
+			}
 		}
 		if(!tw.equals("--Choose--")) {
 			if(SheetScore.pageWidth != Double.parseDouble(tw)) {
@@ -80,6 +90,8 @@ public class DisplaySettingController{
 		System.out.println("Rest Button Clicked!");
 		lineSpaceValue.setValue("10");
 		taleWidthValue.setValue("1045");
+		fontValue.setValue("Calibri");
+		noteSpaceValue.setValue("400");
 		ApplyHandler();
 		System.out.println("Rest Complete!");
 	}
@@ -92,24 +104,23 @@ public class DisplaySettingController{
 	
 	private void loadFonts() {
 		fontValues.removeAll(fontValues);
-		lineSpaceValues.add("--Choose--");
-		String a = "font1";
-		String b = "font2";
-		String c = "font3";
-		String d = "font4";
-		fontValues.addAll(a,b,c,d);
+		String start = "--Choose--";
+		String a = "Calibri";
+		String b = "Serif";
+		String c = "SansSerif";
+		String d = "Monospaced";
+		String e = "Dialog";
+		fontValues.addAll(start,a,b,c,d,e);
 		fontValue.getItems().addAll(fontValues);
 		
 		
 	}
 	private void loadNoteSpace() {
 		noteSpaceValues.removeAll(noteSpaceValues);
-		lineSpaceValues.add("--Choose--");
-		String a = "1";
-		String b = "2";
-		String c = "3";
-		String d = "4";
-		noteSpaceValues.addAll(a,b,c,d);
+		noteSpaceValues.add("--Choose--");
+		for(int i = 100; i <= 800; i+=100) {
+			noteSpaceValues.add(i+"");
+		}
 		noteSpaceValue.getItems().addAll(noteSpaceValues);
 		
 		

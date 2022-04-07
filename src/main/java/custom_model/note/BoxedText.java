@@ -12,12 +12,13 @@ public class BoxedText extends BoxedUnit{
 	static final int PADDING_LEFT = 8; 
 	Text label;
 	Rectangle container;
+	public static String customizefont = "Calibri";
 	
 	public BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure, Note data) {
 		// Create the actual textbox with the given number in "String text" argument
 		this.label = new Text(text);
 		this.data = data;
-		label.setFont(Font.font(size*0.88));	// Set the font size 
+		label.setFont(Font.font(customizefont,size*0.88));	// Set the font size 
 		
 		// Set the position of text based on the padding on the top and on the sides of the box
 		label.setX((size + PADDING_LEFT - label.minWidth(0))/2.00);

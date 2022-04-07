@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import custom_component_data.Measure;
-import custom_component_data.Note;
 import custom_model.note.NoteUnit;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -30,6 +29,8 @@ abstract public class MusicMeasure extends Pane {
 	// The connectors of notes: curved lines, slides, etc
 	List<NoteLinker> links;
 	
+	//font
+	public static String customizefont = "Calibri" ;
 	
 	// The dimensions of the measure
 	double maxHeight;
@@ -40,10 +41,12 @@ abstract public class MusicMeasure extends Pane {
 	// Used for calculating the X position of the next Note
 	double currentDistance;
 	
+	public static double scale = 1200;
 	// The amount of distance between whole notes (smaller for short notes, longer spacing distance for long notes)
-	public double wholeNoteSpacing = 400;
+	public double wholeNoteSpacing = scale;
 	
 	List<Node> endRepeat;
+	
 	
 	/**
 	 * 
@@ -69,9 +72,9 @@ abstract public class MusicMeasure extends Pane {
 		this.measureNum = MusicMeasure.measureCount;
 		
 		Text measureNum = new Text(Integer.toString(this.measureNum));
-		measureNum.setFont(Font.font("Calibri", FontPosture.ITALIC, size*1.5));
-		measureNum.setTranslateY(0 - size * 0.5);
-		measureNum.setTranslateX(size * 0.5);
+		measureNum.setFont(Font.font(customizefont, FontPosture.ITALIC, size*1.5));
+		measureNum.setTranslateY(0 - size * 0.6);
+		measureNum.setTranslateX(size * 0.2);
 		this.getChildren().add(measureNum);
 		
 		if (m.getIsRepeatStart()) {
@@ -102,7 +105,8 @@ abstract public class MusicMeasure extends Pane {
 				// Create the numerator (top number) of the time signature
 			Text beat = new Text();
 			beat.setText(Integer.toString(m.getTimeSignature()[0]));
-			beat.setFont(Font.font(size * (m.getStaffLines()-1) * 0.675));
+			//changed1:
+			beat.setFont(Font.font(customizefont, size * (m.getStaffLines()-1) * 0.675));
 			beat.setX(currentDistance);
 				// how many lines of space should be padded above the measure
 			int upperPadding = m.getTab() ? 0: StaffMeasure.UPPER_PADDING;
@@ -113,7 +117,8 @@ abstract public class MusicMeasure extends Pane {
 				// Create the denominator (bottom number) of the time signature
 			Text beatType = new Text();
 			beatType.setText(Integer.toString(m.getTimeSignature()[1]));
-			beatType.setFont(Font.font(size * (m.getStaffLines()-1) * 0.675));
+			//change2
+			beatType.setFont(Font.font(customizefont, size * (m.getStaffLines()-1) * 0.675));
 			beatType.setX(currentDistance);
 				// Set the Y position of the denominator to the bottom of the meeasure 
 			beatType.setY(size * (upperPadding + m.getStaffLines()-1));
@@ -159,9 +164,10 @@ abstract public class MusicMeasure extends Pane {
 		List<Text> tabVertical = new ArrayList<>();
 		
 		// Create Text object for "T"
+		//change3
 		Text t = new Text();
 		t.setText("T");
-		t.setFont(Font.font(size * 0.45));
+		t.setFont(Font.font(customizefont, size * 0.45));
 		t.setX(currentDistance);
 		// Set Y position a third of the way down the 
 		t.setY(size/3.0);
@@ -170,7 +176,7 @@ abstract public class MusicMeasure extends Pane {
 		
 		Text a = new Text();
 		a.setText("A");
-		a.setFont(Font.font(size * 0.45));
+		a.setFont(Font.font(customizefont,size * 0.45));
 		a.setX(currentDistance);
 		a.setY(size*2.0/3.0);
 		this.getChildren().add(a);
@@ -178,7 +184,7 @@ abstract public class MusicMeasure extends Pane {
 		
 		Text b = new Text();
 		b.setText("B");
-		b.setFont(Font.font(size * 0.45));
+		b.setFont(Font.font(customizefont,size * 0.45));
 		b.setX(currentDistance);
 		b.setY(size);
 		this.getChildren().add(b);
@@ -249,7 +255,7 @@ abstract public class MusicMeasure extends Pane {
 		
 		Text times = new Text();
 		times.setText("x" + repeatNumber);
-		times.setFont(Font.font("Calibri", size));
+		times.setFont(Font.font(customizefont, size));
 		times.setTranslateX(this.currentDistance);
 		this.getChildren().add(times);
 		

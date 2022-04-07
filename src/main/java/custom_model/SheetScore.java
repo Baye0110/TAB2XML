@@ -10,9 +10,6 @@ import custom_model.note.NoteUnit;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 // For ALL INSTRUMENTS
 public class SheetScore extends VBox{
@@ -23,7 +20,7 @@ public class SheetScore extends VBox{
 	double songTempo;
 	public static double lineSize = 10;  // 5 - 30
 	public static double pageWidth = 1045;
-
+	
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 
 	
