@@ -4,7 +4,6 @@ import javafx.scene.Group;
 
 abstract public class BoxedUnit extends NoteUnit{
 	
-	public static int currMeasureNoteNum = 0;
+	public static int noteCounter = 0;
 	
-
 }

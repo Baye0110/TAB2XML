@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import custom_component_data.Measure;
-import custom_component_data.Note;
 import custom_model.note.NoteUnit;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -19,13 +19,18 @@ abstract public class MusicMeasure extends Pane {
 	public static final double START_DISTANCE = 30;
 	
 	// Measure Number
-	static int measureCount = 0;
+	public static int measureCount = 0;
 	int measureNum;
 	
 	// The barLines (the last one is always the barLine for the end of the staff)
 	List<Line> barLines;
 	// The notes
 	List<NoteUnit> notes;
+	// The connectors of notes: curved lines, slides, etc
+	List<NoteLinker> links;
+	
+	//font
+	public static String customizefont = "Calibri" ;
 	
 	// The dimensions of the measure
 	double maxHeight;
@@ -36,8 +41,12 @@ abstract public class MusicMeasure extends Pane {
 	// Used for calculating the X position of the next Note
 	double currentDistance;
 	
+	public static double scale = 1200;
 	// The amount of distance between whole notes (smaller for short notes, longer spacing distance for long notes)
-	public double wholeDistance = 400;
+	public double wholeNoteSpacing = scale;
+	
+	List<Node> endRepeat;
+	
 	
 	/**
 	 * 
@@ -46,6 +55,16 @@ abstract public class MusicMeasure extends Pane {
 	 * @param start   Does this measure start on a new line on the sheet music?
 	 */
 	public MusicMeasure(double size, Measure m, boolean start) {
+		if (m.getNotes().size() == 0) {
+			this.currentDistance = 200;
+			this.minWidth = 200;
+			this.spacing = 200;
+			MusicMeasure.measureCount += 1;
+			this.measureNum = MusicMeasure.measureCount;
+			this.notes = new ArrayList<>();
+		}
+		
+		
 		// Set the initial distance to the start_distance constant.
 		this.currentDistance = START_DISTANCE;
 		
@@ -53,11 +72,17 @@ abstract public class MusicMeasure extends Pane {
 		this.measureNum = MusicMeasure.measureCount;
 		
 		Text measureNum = new Text(Integer.toString(this.measureNum));
-		measureNum.setFont(Font.font("Calibri", FontPosture.ITALIC, size*1.5));
-		measureNum.setTranslateY(0 - size * 0.5);
-		measureNum.setTranslateX(size * 0.5);
+		measureNum.setFont(Font.font(customizefont, FontPosture.ITALIC, size*1.5));
+		measureNum.setTranslateY(0 - size * 0.6);
+		measureNum.setTranslateX(size * 0.2);
 		this.getChildren().add(measureNum);
 		
+		if (m.getIsRepeatStart()) {
+			RepeatBarLine repeat = new RepeatBarLine(size, m.getStaffLines());
+			repeat.setTranslateX(repeat.getFirstLineWidth()/2);
+			this.getChildren().add(repeat);
+			this.currentDistance += repeat.minWidth(0);
+		}
 		
 		// If this measure is the 1st in its line, then add the clef symbol
 		if (start) {
@@ -80,7 +105,8 @@ abstract public class MusicMeasure extends Pane {
 				// Create the numerator (top number) of the time signature
 			Text beat = new Text();
 			beat.setText(Integer.toString(m.getTimeSignature()[0]));
-			beat.setFont(Font.font(size * (m.getStaffLines()-1) * 0.675));
+			//changed1:
+			beat.setFont(Font.font(customizefont, size * (m.getStaffLines()-1) * 0.675));
 			beat.setX(currentDistance);
 				// how many lines of space should be padded above the measure
 			int upperPadding = m.getTab() ? 0: StaffMeasure.UPPER_PADDING;
@@ -91,7 +117,8 @@ abstract public class MusicMeasure extends Pane {
 				// Create the denominator (bottom number) of the time signature
 			Text beatType = new Text();
 			beatType.setText(Integer.toString(m.getTimeSignature()[1]));
-			beatType.setFont(Font.font(size * (m.getStaffLines()-1) * 0.675));
+			//change2
+			beatType.setFont(Font.font(customizefont, size * (m.getStaffLines()-1) * 0.675));
 			beatType.setX(currentDistance);
 				// Set the Y position of the denominator to the bottom of the meeasure 
 			beatType.setY(size * (upperPadding + m.getStaffLines()-1));
@@ -118,7 +145,7 @@ abstract public class MusicMeasure extends Pane {
 	
 	public void setBaseDistance(double scale) {
 		// Change the base spacing (the spacing between whole notes)
-		this.wholeDistance *= scale;
+		this.wholeNoteSpacing *= scale;
 	}
 	
 	// The abstract method so that StaffMeasure and TabMeasure can set the spacing between notes, but the implementation is done in the StaffMeasure/TabMeasure Classes
@@ -137,9 +164,10 @@ abstract public class MusicMeasure extends Pane {
 		List<Text> tabVertical = new ArrayList<>();
 		
 		// Create Text object for "T"
+		//change3
 		Text t = new Text();
 		t.setText("T");
-		t.setFont(Font.font(size * 0.45));
+		t.setFont(Font.font(customizefont, size * 0.45));
 		t.setX(currentDistance);
 		// Set Y position a third of the way down the 
 		t.setY(size/3.0);
@@ -148,7 +176,7 @@ abstract public class MusicMeasure extends Pane {
 		
 		Text a = new Text();
 		a.setText("A");
-		a.setFont(Font.font(size * 0.45));
+		a.setFont(Font.font(customizefont,size * 0.45));
 		a.setX(currentDistance);
 		a.setY(size*2.0/3.0);
 		this.getChildren().add(a);
@@ -156,7 +184,7 @@ abstract public class MusicMeasure extends Pane {
 		
 		Text b = new Text();
 		b.setText("B");
-		b.setFont(Font.font(size * 0.45));
+		b.setFont(Font.font(customizefont,size * 0.45));
 		b.setX(currentDistance);
 		b.setY(size);
 		this.getChildren().add(b);
@@ -195,5 +223,62 @@ abstract public class MusicMeasure extends Pane {
 	public int getMeasureNume() {
 		return this.measureNum;
 	}
+	
+	public void generateBarLines(double size, int staffLines) {
+		this.barLines = new ArrayList<Line>();
+		for (int i = 0; i < staffLines; i++) {
+			Line barLine = new Line();
+			barLine.setStartX(0);
+			barLine.setStartY(size * i);
+			barLine.setEndX(this.minWidth);
+			barLine.setEndY(size * i);
+			barLine.setStroke(Paint.valueOf("0x777"));
+			barLine.setStrokeWidth(0.6);
+			
+			this.barLines.add(barLine);
+			this.getChildren().add(barLine);
+		}
+		
+		// Create the line at the end of the measure (to show that the measure has ended
+		Line end = new Line();
+		end.setStartX(this.minWidth);
+		end.setStartY(0);
+		end.setEndX(this.minWidth);
+		end.setEndY((staffLines - 1) * size);
+		end.setStrokeWidth(2);
+		this.barLines.add(end);
+		this.getChildren().add(end);
+	}
 
+	public void generateEndRepeat(double size, int staffLines, int repeatNumber) {
+		endRepeat = new ArrayList<>();
+		
+		Text times = new Text();
+		times.setText("x" + repeatNumber);
+		times.setFont(Font.font(customizefont, size));
+		times.setTranslateX(this.currentDistance);
+		this.getChildren().add(times);
+		
+		RepeatBarLine repeat = new RepeatBarLine(size, staffLines);
+		repeat.setScaleX(-1);
+		repeat.setTranslateX(this.currentDistance);
+		this.currentDistance += repeat.minWidth(0) + repeat.getFirstLineWidth()/2;
+		this.getChildren().add(repeat);
+		
+		endRepeat.add(times);
+		endRepeat.add(repeat);
+		
+	}
+	
+	public List<NoteUnit> getNotes() {
+		return this.notes;
+	}
+	
+	public double getMeasureWidth() {
+		return this.minWidth;
+	}
+	
+	public double getMeasureHeight() {
+		return this.maxHeight;
+	}
 }

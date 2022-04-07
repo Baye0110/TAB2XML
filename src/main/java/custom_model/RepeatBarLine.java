@@ -8,49 +8,57 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 public class RepeatBarLine extends Group {
+	private double firstLineWidth;
 	
 	//constructor of gui element
-	RepeatBarLine(int lineSpacing, int numOfLines) {
+	RepeatBarLine(double lineSpacing, int numOfLines) {
 		
-		int n = 0 + numOfLines * lineSpacing;
+		double n = 0 + numOfLines * lineSpacing;
 		
 		//drawing vertical lines
 		Line v1 = new Line();
-		v1.setStartX(50);
-		v1.setStartY(50);
-		v1.setEndX(50);
-		v1.setEndY(n- lineSpacing);
-		v1.setStrokeWidth(1/6*lineSpacing);
+		double lineWidth = 1.0/6.0*lineSpacing;
+		this.firstLineWidth = lineWidth;
+		v1.setStartX(10);
+		v1.setStartY(0 + lineWidth/2);
+		v1.setEndX(10);
+		v1.setEndY(n - lineSpacing - lineWidth/2);
+		v1.setStrokeWidth(lineWidth);
 		
 		this.getChildren().add(v1);  
 		
 		//the second line has a higher Stroke Width
 		Line v2 = new Line();
-		v2.setStartX(60);
-		v2.setStartY(50);	
-		v2.setEndX(60);	
-		v2.setEndY(n - lineSpacing);
-		v2.setStrokeWidth(1/3* lineSpacing);
+		lineWidth = 1.0/3.0* lineSpacing;
+		v2.setStartX(0);
+		v2.setStartY(0 + lineWidth/2);	
+		v2.setEndX(0);	
+		v2.setEndY(n - lineSpacing - lineWidth/2);
+		v2.setStrokeWidth(lineWidth);
 		
 		this.getChildren().add(v2); 
 		
 		//drawing the first dot (upper dot)
 		 Circle circle = new Circle();
-		 circle.setCenterX(70);
-		 circle.setCenterY(lineSpacing/2);	
-		 circle.setRadius(1/3*lineSpacing);
+		 circle.setCenterX(20);
+		 circle.setCenterY(lineSpacing/2.0);	
+		 circle.setRadius(1.0/6.0*lineSpacing);
 		 circle.setFill(Color.BLACK);
 
 		 this.getChildren().add(circle); 
 		 
 		 //drawing the second dot
 		 Circle circle2 = new Circle();
-		 circle2.setCenterX(70);
-		 circle2.setCenterY((50 - (n-lineSpacing) - lineSpacing)/2);	//(vertical line height - lineSpacing)/2
-		 circle2.setRadius(1/3*lineSpacing);
+		 circle2.setCenterX(20);
+		 circle2.setCenterY((n-lineSpacing) - lineSpacing/2.0);	//(vertical line height - lineSpacing)/2
+		 circle2.setRadius(1.0/6.0*lineSpacing);
 		 circle2.setFill(Color.BLACK);
 		 
 		 this.getChildren().add(circle2);
+	}
+
+	public double getFirstLineWidth() {
+		return firstLineWidth;
 	}
 	
 			

@@ -1,9 +1,7 @@
 package custom_model.note;
 
-import javafx.scene.Group;
-import javafx.scene.Node;
+import custom_component_data.Note;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -14,11 +12,13 @@ public class BoxedText extends BoxedUnit{
 	static final int PADDING_LEFT = 8; 
 	Text label;
 	Rectangle container;
+	public static String customizefont = "Calibri";
 	
-	public BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure) {
+	public BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure, Note data) {
 		// Create the actual textbox with the given number in "String text" argument
 		this.label = new Text(text);
-		label.setFont(Font.font(size*0.88));	// Set the font size 
+		this.data = data;
+		label.setFont(Font.font(customizefont,size*0.88));	// Set the font size 
 		
 		// Set the position of text based on the padding on the top and on the sides of the box
 		label.setX((size + PADDING_LEFT - label.minWidth(0))/2.00);
@@ -40,10 +40,15 @@ public class BoxedText extends BoxedUnit{
 		this.setGrace(grace);
 		this.setMeasure(measure);
 
+		// If this is not part of a chord, (it is an individual note) then track its number and
+		// attach an function which is activated when the note is clicked.
 		if (!chord) {
-			BoxedUnit.currMeasureNoteNum ++;
-			this.setNoteNum(BoxedUnit.currMeasureNoteNum);
+			BoxedUnit.noteCounter ++;
+			this.noteNum = BoxedUnit.noteCounter;
 			
+			// creates the function which will highlight this note when clicked, and if this note 
+			// is double-clicked, it will toggle the highlight. Also keeps track of the latest highlighted
+			// note in the "NoteUnit.pressed" variable.
 			this.setOnMouseClicked(e -> {
 				if (this == NoteUnit.pressed) {
 					NoteUnit.pressed = null;
@@ -60,13 +65,15 @@ public class BoxedText extends BoxedUnit{
 		}
 	}
 	
+	// Highlight the note on and off, depending on if it was already highlighted before, or has yet to be highlighted
+	// "this.highlighted" is a boolean value storing whether or not this note has already been highlighted.
 	public void toggleHighlight() {
-		if (!this.highlighted) {
+		if (!this.isHighlighted) {
 			this.label.setStroke(Color.DEEPSKYBLUE);
 			this.label.setStrokeWidth(1.0);
 			this.container.setStroke(Color.DEEPSKYBLUE);
 			this.container.setStrokeWidth(1.0);
-			this.highlighted = true;
+			this.isHighlighted = true;
 			if (pressed != null) {
 				pressed.toggleHighlight();
 			}	
@@ -78,7 +85,7 @@ public class BoxedText extends BoxedUnit{
 			this.label.setStroke(null);
 			this.label.setStrokeWidth(1.0);
 			this.container.setStroke(null);
-			this.highlighted = false;
+			this.isHighlighted = false;
 		}
 		
 	}

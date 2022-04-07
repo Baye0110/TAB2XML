@@ -146,9 +146,9 @@ public class MainGraphicsTest extends Application {
         imageDisplay.setFitWidth(250);			// Set the width of the image
         g1.getChildren().add(imageDisplay);		// Add the image GUI element to the Group
         
-
+*/
         // Testing your own Class without running the TAB2XML Gradle Project (Simply run this file like a normal Java Class)
-        QuarterRest qr = new QuarterRest(100);    // Create an object instance of your class
+        /*QuarterRest qr = new QuarterRest(100);    // Create an object instance of your class
         g1.getChildren().add(qr); 				  // Add it to the group
         qr.setTranslateX(250);	qr.setTranslateX(50);			  // Translate the object (Set its (x,y) coordinates)     
         
@@ -157,7 +157,7 @@ public class MainGraphicsTest extends Application {
         ExampleClass ex = new ExampleClass(Color.RED, Color.ORANGE);
         ex.setTranslateX(700);
         ex.setTranslateY(25);
-        g1.getChildren().add(ex);
+        g1.getChildren().add(ex);*/
         
         
         /*
@@ -167,7 +167,20 @@ public class MainGraphicsTest extends Application {
         double widthOfEllipse = e1.minWidth(0);
         System.out.println("Height: " + heightOfEllipse + "\nWidth: " + widthOfEllipse);*/
         
+       /* SlantLine sl = new SlantLine(100, 14, 20.0, false);
+        sl.setTranslateX(400);
+        sl.setTranslateY(90);
+        g1.getChildren().add(sl);*/
         
+        Tremolo t = new Tremolo(100, 14, 30.0, false, 3);
+        t.setTranslateX(400);
+        t.setTranslateY(19);
+        g1.getChildren().add(t);
+       
+        Bend b = new Bend(200, 200, "full");
+        b.setTranslateX(700);
+        b.setTranslateY(50);
+        g1.getChildren().add(b);
         
   	}
 
