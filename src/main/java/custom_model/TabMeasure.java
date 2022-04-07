@@ -339,6 +339,8 @@ public class TabMeasure extends MusicMeasure {
 			this.getChildren().remove(end);
 		}
 		
+		this.minWidth = current;
+		
 		MeasureBeamData mbd = new MeasureBeamData(this.notes, 4);
 		BeamInfoProcessor processor = new BeamInfoProcessor(mbd.beamNumbers, mbd.beamInfos);
 		System.out.println(processor.toString()); 

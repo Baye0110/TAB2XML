@@ -21,12 +21,14 @@ import com.itextpdf.layout.element.Image;
 
 import custom_component_data.Score;
 import custom_model.MusicMeasure;
+import custom_model.ScoreLine;
 import custom_model.SheetScore;
 import custom_model.note.BoxedText;
 import custom_player.musicPlayer;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -77,8 +79,22 @@ public class PreviewController extends Application{
 	 }
 	
 	private void getBufferimage() {
-		for(MusicMeasure mm: sheet.getMeasureList()) {
-			bufferedimage.add(SwingFXUtils.fromFXImage(mm.snapshot(new SnapshotParameters(), null), null));
+//		for(MusicMeasure mm: sheet.getMeasureList()) {
+//			bufferedimage.add(SwingFXUtils.fromFXImage(mm.snapshot(new SnapshotParameters(), null), null));
+//		}
+		SheetScore copy = new SheetScore(score);
+		
+		for (ScoreLine line: copy.getScoreLines()) {
+			double width = 0.0;
+			Group lineCopy = new Group();
+			
+			for (MusicMeasure mm: line.getMeasures()) {
+				lineCopy.getChildren().add(mm);
+				mm.setTranslateX(width);
+				width += mm.getMeasureWidth();
+			}
+			
+			bufferedimage.add(SwingFXUtils.fromFXImage(lineCopy.snapshot(new SnapshotParameters(), null), null));
 		}
 	}
 
@@ -145,8 +161,9 @@ public class PreviewController extends Application{
 	    			  ImageData imgD = ImageDataFactory.create(outputFile.getPath());
 	  	              Image image = new Image(imgD);
 	  	              doc.add(image);
+	  	              outputFile.delete();
 	    		 }
-	    		  doc.close();
+	    		 doc.close();
 	  			
 	    		  System.out.println("PDF saved successfully, File path: " + file.getPath());
 		        } catch (Exception e) {
