@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import custom_model.SheetScore;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,11 +16,10 @@ import nu.xom.ValidityException;
 public class DisplaySettingController{
 	
 	private PreviewController pc;
-	
 	ObservableList<String> fontValues = FXCollections.observableArrayList();
-	ObservableList<Integer> noteSpaceValues = FXCollections.observableArrayList();
-	ObservableList<Integer> lineSpaceValues = FXCollections.observableArrayList();
-	ObservableList<Integer> noteSizeValues = FXCollections.observableArrayList();
+	ObservableList<String> noteSpaceValues = FXCollections.observableArrayList();
+	ObservableList<String> lineSpaceValues = FXCollections.observableArrayList();
+	ObservableList<String> taleWidthValues = FXCollections.observableArrayList();
 	
 	@FXML Button applyButton;
 	@FXML Button resetButton;
@@ -27,11 +27,11 @@ public class DisplaySettingController{
 	@FXML 
 	private ChoiceBox<String> fontValue;
 	@FXML 
-	private ChoiceBox<Integer> noteSpaceValue;
+	private ChoiceBox<String> noteSpaceValue;
 	@FXML 
-	private ChoiceBox<Integer> lineSpaceValue;
+	private ChoiceBox<String> lineSpaceValue;
 	@FXML 
-	private ChoiceBox<Integer> noteSizeValue;
+	private ChoiceBox<String> taleWidthValue;
 	
 	
 	 public void setPreviewController(PreviewController pcInput) {
@@ -45,21 +45,54 @@ public class DisplaySettingController{
 		 loadNoteSpace();
 	 }
 	
-	public void ApplyHandler(){
+	public void ApplyHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("Apply Button Clicked!");
+		boolean change = false;
+		String lsv = lineSpaceValue.getValue();
+		String fv = fontValue.getValue();
+		String nsv = noteSpaceValue.getValue();
+		String tw = taleWidthValue.getValue();
+		
+		if(!lsv.equals("--Choose--")) {
+			if(SheetScore.lineSize != Double.parseDouble(lsv)) {
+				SheetScore.lineSize = Double.parseDouble(lsv);
+				change = true;
+			}
+		}
+		if(!fv.equals("--Choose--")) {
+
+		}
+		if(!noteSpaceValue.getValue().equals("--Choose--")) {
+			
+		}
+		if(!tw.equals("--Choose--")) {
+			if(SheetScore.pageWidth != Double.parseDouble(tw)) {
+				SheetScore.pageWidth = Double.parseDouble(tw);
+				change = true;
+			}
+		}
+		if(change) {
+			pc.update();
+		}
 	}
 	
-	public void resetHandler(){
+	public void resetHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("Rest Button Clicked!");
+		lineSpaceValue.setValue("10");
+		taleWidthValue.setValue("1045");
+		ApplyHandler();
+		System.out.println("Rest Complete!");
 	}
 
-	public void applyandexitHandler(){
+	public void applyandexitHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
+		ApplyHandler();
 		pc.displayWindow.hide();
 		System.out.println("Apply&Reset Button Clicked!");
 	}
 	
 	private void loadFonts() {
 		fontValues.removeAll(fontValues);
+		lineSpaceValues.add("--Choose--");
 		String a = "font1";
 		String b = "font2";
 		String c = "font3";
@@ -69,36 +102,36 @@ public class DisplaySettingController{
 		
 		
 	}
-	private void loadNoteSize() {
-		noteSizeValues.removeAll(noteSizeValues);
-		int a = 1;
-		int b = 2;
-		int c = 3;
-		int d = 4;
-		noteSizeValues.addAll(a,b,c,d);
-		noteSizeValue.getItems().addAll(noteSizeValues);
-		
-		
-	}
 	private void loadNoteSpace() {
 		noteSpaceValues.removeAll(noteSpaceValues);
-		int a = 1;
-		int b = 2;
-		int c = 3;
-		int d = 4;
+		lineSpaceValues.add("--Choose--");
+		String a = "1";
+		String b = "2";
+		String c = "3";
+		String d = "4";
 		noteSpaceValues.addAll(a,b,c,d);
 		noteSpaceValue.getItems().addAll(noteSpaceValues);
 		
 		
 	}
 	private void loadLineSpace() {
+		//5 - 30
 		lineSpaceValues.removeAll(lineSpaceValues);
-		int a = 1;
-		int b = 2;
-		int c = 3;
-		int d = 4;
-		lineSpaceValues.addAll(a,b,c,d);
+		lineSpaceValues.add("--Choose--");
+		for(int i = 5; i <= 30; i+=5) {
+			lineSpaceValues.add(i+"");
+		}
 		lineSpaceValue.getItems().addAll(lineSpaceValues);
+	}
+	
+	private void loadNoteSize() {
+		taleWidthValues.removeAll(taleWidthValues);
+		taleWidthValues.add("--Choose--");
+		for(int i = 645; i <= 1045; i+=100) {
+			taleWidthValues.add(i+"");
+		}
+		taleWidthValue.getItems().addAll(taleWidthValues);
+		
 		
 		
 	}

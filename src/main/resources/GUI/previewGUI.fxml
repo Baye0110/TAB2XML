@@ -37,7 +37,7 @@
                           </Label>
                           <TextField fx:id="gotoMeasureField" layoutX="115.0" layoutY="80.0" prefHeight="25.0" prefWidth="55.0" />                                
                           <Button fx:id="goButton" layoutX="175.0" layoutY="80.0" mnemonicParsing="false" onAction="#goHandler" prefHeight="25.0" prefWidth="42.0" text="Go!" />
-                          <Label layoutX="819.0" layoutY="80.0" text="Tempo:" >
+                          <Label layoutX="819.0" layoutY="80.0" text="Tempo:">
                               <padding>
                                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                               </padding>
