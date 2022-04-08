@@ -128,6 +128,16 @@ public class TabMeasure extends MusicMeasure {
 			 *  5. Add the bend to the measure (using this.getChildren().add())
 			 */			
 			
+			if(isBend == true) {
+				double height = size * -1.5 - boxedUnit.getTranslateY();
+				double length = (boxedUnit.minWidth(0) + wholeNoteSpacing / currentNote.getType())/2;
+				String text = (currentNote.getNotation().getTechnical().getBend().getBendAlter() == 2) ? "full" : "BendAlter/2";
+				custom_model.Bend modelBend = new Bend(height, length, text);
+				modelBend.setTranslateY(-1.5 * size);
+				boxedUnit.setBend(modelBend);
+				boxedUnit.setBendPositionX();
+				this.getChildren().add(modelBend);
+			}
 			
 			
 			if (currentNote.getNotation().getSlides().size() != 0) {
