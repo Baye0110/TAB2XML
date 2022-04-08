@@ -25,6 +25,8 @@ public class TabMeasure extends MusicMeasure {
 	//   1. labels = Store the textboxes with the numbers
 	//   2. stems  = Store the noteStems which are displayed under the staff
 	List<TabNoteStem> stems;
+	int numStaffLines;
+	BeamInfoProcessor beamProcessor;
 	
 	/**
 	 * 
@@ -35,6 +37,8 @@ public class TabMeasure extends MusicMeasure {
 	public TabMeasure (double size, Measure m, boolean start) {
 		// Initialize the Clef and the Time Signature (4/4, 3/4, 7/8, ...) which are in the MusicMeasure superclass
 		super(size, m, start);
+		
+		this.numStaffLines = m.getStaffLines();
 		
 		if (m.getNotes().size() == 0) {
 			this.generateBarLines(size, m.getStaffLines());
@@ -100,12 +104,12 @@ public class TabMeasure extends MusicMeasure {
 				}
 			}
 			
-			if (!currentNote.getGrace()) {
-				TabNoteStem stem = new TabNoteStem(size, notes.get(i).getType(), notes.get(i).getDot());
-				stem.setTranslateX(currentDistance + (boxedUnit.minWidth(0)/2));
-				stem.setTranslateY(size * m.getStaffLines());
-				this.stems.add(stem);
-			}
+//			if (!currentNote.getGrace()) {
+//				TabNoteStem stem = new TabNoteStem(size, notes.get(i).getType(), notes.get(i).getDot());
+//				stem.setTranslateX(currentDistance + (boxedUnit.minWidth(0)/2));
+//				stem.setTranslateY(size * m.getStaffLines());
+//				this.stems.add(stem);
+//			}
 			
 			boxedUnit.setTranslateX(currentDistance);
 			boxedUnit.setTranslateY(size * (string - 1.5) + boxedUnit.getTranslateY());
@@ -182,12 +186,40 @@ public class TabMeasure extends MusicMeasure {
 				}
 			}
 			
+			
+			
 			double type = currentNote.getType() == 0 ? 0.5 : currentNote.getType();
 			currentDistance += boxedUnit.minWidth(0) + wholeNoteSpacing/type;
 			this.spacing += wholeNoteSpacing/type;
 			
 			
 		}
+		
+		MeasureBeamData mbd = new MeasureBeamData(this.notes, 4);
+		this.beamProcessor = new BeamInfoProcessor(mbd.beamNumbers, mbd.beamInfos);
+		System.out.println(this.beamProcessor.toString()); 
+		
+		int singularNote = 0;
+		for (int i = 0; i < notes.size(); i++) {
+			if (!notes.get(i).getGrace() && !notes.get(i).getChord()) {
+				TabNoteStem stem = null;
+				if (mbd.getBeamNumbers().get(singularNote) != 0) {
+					stem = new TabNoteStem(size, 4, notes.get(i).getDot(), this.notes.get(singularNote));
+				}
+				else {
+					stem = new TabNoteStem(size, notes.get(i).getType(), notes.get(i).getDot(), this.notes.get(singularNote));
+				}
+				stem.setTranslateX(currentDistance + ((BoxedUnit)this.notes.get(singularNote)).minWidth(0)/2);
+				stem.setTranslateY(size * m.getStaffLines());
+				this.stems.add(stem);
+				singularNote++;
+			}
+			else if (!notes.get(i).getChord()) {
+				singularNote++;
+			}
+		}
+		
+		
 //			// Get the XML parsed note data
 //			Note currentNote = notes.get(i);
 //			
@@ -280,7 +312,7 @@ public class TabMeasure extends MusicMeasure {
 		//this.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		
 		// Sets the correct height of the measure which takes into account the stems under the measure
-		this.setMinHeight(this.stems.get(0).getTranslateY() + this.stems.get(0).minHeight(0));
+		this.setMinHeight(size * (2.5 + m.getStaffLines()));
 	}
 	
 	
@@ -323,10 +355,10 @@ public class TabMeasure extends MusicMeasure {
 			currLabel.setTranslateX(current);
 			
 			// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
-			if (!currLabel.getGrace()) {
-				this.stems.get(stemNum).setTranslateX(current + (currLabel.minWidth(0)/2));
-				stemNum ++;
-			}
+//			if (!currLabel.getGrace()) {
+//				this.stems.get(stemNum).setTranslateX(current + (currLabel.minWidth(0)/2));
+//				stemNum ++;
+//			}
 			
 			/*
 			 * TODO: The Bend has already been added to the measure, here we simply need to adjust its x-position
@@ -370,6 +402,10 @@ public class TabMeasure extends MusicMeasure {
 			this.spacing += this.wholeNoteSpacing/currLabel.getSpacingType();
 		}
 		
+		for (int i = 0; i < this.stems.size(); i++) {
+			this.stems.get(i).setPositionX();
+		}
+		
 		if (this.endRepeat != null) {
 			this.endRepeat.get(0).setTranslateX(current);
 			this.endRepeat.get(1).setTranslateX(current);
@@ -396,9 +432,7 @@ public class TabMeasure extends MusicMeasure {
 		
 		this.minWidth = current;
 		
-		MeasureBeamData mbd = new MeasureBeamData(this.notes, 4);
-		BeamInfoProcessor processor = new BeamInfoProcessor(mbd.beamNumbers, mbd.beamInfos);
-		System.out.println(processor.toString()); 
+		this.beamProcessor.generateGuitarBeams(this, this.numStaffLines);
 	}
 
 }
