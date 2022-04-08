@@ -9,10 +9,18 @@ public class ArcLine extends Group {
 	
 	ArcLine(double height, double length, boolean upFacing){
         Arc arc1 = new Arc();
-        arc1.setRadiusX(length/2);	//length/2 = radius x
-        arc1.setRadiusY(height);	//height = radius y
-        arc1.setCenterX(100);
-        arc1.setCenterY(100);
+        arc1.setRadiusX(length/2);	
+        //length/2 = radius x
+        
+        arc1.setRadiusY(height);
+        //height = radius y
+        
+        arc1.setCenterX(length/2);
+        //center x = length / 2 
+        
+        arc1.setCenterY(height + 0.466*length/2);
+        //tested and calculated : center y = height + tan(25) * length/2
+        
         arc1.setStartAngle(25);	//tested
         arc1.setLength(130);
         
