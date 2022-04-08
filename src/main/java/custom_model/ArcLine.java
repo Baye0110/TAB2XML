@@ -18,12 +18,13 @@ public class ArcLine extends Group {
         arc1.setCenterX(length/2);
         //center x = length / 2 
         
-        arc1.setCenterY(height + 0.466*length/2);
-        //tested and calculated : center y = height + tan(25) * length/2
+        arc1.setCenterY(height);
+        //center y = height
         
         arc1.setStartAngle(25);	//tested
         arc1.setLength(130);
         
+        //if upFacing is false then we rotate the shape 180 degrees
         if(upFacing == false)
         {
         	arc1.setScaleY(-1);
