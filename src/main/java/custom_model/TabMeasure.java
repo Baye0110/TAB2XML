@@ -64,11 +64,18 @@ public class TabMeasure extends MusicMeasure {
 			unitParts.add(currentNote);
 			BoxedUnit boxedUnit = null;
 			
+			boolean isBend = currentNote.getNotation() != null && currentNote.getNotation().getTechnical() != null &&
+					currentNote.getNotation().getTechnical().getBend() != null;
 			boolean isChord = i + 1 < notes.size() && notes.get(i + 1).getChord();
+			
 			while(isChord) {
 				i++;
 				unitParts.add(notes.get(i));
 				isChord = i + 1 < notes.size() && notes.get(i + 1).getChord();
+				if (notes.get(i).getNotation() != null && notes.get(i).getNotation().getTechnical() != null && 
+						notes.get(i).getNotation().getTechnical().getBend() != null) {
+					isBend = true;
+				}
 			}
 			
 			int string = currentNote.getNotation().getString();
@@ -101,6 +108,27 @@ public class TabMeasure extends MusicMeasure {
 			boxedUnit.setTranslateX(currentDistance);
 			boxedUnit.setTranslateY(size * (string - 1.5) + boxedUnit.getTranslateY());
 			this.notes.add(boxedUnit);
+			
+			/*
+			 *  |	TODO: Implement the Bend Class Here  |
+			 *  |										 |
+			 * \ / 	                                    \ /
+			 * 	.    	                                 .  
+			 *  
+			 *  Here we have access to the XML component_data from the class Note in the variable "currentNote" (refer to line 61)
+			 *  1. Check if this note has a bend, the boolean value for this is already stored in the variable "isBend" (refer to line 67)
+			 *  2. Get the Bend element from the "currentNote" variable (refer to the component_data pckg powerpoint
+			 *  3. Then if this note should have a Bend, we must create the object with the following parameters:
+			 *  	height = size * -1.5 - boxedUnit.getTranslateY()   <==  this is 1.5 lines of space above the measure + the y position of the note
+			 *  	length = (boxedUnit.minWidth(0) + wholeNoteSpacing/currentNote.getType())/2  <== this should be about half the length until the next note
+			 *  	text = "BendAlter/2" OR "full" if bendAlter == 2    <== get the bendAlter from the Bend element
+			 *  4. Correctly set its position on the score:
+			 *  	4.a) Set the translateY position of the bend (since the bend is meant to extend 1.5 lines above the measure this should be = -1.5 * size)
+			 *  	4.b) Set the translateX position (simply attach the bend to the boxedUnit using the "setBend(Bend)" method, then set the X-position with the "setBendPositionX()" method
+			 *  5. Add the bend to the measure (using this.getChildren().add())
+			 */			
+			
+			
 			
 			if (currentNote.getNotation().getSlides().size() != 0) {
 				List<Slide> slides = currentNote.getNotation().getSlides();
@@ -277,7 +305,7 @@ public class TabMeasure extends MusicMeasure {
 		// Set the correct spacing for each BoxedText number in "this.labels"
 		for (int i = 0; i < this.notes.size(); i++) {
 			// Get the ith textbox, and set the correct X position to put it
-			NoteUnit currLabel = this.notes.get(i);
+			NoteUnit currLabel = (BoxedUnit) this.notes.get(i);
 			currLabel.setTranslateX(current);
 			
 			// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
@@ -285,6 +313,15 @@ public class TabMeasure extends MusicMeasure {
 				this.stems.get(stemNum).setTranslateX(current + (currLabel.minWidth(0)/2));
 				stemNum ++;
 			}
+			
+			/*
+			 * TODO: The Bend has already been added to the measure, here we simply need to adjust its x-position
+			 * 			because this setSpacing() method will make the measure shorter or longer.
+			 * 
+			 * 1. Simply Check if the currentNote has a bend, you can do this either by adding an "hasBend()" method to the BoxedUnit
+			 *    class or you can use the getBend() method on "currLabel" variable and check if the Bend is null.
+			 * 2. If this note does have a bend, then re-adjust its x-position using the "setBendPositionX()" method of the BoxedUnit class
+			 */
 			
 			if (currLabel.getData().getNotation().getSlides().size() != 0) {
 				List<Slide> slides = currLabel.getData().getNotation().getSlides();
