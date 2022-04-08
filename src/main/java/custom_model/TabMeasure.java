@@ -315,7 +315,7 @@ public class TabMeasure extends MusicMeasure {
 		// Set the correct spacing for each BoxedText number in "this.labels"
 		for (int i = 0; i < this.notes.size(); i++) {
 			// Get the ith textbox, and set the correct X position to put it
-			NoteUnit currLabel = (BoxedUnit) this.notes.get(i);
+			BoxedUnit currLabel = (BoxedUnit) this.notes.get(i);
 			currLabel.setTranslateX(current);
 			
 			// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
@@ -332,6 +332,9 @@ public class TabMeasure extends MusicMeasure {
 			 *    class or you can use the getBend() method on "currLabel" variable and check if the Bend is null.
 			 * 2. If this note does have a bend, then re-adjust its x-position using the "setBendPositionX()" method of the BoxedUnit class
 			 */
+			if(currLabel.getBend() != null) {
+				currLabel.setBendPositionX();
+			}
 			
 			if (currLabel.getData().getNotation().getSlides().size() != 0) {
 				List<Slide> slides = currLabel.getData().getNotation().getSlides();
