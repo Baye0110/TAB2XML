@@ -73,7 +73,6 @@ public class PreviewController extends Application{
 		 tempoField.setText("60");
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score);
-		 initialValue();
 		 sp.setContent(sheet);
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
 	 }
@@ -174,10 +173,9 @@ public class PreviewController extends Application{
 	}
 	
 	private void initialValue() {
-		SheetScore.lineSize = 10.0;
-		SheetScore.pageWidth = 1045.0;
-		BoxedText.customizefont = "Calibri";
-		MusicMeasure.customizefont = "Calibri";
+		SheetScore.lineSize = 10;
+		SheetScore.pageWidth = 1045;
+		BoxedText.customizefont = MusicMeasure.customizefont = "Calibri";
 		MusicMeasure.scale = 400;
 	}
 	

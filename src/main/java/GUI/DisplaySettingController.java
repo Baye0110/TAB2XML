@@ -40,56 +40,50 @@ public class DisplaySettingController{
 	 }
 	 
 	 public void update() throws ValidityException, ParserConfigurationException, ParsingException, IOException {
-		fontValue.setBackground(null);
-		lineSpaceValue.setBackground(null);
-		noteSpaceValue.setBackground(null);
-		taleWidthValue.setBackground(null);
-		
 		loadFonts();
 		loadNoteSize();
 		loadLineSpace();
 		loadNoteSpace();
 		 
-		lineSpaceValue.setValue("10");
-		taleWidthValue.setValue("1045");
-		fontValue.setValue("Calibri");
-		noteSpaceValue.setValue("400");
+		lineSpaceValue.setValue((int)SheetScore.lineSize + "");
+		taleWidthValue.setValue((int)SheetScore.pageWidth+ "");
+		fontValue.setValue(MusicMeasure.customizefont);
+		noteSpaceValue.setValue((int)MusicMeasure.scale + "");
 	 }
 	
 	public void ApplyHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("Apply Button Clicked!");
-		boolean change = false;
-		String lsv = lineSpaceValue.getValue();
-		String fv = fontValue.getValue();
-		String nsv = noteSpaceValue.getValue();
-		String tw = taleWidthValue.getValue();
-		
-		if(!lsv.equals("--Choose--")) {
-			if(SheetScore.lineSize != Double.parseDouble(lsv)) {
-				SheetScore.lineSize = Double.parseDouble(lsv);
+		boolean change = false;		
+		if(!lineSpaceValue.getValue().equals("--Choose--")) {
+			if(SheetScore.lineSize != Double.parseDouble(lineSpaceValue.getValue())) {
+				SheetScore.lineSize = Double.parseDouble(lineSpaceValue.getValue());
 				change = true;
 			}
 		}
 		
-		if(!fv.equals("--Choose--")) {
-			if(!MusicMeasure.customizefont.equalsIgnoreCase(fv)) {
-				MusicMeasure.customizefont = fv;
-				BoxedText.customizefont = fv;
+		if(!fontValue.getValue().equals("--Choose--")) {
+			if(!MusicMeasure.customizefont.equalsIgnoreCase(fontValue.getValue())) {
+				MusicMeasure.customizefont = fontValue.getValue();
+				change = true;
+			}
+			
+			if(!BoxedText.customizefont.equalsIgnoreCase(fontValue.getValue())) {
+				BoxedText.customizefont = fontValue.getValue();
 				change = true;
 			}
 
 		}
 		
-		if(!nsv.equals("--Choose--")) {
-			if(MusicMeasure.scale != Double.parseDouble(nsv)) {
-				MusicMeasure.scale = Double.parseDouble(nsv);
+		if(!noteSpaceValue.getValue().equals("--Choose--")) {
+			if(MusicMeasure.scale != Double.parseDouble(noteSpaceValue.getValue())) {
+				MusicMeasure.scale = Double.parseDouble(noteSpaceValue.getValue());
 				change = true;
 			}
 		}
 		
-		if(!tw.equals("--Choose--")) {
-			if(SheetScore.pageWidth != Double.parseDouble(tw)) {
-				SheetScore.pageWidth = Double.parseDouble(tw);
+		if(!taleWidthValue.getValue().equals("--Choose--")) {
+			if(SheetScore.pageWidth != Double.parseDouble(taleWidthValue.getValue())) {
+				SheetScore.pageWidth = Double.parseDouble(taleWidthValue.getValue());
 				change = true;
 			}
 		}
@@ -100,9 +94,10 @@ public class DisplaySettingController{
 	
 	public void resetHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("Rest Button Clicked!");
+		
+		fontValue.setValue("Calibri");
 		lineSpaceValue.setValue("10");
 		taleWidthValue.setValue("1045");
-		fontValue.setValue("Calibri");
 		noteSpaceValue.setValue("400");
 		ApplyHandler();
 		System.out.println("Rest Complete!");
