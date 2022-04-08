@@ -73,15 +73,12 @@ public class PreviewController extends Application{
 		 tempoField.setText("60");
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score);
+		 initialValue();
 		 sp.setContent(sheet);
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
-		 getBufferimage();
 	 }
 	
 	private void getBufferimage() {
-//		for(MusicMeasure mm: sheet.getMeasureList()) {
-//			bufferedimage.add(SwingFXUtils.fromFXImage(mm.snapshot(new SnapshotParameters(), null), null));
-//		}
 		SheetScore copy = new SheetScore(score);
 		
 		for (ScoreLine line: copy.getScoreLines()) {
@@ -100,9 +97,7 @@ public class PreviewController extends Application{
 
 	public void playHandler() {
 		System.out.println("Play Button Clicked!");
-		System.out.println("String1: " + player.toString());
 		player.play(tempoField.getText());
-		System.out.println("String2: " + player.toString());
 		System.out.println("The tempoSpeed is: " + player.getTempo());
 	}
 	public void pauseHandler(){
@@ -111,11 +106,15 @@ public class PreviewController extends Application{
 	}
 	public void exitHandler(){
 		System.out.println("Exit Button Clicked!");
+		exit();
+	}
+	
+	public void exit() {
 		player.exit();
 		initialValue();
 		mvc.convertWindow.hide();
-		System.out.println("preview windows exited");
 	}
+	
 	public void goHandler(){
 		System.out.println("Go Button Clicked!");
 		this.sp.setVmax(this.sheet.minHeight(0) + this.sp.minHeight(0));
@@ -155,6 +154,7 @@ public class PreviewController extends Application{
 	    		  PdfWriter writer = new PdfWriter(file); 
 	    		  PdfDocument pdf = new PdfDocument(writer);
 	    		  Document doc = new Document(pdf); 
+	    		  getBufferimage();
 	    		  for(int i = 0; i < bufferedimage.size(); i ++) {
 	    			  File outputFile = new File("image" + i + ".png");
 	    			  ImageIO.write(bufferedimage.get(i), "png", outputFile);
@@ -164,6 +164,7 @@ public class PreviewController extends Application{
 	  	              outputFile.delete();
 	    		 }
 	    		 doc.close();
+	    		 bufferedimage = new ArrayList<BufferedImage>();
 	  			
 	    		  System.out.println("PDF saved successfully, File path: " + file.getPath());
 		        } catch (Exception e) {

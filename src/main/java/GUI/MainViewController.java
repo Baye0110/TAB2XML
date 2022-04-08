@@ -320,7 +320,8 @@ public class MainViewController extends Application {
 			controller.update();
 			convertWindow = this.openNewWindow(root, "Music Sheet");
 			convertWindow.setOnHidden(e->{
-				controller.exitHandler();
+				controller.exit();
+				System.out.println("preview windows exited");
 			});
 	
 		} catch (Exception e) {
