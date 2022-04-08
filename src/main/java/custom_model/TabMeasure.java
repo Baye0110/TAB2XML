@@ -63,6 +63,7 @@ public class TabMeasure extends MusicMeasure {
 			List<Note> unitParts = new ArrayList<>();
 			unitParts.add(currentNote);
 			BoxedUnit boxedUnit = null;
+			Note bentNote = null;
 			
 			boolean isBend = currentNote.getNotation() != null && currentNote.getNotation().getTechnical() != null &&
 					currentNote.getNotation().getTechnical().getBend() != null;
@@ -75,6 +76,7 @@ public class TabMeasure extends MusicMeasure {
 				if (notes.get(i).getNotation() != null && notes.get(i).getNotation().getTechnical() != null && 
 						notes.get(i).getNotation().getTechnical().getBend() != null) {
 					isBend = true;
+					bentNote = notes.get(i);
 				}
 			}
 			
@@ -127,9 +129,10 @@ public class TabMeasure extends MusicMeasure {
 			 *  	4.b) Set the translateX position (simply attach the bend to the boxedUnit using the "setBend(Bend)" method, then set the X-position with the "setBendPositionX()" method
 			 *  5. Add the bend to the measure (using this.getChildren().add())
 			 */			
-			
+			Note temp = currentNote;
 			if(isBend == true) {
-				double height = size * -1.5 - boxedUnit.getTranslateY();
+				currentNote = bentNote != null ? bentNote : currentNote;
+				double height = size * 1.5 + boxedUnit.getTranslateY();
 				double length = (boxedUnit.minWidth(0) + wholeNoteSpacing / currentNote.getType())/2;
 				String text = (currentNote.getNotation().getTechnical().getBend().getBendAlter() == 2) ? "full" : "BendAlter/2";
 				custom_model.Bend modelBend = new Bend(height, length, text);
@@ -137,6 +140,7 @@ public class TabMeasure extends MusicMeasure {
 				boxedUnit.setBend(modelBend);
 				boxedUnit.setBendPositionX();
 				this.getChildren().add(modelBend);
+				currentNote = temp;
 			}
 			
 			
@@ -333,6 +337,7 @@ public class TabMeasure extends MusicMeasure {
 			 * 2. If this note does have a bend, then re-adjust its x-position using the "setBendPositionX()" method of the BoxedUnit class
 			 */
 			if(currLabel.getBend() != null) {
+				currLabel.getBend().adjustLength((this.wholeNoteSpacing * 1/currLabel.getSpacingType())/2);
 				currLabel.setBendPositionX();
 			}
 			
