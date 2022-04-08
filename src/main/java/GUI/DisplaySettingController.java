@@ -35,16 +35,25 @@ public class DisplaySettingController{
 	@FXML 
 	private ChoiceBox<String> taleWidthValue;
 	
-	
 	 public void setPreviewController(PreviewController pcInput) {
 		 this.pc = pcInput;
 	 }
 	 
 	 public void update() throws ValidityException, ParserConfigurationException, ParsingException, IOException {
-		 loadFonts();
-		 loadNoteSize();
-		 loadLineSpace();
-		 loadNoteSpace();
+		fontValue.setBackground(null);
+		lineSpaceValue.setBackground(null);
+		noteSpaceValue.setBackground(null);
+		taleWidthValue.setBackground(null);
+		
+		loadFonts();
+		loadNoteSize();
+		loadLineSpace();
+		loadNoteSpace();
+		 
+		lineSpaceValue.setValue("10");
+		taleWidthValue.setValue("1045");
+		fontValue.setValue("Calibri");
+		noteSpaceValue.setValue("400");
 	 }
 	
 	public void ApplyHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
@@ -61,6 +70,7 @@ public class DisplaySettingController{
 				change = true;
 			}
 		}
+		
 		if(!fv.equals("--Choose--")) {
 			if(!MusicMeasure.customizefont.equalsIgnoreCase(fv)) {
 				MusicMeasure.customizefont = fv;
@@ -69,12 +79,14 @@ public class DisplaySettingController{
 			}
 
 		}
+		
 		if(!nsv.equals("--Choose--")) {
 			if(MusicMeasure.scale != Double.parseDouble(nsv)) {
 				MusicMeasure.scale = Double.parseDouble(nsv);
 				change = true;
 			}
 		}
+		
 		if(!tw.equals("--Choose--")) {
 			if(SheetScore.pageWidth != Double.parseDouble(tw)) {
 				SheetScore.pageWidth = Double.parseDouble(tw);

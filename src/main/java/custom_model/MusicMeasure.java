@@ -41,7 +41,7 @@ abstract public class MusicMeasure extends Pane {
 	// Used for calculating the X position of the next Note
 	double currentDistance;
 	
-	public static double scale = 1200;
+	public static double scale = 400;
 	// The amount of distance between whole notes (smaller for short notes, longer spacing distance for long notes)
 	public double wholeNoteSpacing = scale;
 	

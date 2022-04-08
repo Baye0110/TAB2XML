@@ -18,8 +18,8 @@ public class SheetScore extends VBox{
 	List<Double> noteTimings;
 	boolean isPlaying;
 	double songTempo;
-	public static double lineSize = 10;  // 5 - 30
-	public static double pageWidth = 1045;
+	public static double lineSize = 10.0; 
+	public static double pageWidth = 1045.0;
 	
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 

@@ -21,12 +21,14 @@ import com.itextpdf.layout.element.Image;
 
 import custom_component_data.Score;
 import custom_model.MusicMeasure;
+import custom_model.ScoreLine;
 import custom_model.SheetScore;
 import custom_model.note.BoxedText;
 import custom_player.musicPlayer;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -71,22 +73,31 @@ public class PreviewController extends Application{
 		 tempoField.setText("60");
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score);
+		 initialValue();
 		 sp.setContent(sheet);
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
-		 getBufferimage();
 	 }
 	
 	private void getBufferimage() {
-		for(MusicMeasure mm: sheet.getMeasureList()) {
-			bufferedimage.add(SwingFXUtils.fromFXImage(mm.snapshot(new SnapshotParameters(), null), null));
+		SheetScore copy = new SheetScore(score);
+		
+		for (ScoreLine line: copy.getScoreLines()) {
+			double width = 0.0;
+			Group lineCopy = new Group();
+			
+			for (MusicMeasure mm: line.getMeasures()) {
+				lineCopy.getChildren().add(mm);
+				mm.setTranslateX(width);
+				width += mm.getMeasureWidth();
+			}
+			
+			bufferedimage.add(SwingFXUtils.fromFXImage(lineCopy.snapshot(new SnapshotParameters(), null), null));
 		}
 	}
 
 	public void playHandler() {
 		System.out.println("Play Button Clicked!");
-		System.out.println("String1: " + player.toString());
 		player.play(tempoField.getText());
-		System.out.println("String2: " + player.toString());
 		System.out.println("The tempoSpeed is: " + player.getTempo());
 	}
 	public void pauseHandler(){
@@ -95,11 +106,15 @@ public class PreviewController extends Application{
 	}
 	public void exitHandler(){
 		System.out.println("Exit Button Clicked!");
+		exit();
+	}
+	
+	public void exit() {
 		player.exit();
 		initialValue();
 		mvc.convertWindow.hide();
-		System.out.println("preview windows exited");
 	}
+	
 	public void goHandler(){
 		System.out.println("Go Button Clicked!");
 		this.sp.setVmax(this.sheet.minHeight(0) + this.sp.minHeight(0));
@@ -139,14 +154,17 @@ public class PreviewController extends Application{
 	    		  PdfWriter writer = new PdfWriter(file); 
 	    		  PdfDocument pdf = new PdfDocument(writer);
 	    		  Document doc = new Document(pdf); 
+	    		  getBufferimage();
 	    		  for(int i = 0; i < bufferedimage.size(); i ++) {
 	    			  File outputFile = new File("image" + i + ".png");
 	    			  ImageIO.write(bufferedimage.get(i), "png", outputFile);
 	    			  ImageData imgD = ImageDataFactory.create(outputFile.getPath());
 	  	              Image image = new Image(imgD);
 	  	              doc.add(image);
+	  	              outputFile.delete();
 	    		 }
-	    		  doc.close();
+	    		 doc.close();
+	    		 bufferedimage = new ArrayList<BufferedImage>();
 	  			
 	    		  System.out.println("PDF saved successfully, File path: " + file.getPath());
 		        } catch (Exception e) {
