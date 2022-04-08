@@ -9,13 +9,22 @@ public class ArcLine extends Group {
 	
 	ArcLine(double height, double length, boolean upFacing){
         Arc arc1 = new Arc();
-        arc1.setRadiusX(length/2);	//length/2 = radius x
-        arc1.setRadiusY(height);	//height = radius y
-        arc1.setCenterX(100);
-        arc1.setCenterY(100);
+        arc1.setRadiusX(length/2);	
+        //length/2 = radius x
+        
+        arc1.setRadiusY(height);
+        //height = radius y
+        
+        arc1.setCenterX(length/2);
+        //center x = length / 2 
+        
+        arc1.setCenterY(height);
+        //center y = height
+        
         arc1.setStartAngle(25);	//tested
         arc1.setLength(130);
         
+        //if upFacing is false then we rotate the shape 180 degrees
         if(upFacing == false)
         {
         	arc1.setScaleY(-1);
