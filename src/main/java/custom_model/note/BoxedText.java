@@ -13,6 +13,7 @@ public class BoxedText extends BoxedUnit{
 	Text label;
 	Rectangle container;
 	public static String customizefont = "Calibri";
+	boolean isChord;
 	
 	public BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure, Note data) {
 		// Create the actual textbox with the given number in "String text" argument
@@ -74,7 +75,7 @@ public class BoxedText extends BoxedUnit{
 			this.container.setStroke(Color.DEEPSKYBLUE);
 			this.container.setStrokeWidth(1.0);
 			this.isHighlighted = true;
-			if (pressed != null) {
+			if (pressed != null && !this.isChord) {
 				pressed.toggleHighlight();
 			}	
 			if (this.getNoteNum() > -1) {
@@ -88,5 +89,9 @@ public class BoxedText extends BoxedUnit{
 			this.isHighlighted = false;
 		}
 		
+	}
+
+	public void setIsChord(boolean b) {
+		this.isChord = b;
 	}
 }

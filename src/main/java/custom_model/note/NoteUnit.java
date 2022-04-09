@@ -62,4 +62,8 @@ abstract public class NoteUnit extends Group{
 		return this.data;
 	}
 	
+	public boolean getHighlighted() {
+		return this.isHighlighted;
+	}
+	
 }

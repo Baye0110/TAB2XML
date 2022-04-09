@@ -208,6 +208,7 @@ public class SheetScore extends VBox{
 	}
 	
 	public void startHighlight() {
+		this.threadKilled = false;
 		this.isPlaying = true;
 		
 		int notePressed; int measureOfNote;
@@ -280,7 +281,7 @@ public class SheetScore extends VBox{
 				if (n.getHighlighted())
 					n.toggleHighlight();
 			}
-		}
+		} 
 	}
 	
 	public boolean getThreadKilled() {

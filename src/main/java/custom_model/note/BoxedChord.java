@@ -53,7 +53,6 @@ public class BoxedChord extends BoxedUnit{
 	
 	public void toggleHighlight() {
 		NoteUnit originalPressed = pressed;
-		pressed = null;
 		
 		for (BoxedText fret: this.frets) {
 			fret.toggleHighlight();
