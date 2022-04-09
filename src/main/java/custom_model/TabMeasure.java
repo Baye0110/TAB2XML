@@ -25,8 +25,6 @@ public class TabMeasure extends MusicMeasure {
 	//   1. labels = Store the textboxes with the numbers
 	//   2. stems  = Store the noteStems which are displayed under the staff
 	List<TabNoteStem> stems;
-	int numStaffLines;
-	BeamInfoProcessor beamProcessor;
 	
 	/**
 	 * 
@@ -86,7 +84,7 @@ public class TabMeasure extends MusicMeasure {
 			if (unitParts.size() == 1) {
 				double type = currentNote.getType() != 0 ? currentNote.getType() : 0.5;
 				if (currentNote.getGrace()) {
-					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size*0.65, type, true, false, this.measureNum, currentNote);
+					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size*0.65, 24, true, false, this.measureNum, currentNote);
 					boxedUnit.setTranslateY(size * 0.35);
 				}
 				else {
@@ -181,7 +179,7 @@ public class TabMeasure extends MusicMeasure {
 			
 		}
 		
-		MeasureBeamData mbd = new MeasureBeamData(this.notes, 4);
+		MeasureBeamData mbd = new MeasureBeamData(this.notes, m.getTimeSignature()[1]);
 		this.beamProcessor = new BeamInfoProcessor(mbd.beamNumbers, mbd.beamInfos);
 		System.out.println(this.beamProcessor.toString()); 
 		

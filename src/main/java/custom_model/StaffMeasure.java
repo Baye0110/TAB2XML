@@ -17,6 +17,9 @@ public class StaffMeasure extends MusicMeasure{
 	
 	public StaffMeasure(double height, Measure measure, boolean start) {
 		super(height, measure, start);
+		
+		this.numStaffLines = measure.getStaffLines();
+		
 		if (measure.getNotes().size() == 0) {
 			this.generateBarLines(height, measure.getStaffLines());
 			this.maxHeight = height * (measure.getStaffLines());
@@ -50,16 +53,14 @@ public class StaffMeasure extends MusicMeasure{
 			}
 			else {
 				double noteHeight = notes.get(i).getGrace() ? height * 0.65 : height;
-				currentUnit = new DisplayNote(height, notes.get(i), false, false, false);	
-				currentUnit.addTails(height, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
-				currentUnit.generateBox();
-				currentUnit.getChildren().add(currentUnit.getBox());
+				currentUnit = new DisplayNote(noteHeight, notes.get(i), false, false, false);	
+//				currentUnit.addTails(height, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
 			}
 			
 			
 			currentUnit.extendStaff((measure.getStaffLines()-1)*2, height);
 					
-			currentUnit.setTranslateX(currentDistance);
+//			currentUnit.setTranslateX(currentDistance);
 			
 			double pos_y = height*(measure.getStaffLines() + UPPER_PADDING-1.5) - (height/2)*currentUnit.getPosition();
 			if (notes.get(i).getRest())
@@ -69,12 +70,30 @@ public class StaffMeasure extends MusicMeasure{
 			
 			//System.out.println(currentUnit.getPosition());
 			
-			double spaceAdded = wholeNoteSpacing/currentUnit.getSpacingType();
-			currentDistance += currentUnit.getWidth() +  spaceAdded;
-			this.spacing += spaceAdded;
+			
+//			double spaceAdded = wholeNoteSpacing/currentUnit.getSpacingType();
+//			currentDistance += currentUnit.getWidth() +  spaceAdded;
+//			this.spacing += spaceAdded;
 			this.notes.add(currentUnit);
 		}
 		
+		MeasureBeamData mbd = new MeasureBeamData(this.notes, measure.getTimeSignature()[1]);
+		this.beamProcessor = new BeamInfoProcessor(mbd.getBeamNumbers() , mbd.beamInfos);
+		for (int i = 0; i < this.notes.size(); i++) {
+			List<Integer> beamNums = mbd.getBeamNumbers();
+			DisplayUnit thisNote = (DisplayUnit) this.notes.get(i);
+			if (!thisNote.getRest() && beamNums.get(i) == 0) {
+				thisNote.addTails(height, false);
+			}
+		}
+		System.out.println(this.beamProcessor.toString());
+		
+		for (NoteUnit note: this.notes) {
+			note.setTranslateX(currentDistance);
+			double spaceAdded = wholeNoteSpacing/note.getSpacingType();
+			currentDistance += note.getWidth() +  spaceAdded;
+			this.spacing += spaceAdded;
+		}
 		
 		if (measure.getIsRepeatStop()) {
 			this.generateEndRepeat(height, measure.getStaffLines(), measure.getBarLineRight().getRepeatNum());
@@ -88,8 +107,12 @@ public class StaffMeasure extends MusicMeasure{
 			}
 		}
 
+		
+		
 		for (NoteUnit noteUnit: this.notes) {
 			DisplayUnit note = (DisplayUnit) noteUnit;
+			note.generateBox();
+			note.getChildren().add(note.getBox());
 			this.maxHeight = note.getTranslateY() + note.getTop() > this.maxHeight ? note.getTranslateY() + note.getTop() : this.maxHeight;
 			this.getChildren().add(note);
 		}
@@ -171,9 +194,7 @@ public class StaffMeasure extends MusicMeasure{
 		}
 		this.minWidth = current;
 		
-		MeasureBeamData mbd = new MeasureBeamData(this.notes, 4);
-		BeamInfoProcessor bip = new BeamInfoProcessor(mbd.getBeamNumbers() , mbd.beamInfos);
-		System.out.println(bip.toString());
+		this.beamProcessor.generateDrumsBeams(this, this.numStaffLines);
 	}
 
 }

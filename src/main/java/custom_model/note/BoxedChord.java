@@ -23,7 +23,7 @@ public class BoxedChord extends BoxedUnit{
 		
 		for (int i = 0; i < notes.size(); i++) {
 			Note note = notes.get(i);
-			BoxedText fret = new BoxedText("" + note.getNotation().getFret(), isGrace ? size * 0.65 : size, note.getType() == 0 ? 0.5 : note.getType(), isGrace, true, 0, notes.get(i));
+			BoxedText fret = new BoxedText("" + note.getNotation().getFret(), isGrace ? size * 0.65 : size, note.getType() == 0 ? 0.5 : (isGrace? 32: note.getType()), isGrace, true, 0, notes.get(i));
 			fret.setTranslateY(size * (notes.get(i).getNotation().getString() - min));
 			
 			this.frets.add(fret);
