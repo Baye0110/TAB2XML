@@ -5,6 +5,7 @@ import java.util.List;
 
 import custom_component_data.Note;
 import custom_model.MusicMeasure;
+import custom_model.SheetScore;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -16,11 +17,11 @@ public class DisplayChord extends DisplayUnit{
 	List<DisplayNote> displayNotes;
 
 	public DisplayChord(double height, List<Note> notes) {
-		
 		sortNotes(notes);
 		this.hasFlip = isANoteFlipped(notes);
 		this.min_position = notes.get(0).getPosition();
 		this.max_position = notes.get(notes.size()-1).getPosition();
+		this.setRest(false);
 		
 		this.data = notes.get(notes.size()-1);
 		
@@ -39,10 +40,7 @@ public class DisplayChord extends DisplayUnit{
 				note = new DisplayNote(height, notes.get(i), hasFlip, i>0 && notes.get(i).getPosition() - notes.get(i-1).getPosition() == 1, true);
 				flipDone = i>0 && notes.get(i).getPosition() - notes.get(i-1).getPosition() == 1;
 			}
-			
-			if (i == notes.size()-1)
-				note.addTails(height, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
-			
+						
 			max_preceding = note.preceding > max_preceding ? note.preceding : max_preceding;
 			max_trailing = note.trailing > max_trailing ? note.trailing : max_trailing;
 			displayNotes.add(note);
@@ -78,10 +76,10 @@ public class DisplayChord extends DisplayUnit{
 				start_y += notes.get(last).getNotehead() != null && notes.get(last).getNotehead().equals("x") ? height : height/2;
 				double end_y = start_y + (3 + 0.5*(max_position - min_position))*height;
 				
-				Line staff = new Line(pos_x, start_y, pos_x, end_y);
-				staff.setStrokeWidth(height/15);
-				staff.setTranslateX(0 - staff.minWidth(0));
-				this.getChildren().add(staff);
+				this.stem = new Line(pos_x, start_y, pos_x, end_y);
+				this.stem.setStrokeWidth(height/15);
+				this.stem.setTranslateX(0 - this.stem.minWidth(0));
+				this.getChildren().add(this.stem);
 			}
 			else {
 				int last = notes.size()-1;
@@ -91,28 +89,28 @@ public class DisplayChord extends DisplayUnit{
 				double end_y = displayNotes.get(0).parenthesesDisplacement;
 				end_y += notes.get(0).getNotehead() == null || !notes.get(0).getNotehead().equals("x") ? height/2 : 0;
 				
-				Line staff = new Line(pos_x, start_y, pos_x, end_y);
-				staff.setStrokeWidth(height/15);
-				staff.setTranslateX(0 - staff.minWidth(0));
-				this.getChildren().add(staff);
+				this.stem = new Line(pos_x, start_y, pos_x, end_y);
+				this.stem.setStrokeWidth(height/15);
+				this.stem.setTranslateX(0 - this.stem.minWidth(0));
+				this.getChildren().add(this.stem);
 			}
 		}
 		else {
 			double pos_x = stemDown ? max_preceding : max_preceding + noteheadWidth;
-			double start_y = stemDown ? height : 0;
-			double end_y = start_y - (max_position - min_position)*0.5*height;
+			double end_y = stemDown ? height : 0;
+			double start_y  = end_y - (max_position - min_position)*0.5*height;
 			if (!stemDown) {
 				this.setTop(0 - ((max_position - min_position)*0.5 + 3)*height);
 			}
 			
-			Line staff = new Line(pos_x, start_y, pos_x, end_y);
-			staff.setStrokeWidth(height/15);
-			staff.setTranslateX(0 - staff.minWidth(0));
-			this.getChildren().add(staff);
+			this.stem = new Line(pos_x, start_y, pos_x, end_y);
+			this.stem.setStrokeWidth(height/15);
+			this.stem.setTranslateX(0 - this.stem.minWidth(0));
+			this.getChildren().add(this.stem);
 			
 		}
 		
-		this.setSpacingType(notes.get(0).getType() != 0 ? notes.get(0).getType() : 0.5);
+		this.setSpacingType(notes.get(0).getType() == 0 ? 0.5 : (notes.get(0).getGrace() ? 24 : notes.get(0).getType()));
 		this.setPosition(min_position);
 		this.setHeight(this.minHeight(0));		
 		
@@ -167,12 +165,6 @@ public class DisplayChord extends DisplayUnit{
 			note.extendStaff(positions, height);
 		}
 	}
-
-	@Override
-	public void addTails(double height, boolean stemDown) {
-		
-		
-	}
 	
 	public void toggleHighlight() {
 		if (!this.isHighlighted) {
@@ -204,5 +196,18 @@ public class DisplayChord extends DisplayUnit{
 		right.setStroke(Color.DEEPSKYBLUE);
 		
 		this.box = new Group(left, top, bottom, right);
+		this.box.setOpacity(0);
+	}
+	
+	public void addTails(double height, boolean stemDown) {
+		this.displayNotes.get(this.displayNotes.size()-1).addTails(height, stemDown);
+	}
+	
+	public void extendStemForBeam() {
+		for (DisplayNote note: this.displayNotes) {
+			if (note.stem != null)
+				note.stem.setStartY(0 - note.getTranslateY() - SheetScore.lineSize * 4);
+		}
+		this.stem.setStartY(0 - this.getTranslateY() - SheetScore.lineSize * 4);
 	}
 }

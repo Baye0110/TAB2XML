@@ -154,7 +154,7 @@ public class MeasureBeamData {
                 }
             }
             else if (i == notes.size()-1) {
-                if (this.beamNumbers.get(this.beamNumbers.size()-1) != 0) {
+                if (beaming) {
                     this.beamNumbers.add(beamCount);
                     this.beamInfos.add(new BeamInfo(notes.get(i)));
                 }

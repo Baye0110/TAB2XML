@@ -1,6 +1,7 @@
 package custom_model;
 
 import custom_model.note.NoteTail;
+import custom_model.note.NoteUnit;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -10,13 +11,15 @@ import javafx.scene.shape.Line;
 public class TabNoteStem extends Group {
 	// Creates the noteStem that is displayed under guitar/bass tabs
 
+	NoteUnit note;
 	
 	/**
 	 * @param height	the spacing between the stafflines
 	 * @param type		the type of this note (1 = whole, 2 = half, 4 = quarter, 8 = 8th, 16 = 16th, ...)
 	 * @param dot
 	 */
-	public TabNoteStem(double height, int type, int dot) {
+	public TabNoteStem(double height, int type, int dot, NoteUnit note) {
+		this.note = note;
 		if (type == 2) {  // Creates the Stem for a half note
 			// A line with half length
 			Line stem = new Line(0, height, 0, height * 2);
@@ -68,6 +71,10 @@ public class TabNoteStem extends Group {
 			Ellipse circle = new Ellipse(baseDotDistance*(i + 1), height/2 + (type <= 2 ? height: 0), dotRad, dotRad);
 			this.getChildren().add(circle);
 		}
+	}
+	
+	public void setPositionX() {
+		this.setTranslateX(this.note.getTranslateX() + this.note.getWidth()/2);
 	}
 
 }

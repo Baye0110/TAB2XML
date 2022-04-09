@@ -1,6 +1,8 @@
 package custom_model.note;
 
+import custom_model.SheetScore;
 import javafx.scene.Group;
+import javafx.scene.shape.Line;
 
 // DRUMS ONLY
 public abstract class DisplayUnit extends NoteUnit{
@@ -12,8 +14,11 @@ public abstract class DisplayUnit extends NoteUnit{
 	private double height;
 	private int position;
 	boolean grace;
+	private boolean rest;
 	public static int currMeasureNoteNum = 0;
 	Group box;
+	
+	Line stem;
 	
 	
 	public int getPosition() {
@@ -52,6 +57,10 @@ public abstract class DisplayUnit extends NoteUnit{
 	public Group getBox() {
 		return this.box;
 	}
+	
+	public Line getStem() {
+		return this.stem;
+	}
 
 	public abstract void extendStaff(int positions, double height);
 	
@@ -62,4 +71,15 @@ public abstract class DisplayUnit extends NoteUnit{
 	}
 
 	public abstract void generateBox();
+	
+	public abstract void extendStemForBeam();
+	
+	public void setRest(boolean rest) {
+		this.rest = rest;
+	}
+	
+	public boolean getRest() {
+		return this.rest;
+	}
 }
+

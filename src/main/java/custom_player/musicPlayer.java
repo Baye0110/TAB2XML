@@ -331,6 +331,11 @@ public class musicPlayer {
 				}
 			}
 			
+			if (m.getNotes().size() == 0) {
+				double duration = (double) m.getTimeSignature()[0] / m.getTimeSignature()[1];
+				drumSet += " R/" + duration + " "; 
+			}
+			
 			drumSet += "| ";
 		}
 	}
