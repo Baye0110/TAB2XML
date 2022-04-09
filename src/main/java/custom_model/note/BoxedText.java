@@ -75,7 +75,7 @@ public class BoxedText extends BoxedUnit{
 			this.container.setStroke(Color.DEEPSKYBLUE);
 			this.container.setStrokeWidth(1.0);
 			this.isHighlighted = true;
-			if (pressed != null && !this.isChord) {
+			if (!this.getIsChord() && pressed != null) {
 				pressed.toggleHighlight();
 			}	
 			if (this.getNoteNum() > -1) {
@@ -89,9 +89,5 @@ public class BoxedText extends BoxedUnit{
 			this.isHighlighted = false;
 		}
 		
-	}
-
-	public void setIsChord(boolean b) {
-		this.isChord = b;
 	}
 }

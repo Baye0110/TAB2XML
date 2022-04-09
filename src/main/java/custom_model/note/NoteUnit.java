@@ -66,4 +66,8 @@ abstract public class NoteUnit extends Group{
 		return this.isHighlighted;
 	}
 	
+	public String toString() {
+		return "m: " + this.measure + ", n: " + this.noteNum;
+	}
+	
 }
