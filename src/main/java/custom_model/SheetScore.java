@@ -20,6 +20,7 @@ public class SheetScore extends VBox{
 	double songTempo;
 	public static double lineSize = 10.0; 
 	public static double pageWidth = 1045.0;
+	boolean threadKilled;
 	
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 
@@ -32,6 +33,7 @@ public class SheetScore extends VBox{
 		MusicMeasure.measureCount = 0;
 		NoteUnit.pressed = null;
 		this.songTempo = 60;
+		this.threadKilled = true;
 		
 		this.lines = new ArrayList<>();
 		
@@ -187,6 +189,7 @@ public class SheetScore extends VBox{
 	
 	public void startHighlight() {
 		this.isPlaying = true;
+		this.threadKilled = false;
 		
 		int notePressed; int measureOfNote;
 		if (NoteUnit.pressed == null) {
@@ -249,6 +252,20 @@ public class SheetScore extends VBox{
 	
 	public void resetLinker() {
 		NoteUnit.pressed = null;
+	}
+	
+	public void removeAllHighlight() {
+		List<MusicMeasure> measures = this.getMeasureList();
+		for (MusicMeasure m: measures) {
+			for (NoteUnit n: m.getNotes()) {
+				if (n.getHighlighted())
+					n.toggleHighlight();
+			}
+		}
+	}
+	
+	public boolean getThreadKilled() {
+		return this.threadKilled;
 	}
 	
 }

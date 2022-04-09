@@ -25,6 +25,7 @@ public class BoxedChord extends BoxedUnit{
 			Note note = notes.get(i);
 			BoxedText fret = new BoxedText("" + note.getNotation().getFret(), isGrace ? size * 0.65 : size, note.getType() == 0 ? 0.5 : (isGrace? 32: note.getType()), isGrace, true, 0, notes.get(i));
 			fret.setTranslateY(size * (notes.get(i).getNotation().getString() - min));
+			fret.setIsChord(true);
 			
 			this.frets.add(fret);
 			this.getChildren().add(fret);
@@ -52,7 +53,6 @@ public class BoxedChord extends BoxedUnit{
 	
 	public void toggleHighlight() {
 		NoteUnit originalPressed = pressed;
-		pressed = null;
 		
 		for (BoxedText fret: this.frets) {
 			fret.toggleHighlight();

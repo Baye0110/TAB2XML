@@ -87,6 +87,15 @@ public class musicPlayer {
 				System.out.println("Drum is playing");
 			}
 			
+			while (!this.sheet.getThreadKilled() && !this.isPlaying()) {
+				try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			if (this.isFinished()) {
 				List<MusicMeasure> measures = sheet.getMeasureList();
 				List<NoteUnit> last = measures.get(measures.size()-1).getNotes();
@@ -100,6 +109,7 @@ public class musicPlayer {
 				System.out.println("Music is Playing");
 			}else {
 				this.player = new Player();
+				System.out.println(NoteUnit.pressed);
 				if (NoteUnit.pressed == null) {
 					player.delayPlay(0, musicXMLParttern.toString());
 				}
@@ -131,6 +141,12 @@ public class musicPlayer {
 		if(isPlaying()) {
 			player.getManagedPlayer().pause();
 			sheet.stopHighLight();
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			this.sheet.removeAllHighlight();
 			System.out.println("Music paused");
 		}else {
 			System.out.println("playing a music first");
@@ -531,9 +547,13 @@ public class musicPlayer {
 	
 	public void resetMusicToBeginning() {
 		this.sheet.stopHighLight();
-		if (NoteUnit.pressed != null) {
-			NoteUnit.pressed.toggleHighlight();
-			NoteUnit.pressed = null;
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		this.sheet.removeAllHighlight();
+		NoteUnit.pressed = null;
 	}
 }
