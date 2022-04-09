@@ -51,7 +51,6 @@ public class musicPlayer {
 		SetInstrumentType();
 		setInstrument();
 		getRepeat();
-		System.out.println("String 2 :" + musicXMLParttern.toString());
 		this.sheet.generateBasePlayTimings(score);
 	}
 	
@@ -65,6 +64,7 @@ public class musicPlayer {
 	public int getTempo() {
 		return this.tempoSpeed;
 	}
+	
 	public void play(String tempoInput) {
 		if(tempoSpeed != Integer.parseInt(tempoInput)) {
 			tempoSpeed = Integer.parseInt(tempoInput);
@@ -87,6 +87,15 @@ public class musicPlayer {
 				System.out.println("Drum is playing");
 			}
 			
+			while (!this.sheet.getThreadKilled() && !this.isPlaying()) {
+				try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			if (this.isFinished()) {
 				List<MusicMeasure> measures = sheet.getMeasureList();
 				List<NoteUnit> last = measures.get(measures.size()-1).getNotes();
@@ -95,15 +104,12 @@ public class musicPlayer {
 					NoteUnit.pressed = null;
 				}
 			}
-			
-//			if(isPaused()) {
-//				resume();
-//				this.sheet.startHighlight();
-//				System.out.println("Music is resumed");
+					
 			if(isPlaying()) {
 				System.out.println("Music is Playing");
 			}else {
 				this.player = new Player();
+				System.out.println(NoteUnit.pressed);
 				if (NoteUnit.pressed == null) {
 					player.delayPlay(0, musicXMLParttern.toString());
 				}
@@ -119,34 +125,48 @@ public class musicPlayer {
 	public boolean isPaused() {
 		return player.getManagedPlayer().isPaused();
 	}
+	
+	
 	public boolean isPlaying() {
 		return player.getManagedPlayer().isPlaying();
 	}
+	
+	
 	public void resume() {
 		player.getManagedPlayer().resume();
 	}
+	
+	
 	public void pause() {
 		if(isPlaying()) {
 			player.getManagedPlayer().pause();
-			this.sheet.stopHighLight();
+			sheet.stopHighLight();
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			this.sheet.removeAllHighlight();
 			System.out.println("Music paused");
-		}else if(isFinished()){
-			System.out.println("playing a music first");
 		}else {
 			System.out.println("playing a music first");
 		}
 	}
+	
 	public void exit() {
 		if(isPlaying()) {
 			finish();
-			this.sheet.stopHighLight();
+			sheet.stopHighLight();
 		}
 	}
+	
 	public boolean isFinished() {
 		return player.getManagedPlayer().isFinished();
 	}
+	
 	public void finish() {
 		player.getManagedPlayer().finish();
+		player = new Player();
 	}
 	
 	//1:BASS 2:GUITAR 3:DRUMS
@@ -527,9 +547,13 @@ public class musicPlayer {
 	
 	public void resetMusicToBeginning() {
 		this.sheet.stopHighLight();
-		if (NoteUnit.pressed != null) {
-			NoteUnit.pressed.toggleHighlight();
-			NoteUnit.pressed = null;
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		this.sheet.removeAllHighlight();
+		NoteUnit.pressed = null;
 	}
 }

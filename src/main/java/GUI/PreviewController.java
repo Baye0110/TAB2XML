@@ -58,11 +58,11 @@ public class PreviewController extends Application{
 	@FXML Button playButton;
 	@FXML Button pauseButton;
 	@FXML Button goButton;
-	@FXML Button exitButton;
+	@FXML Button stopButton;
 	@FXML Button displayButton;
 	@FXML Button exportButton;
 	List<BufferedImage> bufferedimage = new ArrayList<BufferedImage>();
-	Thread thread;
+
 	
 	public PreviewController() {}
 	
@@ -71,9 +71,7 @@ public class PreviewController extends Application{
 	    }
 	 
 	 public void update() throws ValidityException, ParserConfigurationException, ParsingException, IOException {
-		 initialButton();
-		 thread = new Thread();
-		 thread.start();
+
 		 tempoField.setText("60");
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score);
@@ -81,17 +79,6 @@ public class PreviewController extends Application{
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
 	 }
 	 
-	 public void run() {
-		 if(player.isFinished()) {
-			 initialButton();
-		 }
-	 }
-	 
-	 
-	 public void initialButton() {
-		 playButton.setVisible(true);
-		 pauseButton.setVisible(false);
-	 }
 
 	private void getBufferimage() {
 		SheetScore copy = new SheetScore(score);
@@ -112,26 +99,23 @@ public class PreviewController extends Application{
 
 	public void playHandler() {
 		System.out.println("Play Button Clicked!");
-		playButton.setVisible(false);
-		pauseButton.setVisible(true);
 		player.play(tempoField.getText());
 		System.out.println("The tempoSpeed is: " + player.getTempo());
 	}
 	public void pauseHandler(){
 		System.out.println("Pause Button Clicked!");
-		playButton.setVisible(true);
-		pauseButton.setVisible(false);
 		player.pause();
 	}
-	public void exitHandler(){
-		System.out.println("Exit Button Clicked!");
-		exit();
+	public void stopHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
+		System.out.println("stop Button Clicked!");
+		player.resetMusicToBeginning();
+		player.finish();
 	}
 	
 	public void exit() {
 		player.exit();
 		initialValue();
-		mvc.convertWindow.hide();
+		System.out.println("preview windows exited");
 	}
 	
 	public void goHandler(){
