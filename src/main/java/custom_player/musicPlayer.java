@@ -54,6 +54,7 @@ public class musicPlayer {
 		System.out.println("String 2 :" + musicXMLParttern.toString());
 		this.sheet.generateBasePlayTimings(score);
 	}
+	
 	public void setNoteList() {
 		for(Measure measures: score.getParts().get(0).getMeasures()) {
 			for(Note notes: measures.getNotes()) {
@@ -522,5 +523,13 @@ public class musicPlayer {
 		
 		String s = string.toString();
 		musicXMLParttern = new Pattern(s);
+	}
+	
+	public void resetMusicToBeginning() {
+		this.sheet.stopHighLight();
+		if (NoteUnit.pressed != null) {
+			NoteUnit.pressed.toggleHighlight();
+			NoteUnit.pressed = null;
+		}
 	}
 }

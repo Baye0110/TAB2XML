@@ -283,4 +283,8 @@ abstract public class MusicMeasure extends Pane {
 	public double getMeasureHeight() {
 		return this.maxHeight;
 	}
+	
+	public double getWholeNoteSpacing() {
+		return this.wholeNoteSpacing;
+	}
 }

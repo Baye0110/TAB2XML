@@ -62,6 +62,7 @@ public class PreviewController extends Application{
 	@FXML Button displayButton;
 	@FXML Button exportButton;
 	List<BufferedImage> bufferedimage = new ArrayList<BufferedImage>();
+	Thread thread;
 	
 	public PreviewController() {}
 	
@@ -70,13 +71,28 @@ public class PreviewController extends Application{
 	    }
 	 
 	 public void update() throws ValidityException, ParserConfigurationException, ParsingException, IOException {
+		 initialButton();
+		 thread = new Thread();
+		 thread.start();
 		 tempoField.setText("60");
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score);
 		 sp.setContent(sheet);
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
 	 }
-	
+	 
+	 public void run() {
+		 if(player.isFinished()) {
+			 initialButton();
+		 }
+	 }
+	 
+	 
+	 public void initialButton() {
+		 playButton.setVisible(true);
+		 pauseButton.setVisible(false);
+	 }
+
 	private void getBufferimage() {
 		SheetScore copy = new SheetScore(score);
 		
@@ -96,11 +112,15 @@ public class PreviewController extends Application{
 
 	public void playHandler() {
 		System.out.println("Play Button Clicked!");
+		playButton.setVisible(false);
+		pauseButton.setVisible(true);
 		player.play(tempoField.getText());
 		System.out.println("The tempoSpeed is: " + player.getTempo());
 	}
 	public void pauseHandler(){
 		System.out.println("Pause Button Clicked!");
+		playButton.setVisible(true);
+		pauseButton.setVisible(false);
 		player.pause();
 	}
 	public void exitHandler(){
