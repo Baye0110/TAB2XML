@@ -17,10 +17,14 @@ import javafx.scene.text.Text;
 abstract public class MusicMeasure extends Pane {
 	// The amount of space before any element in a staff
 	public static final double START_DISTANCE = 30;
+	int numStaffLines;
 	
 	// Measure Number
 	public static int measureCount = 0;
 	int measureNum;
+	
+	// Beam Information/Generator
+	BeamInfoProcessor beamProcessor;
 	
 	// The barLines (the last one is always the barLine for the end of the staff)
 	List<Line> barLines;
@@ -59,8 +63,6 @@ abstract public class MusicMeasure extends Pane {
 			this.currentDistance = 200;
 			this.minWidth = 200;
 			this.spacing = 200;
-			MusicMeasure.measureCount += 1;
-			this.measureNum = MusicMeasure.measureCount;
 			this.notes = new ArrayList<>();
 		}
 		

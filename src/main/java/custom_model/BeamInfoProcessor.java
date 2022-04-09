@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import custom_model.MeasureBeamData.BeamInfo;
+import custom_model.note.DisplayUnit;
 import custom_model.note.NoteUnit;
 import javafx.scene.Group;
 import custom_model.MusicMeasure;
 
 public class BeamInfoProcessor {
-	public static final double beamWidthFactor = 0.25;
+	public static final double beamWidthFactor = 0.4;
 	public static final double beamSpaceFactor = 1.0/6.0;
 	List<BeamCreationData> beamData;
 	
@@ -160,7 +161,51 @@ public class BeamInfoProcessor {
 		}
 	}
 	
-	public void setSpacing() {
+	public void generateDrumsBeams(MusicMeasure m, int lines) {
+		double beamWidth = SheetScore.lineSize * BeamInfoProcessor.beamWidthFactor;
+		double beamSpace = SheetScore.lineSize * BeamInfoProcessor.beamSpaceFactor;
+		double measureTop = 0 - SheetScore.lineSize * 4;
+		for (BeamCreationData data : this.beamData) {
+			DisplayUnit current = (DisplayUnit) data.current;
+			DisplayUnit other = (DisplayUnit) data.other;
+			
+			current.extendStemForBeam();
+			
+			double posY = 0.0;
+			if (data.isTail) {
+				if (data.numHalf == 0)
+					continue;
+				
+				for (int i = 0; i < data.numFull; i++) { posY += beamWidth + beamSpace; }
+				double currStemPos = current.getTranslateX() + current.getStem().getStartX() - current.getStem().minWidth(0);
+				double prevStemPos = other.getTranslateX() + other.getStem().getStartX();
+				double halfDistance = (currStemPos - prevStemPos)/2.0;
+				Tremolo t = new Tremolo(halfDistance, beamWidth, 0, false, data.numHalf, beamSpace);
+				//posY += beamWidth * data.numHalf + beamSpace * (data.numFull - 1);
+				t.setTranslateY(measureTop + posY);
+				t.setTranslateX(prevStemPos + halfDistance);
+				m.getChildren().add(t);
+			}
+			else {
+				double currStemPos = current.getTranslateX() + current.getStem().getStartX() - current.getStem().minWidth(0);
+				double nextStemPos = other.getTranslateX() + other.getStem().getStartX();
+				double length = nextStemPos - currStemPos;
+				for (int i = 0; i < data.numFull; i++) {
+					SlantLine line = new SlantLine(length, beamWidth, 0, false);
+					line.setTranslateX(currStemPos);
+					line.setTranslateY(measureTop + posY);
+					m.getChildren().add(line);
+					posY += beamWidth + beamSpace;
+				}
+				for (int i = 0; i < data.numHalf; i++) {
+					SlantLine line = new SlantLine(length/2, beamWidth, 0, false);
+					line.setTranslateX(currStemPos);
+					line.setTranslateY(measureTop + posY);
+					m.getChildren().add(line);
+					posY += beamWidth + beamSpace;
+				}
+			}
+		}
 		
 	}
 }
