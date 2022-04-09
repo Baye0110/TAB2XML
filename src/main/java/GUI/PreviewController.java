@@ -110,7 +110,12 @@ public class PreviewController extends Application{
 		Thread thread = new Thread() {
 			public void run() {
 				while(!player.isFinished()) {
-					System.out.println("Music is playing");
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				initialButton();
 				System.out.println("Music is Finished");
