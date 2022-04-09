@@ -115,7 +115,7 @@ public class musicPlayer {
 				}
 				else {
 					player.delayPlay(0, this.generateSpecificPattern());
-					System.out.println(this.generateSpecificPattern());
+//					System.out.println(this.generateSpecificPattern());
 				}
 				this.sheet.startHighlight();
 			}
@@ -166,7 +166,7 @@ public class musicPlayer {
 	
 	public void finish() {
 		player.getManagedPlayer().finish();
-		player = new Player();
+//		player = new Player();
 	}
 	
 	//1:BASS 2:GUITAR 3:DRUMS
@@ -476,7 +476,7 @@ public class musicPlayer {
 		int note = 1;
 		
 		Scanner tokens = new Scanner(this.musicXMLParttern.toString());
-		System.out.println(this.musicXMLParttern.toString());
+//		System.out.println(this.musicXMLParttern.toString());
 		
 		while (tokens.hasNext()) {
 			String token = tokens.next();
@@ -493,7 +493,7 @@ public class musicPlayer {
 			}
 		}
 		
-		System.out.println(measure + ": " + note);
+//		System.out.println(measure + ": " + note);
 		return str.toString();
 	}
 	
@@ -501,7 +501,7 @@ public class musicPlayer {
 		Boolean sameMeasure = true;
 		List<Measure> measures = new ArrayList<>();
 		Scanner scan = new Scanner(musicXMLParttern.toString());
-		System.out.println("xml: " + musicXMLParttern.toString());
+//		System.out.println("xml: " + musicXMLParttern.toString());
 		List<String> scan2 = new ArrayList<String>();
 		String scan1 = "";
 		while(scan.hasNext()) {
