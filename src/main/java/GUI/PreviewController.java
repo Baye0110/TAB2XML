@@ -108,6 +108,8 @@ public class PreviewController extends Application{
 	}
 	public void stopHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("stop Button Clicked!");
+		player.resetMusicToBeginning();
+		player.finish();
 	}
 	
 	public void exit() {

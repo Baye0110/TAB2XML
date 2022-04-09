@@ -150,6 +150,7 @@ public class musicPlayer {
 	
 	public void finish() {
 		player.getManagedPlayer().finish();
+		player = new Player();
 	}
 	
 	//1:BASS 2:GUITAR 3:DRUMS
