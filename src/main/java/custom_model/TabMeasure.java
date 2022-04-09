@@ -89,8 +89,8 @@ public class TabMeasure extends MusicMeasure {
 			if (unitParts.size() == 1) {
 				double type = currentNote.getType() != 0 ? currentNote.getType() : 0.5;
 				if (currentNote.getGrace()) {
-					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size*0.65, 24, true, false, this.measureNum, currentNote);
-					boxedUnit.setTranslateY(size * 0.35);
+					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size*0.8, 24, true, false, this.measureNum, currentNote);
+					boxedUnit.setTranslateY(size * 0.2);
 				}
 				else {
 					boxedUnit = new BoxedText("" + currentNote.getNotation().getFret(), size, type, false, false, this.measureNum, currentNote);
