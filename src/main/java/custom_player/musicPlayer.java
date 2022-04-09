@@ -54,6 +54,7 @@ public class musicPlayer {
 		System.out.println("String 2 :" + musicXMLParttern.toString());
 		this.sheet.generateBasePlayTimings(score);
 	}
+	
 	public void setNoteList() {
 		for(Measure measures: score.getParts().get(0).getMeasures()) {
 			for(Note notes: measures.getNotes()) {
