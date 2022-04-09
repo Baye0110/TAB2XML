@@ -38,6 +38,8 @@ dependencies {
     implementation 'com.github.JensPiegsa:jfugue:5.0.9'
     
     implementation 'com.itextpdf:itext7-core:7.1.7'
+    
+    implementation group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-9.1.2'
 }
 
 task debug {
