@@ -51,7 +51,6 @@ public class musicPlayer {
 		SetInstrumentType();
 		setInstrument();
 		getRepeat();
-		System.out.println("String 2 :" + musicXMLParttern.toString());
 		this.sheet.generateBasePlayTimings(score);
 	}
 	
@@ -65,6 +64,7 @@ public class musicPlayer {
 	public int getTempo() {
 		return this.tempoSpeed;
 	}
+	
 	public void play(String tempoInput) {
 		if(tempoSpeed != Integer.parseInt(tempoInput)) {
 			tempoSpeed = Integer.parseInt(tempoInput);
@@ -95,11 +95,7 @@ public class musicPlayer {
 					NoteUnit.pressed = null;
 				}
 			}
-			
-//			if(isPaused()) {
-//				resume();
-//				this.sheet.startHighlight();
-//				System.out.println("Music is resumed");
+					
 			if(isPlaying()) {
 				System.out.println("Music is Playing");
 			}else {
@@ -119,32 +115,39 @@ public class musicPlayer {
 	public boolean isPaused() {
 		return player.getManagedPlayer().isPaused();
 	}
+	
+	
 	public boolean isPlaying() {
 		return player.getManagedPlayer().isPlaying();
 	}
+	
+	
 	public void resume() {
 		player.getManagedPlayer().resume();
 	}
+	
+	
 	public void pause() {
 		if(isPlaying()) {
 			player.getManagedPlayer().pause();
-			this.sheet.stopHighLight();
+			sheet.stopHighLight();
 			System.out.println("Music paused");
-		}else if(isFinished()){
-			System.out.println("playing a music first");
 		}else {
 			System.out.println("playing a music first");
 		}
 	}
+	
 	public void exit() {
 		if(isPlaying()) {
 			finish();
-			this.sheet.stopHighLight();
+			sheet.stopHighLight();
 		}
 	}
+	
 	public boolean isFinished() {
 		return player.getManagedPlayer().isFinished();
 	}
+	
 	public void finish() {
 		player.getManagedPlayer().finish();
 	}
