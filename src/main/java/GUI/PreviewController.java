@@ -71,7 +71,7 @@ public class PreviewController extends Application{
 	    }
 	 
 	 public void update() throws ValidityException, ParserConfigurationException, ParsingException, IOException {
-
+		 initialButton();
 		 tempoField.setText("60");
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score);
@@ -79,8 +79,12 @@ public class PreviewController extends Application{
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
 	 }
 	 
+	 private void initialButton() {
+		 playButton.setVisible(true);
+		 pauseButton.setVisible(false);
+	 }
 
-	private void getBufferimage() {
+	 private void getBufferimage() {
 		SheetScore copy = new SheetScore(score);
 		
 		for (ScoreLine line: copy.getScoreLines()) {
@@ -99,15 +103,31 @@ public class PreviewController extends Application{
 
 	public void playHandler() {
 		System.out.println("Play Button Clicked!");
+		playButton.setVisible(false);
+		pauseButton.setVisible(true);
 		player.play(tempoField.getText());
 		System.out.println("The tempoSpeed is: " + player.getTempo());
+		Thread thread = new Thread() {
+			public void run() {
+				while(!player.isFinished()) {
+					System.out.println("Music is playing");
+				}
+				initialButton();
+				System.out.println("Music is Finished");
+			}
+		};
+		thread.start();
 	}
 	public void pauseHandler(){
 		System.out.println("Pause Button Clicked!");
+		playButton.setVisible(true);
+		pauseButton.setVisible(false);
 		player.pause();
 	}
 	public void stopHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("stop Button Clicked!");
+		playButton.setVisible(true);
+		pauseButton.setVisible(false);
 		player.resetMusicToBeginning();
 		player.finish();
 	}
