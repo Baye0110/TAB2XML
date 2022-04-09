@@ -62,12 +62,4 @@ abstract public class NoteUnit extends Group{
 		return this.data;
 	}
 	
-	public boolean getHighlighted() {
-		return this.isHighlighted;
-	}
-	
-	public String toString() {
-		return "m: " + this.measure + ", n: " + this.noteNum;
-	}
-	
 }

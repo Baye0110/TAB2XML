@@ -43,14 +43,13 @@ public class PlaybackGUILinker extends Thread {
 //					diff = 0;
 //				}
 				try {
-					NoteUnit.pressed = measure.notes.get(j);
 					Thread.sleep((long) ((double) sheet.noteTimings.get(timingsNumber)));
 					measureSum += sheet.noteTimings.get(timingsNumber);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				NoteUnit.pressed = measure.notes.get(j);
 				timingsNumber ++;
 			}
 		}
