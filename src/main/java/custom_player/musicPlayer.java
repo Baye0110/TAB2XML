@@ -34,6 +34,7 @@ public class musicPlayer {
 	MusicXmlParser parser = new MusicXmlParser();
 	Player player = new Player();
 	org.jfugue.pattern.Pattern musicXMLParttern;
+	org.jfugue.pattern.Pattern temp;
 	String stringInstrument ="";
 	String drumSet = "V9 ";
 	String[] stepToNoteMap = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
@@ -87,7 +88,7 @@ public class musicPlayer {
 				System.out.println("Drum is playing");
 			}
 			
-			if (this.isFinished()) {
+			if (isFinished()) {
 				List<MusicMeasure> measures = sheet.getMeasureList();
 				List<NoteUnit> last = measures.get(measures.size()-1).getNotes();
 				if (NoteUnit.pressed == last.get(last.size()-1)) {
@@ -95,7 +96,7 @@ public class musicPlayer {
 					NoteUnit.pressed = null;
 				}
 			}
-					
+
 			if(isPlaying()) {
 				System.out.println("Music is Playing");
 			}else {
@@ -106,6 +107,7 @@ public class musicPlayer {
 				else {
 					player.delayPlay(0, this.generateSpecificPattern());
 					System.out.println(this.generateSpecificPattern());
+					
 				}
 				this.sheet.startHighlight();
 			}
