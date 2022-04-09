@@ -6,6 +6,7 @@ import java.util.List;
 import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Slide;
+import custom_component_data.Slur;
 import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.BoxedUnit;
@@ -25,6 +26,7 @@ public class TabMeasure extends MusicMeasure {
 	//   1. labels = Store the textboxes with the numbers
 	//   2. stems  = Store the noteStems which are displayed under the staff
 	List<TabNoteStem> stems;
+	List<ArcLine> slurs;
 	
 	/**
 	 * 
@@ -51,6 +53,7 @@ public class TabMeasure extends MusicMeasure {
 		this.notes = new ArrayList<NoteUnit>();
 		this.stems = new ArrayList<TabNoteStem>();
 		this.links = new ArrayList<NoteLinker>();
+		this.slurs = new ArrayList<ArcLine>();
 		
 		// initialize the height of the staff based on the number of lines
 		this.maxHeight = size * (m.getStaffLines());
@@ -65,6 +68,7 @@ public class TabMeasure extends MusicMeasure {
 			List<Note> unitParts = new ArrayList<>();
 			unitParts.add(currentNote);
 			BoxedUnit boxedUnit = null;
+			Note bentNote = null;
 			
 			boolean isBend = currentNote.getNotation() != null && currentNote.getNotation().getTechnical() != null &&
 					currentNote.getNotation().getTechnical().getBend() != null;
@@ -77,6 +81,7 @@ public class TabMeasure extends MusicMeasure {
 				if (notes.get(i).getNotation() != null && notes.get(i).getNotation().getTechnical() != null && 
 						notes.get(i).getNotation().getTechnical().getBend() != null) {
 					isBend = true;
+					bentNote = notes.get(i);
 				}
 			}
 			
@@ -129,7 +134,19 @@ public class TabMeasure extends MusicMeasure {
 			 *  	4.b) Set the translateX position (simply attach the bend to the boxedUnit using the "setBend(Bend)" method, then set the X-position with the "setBendPositionX()" method
 			 *  5. Add the bend to the measure (using this.getChildren().add())
 			 */			
-			
+			Note temp = currentNote;
+			if(isBend == true) {
+				currentNote = bentNote != null ? bentNote : currentNote;
+				double height = size * 1.5 + boxedUnit.getTranslateY();
+				double length = (boxedUnit.minWidth(0) + wholeNoteSpacing / currentNote.getType())/2;
+				String text = (currentNote.getNotation().getTechnical().getBend().getBendAlter() == 2) ? "full" : "BendAlter/2";
+				custom_model.Bend modelBend = new Bend(height, length, text);
+				modelBend.setTranslateY(-1.5 * size);
+				boxedUnit.setBend(modelBend);
+				boxedUnit.setBendPositionX();
+				this.getChildren().add(modelBend);
+				currentNote = temp;
+			}
 			
 			
 			if (currentNote.getNotation().getSlides().size() != 0) {
@@ -170,7 +187,28 @@ public class TabMeasure extends MusicMeasure {
 				}
 			}
 			
-			
+			if (currentNote.getNotation().getSlurs().size() != 0) {
+				List<Slur> slurs = currentNote.getNotation().getSlurs();
+				boolean init = false; 
+				boolean end = false;
+				for (Slur slur: slurs) {
+					if (slur.getType().equals("start")) 
+						init = true;
+					if (slur.getType().equals("stop"))
+						end = true;
+				}
+				
+				if (end) {
+					this.slurs.get(this.slurs.size()-1).setEndNote(boxedUnit);
+				}
+				if (init) {
+					ArcLine arc = new ArcLine(size * 1.25, 5, true);
+					arc.setTranslateY(boxedUnit.getTranslateY() - size);
+					arc.setStartNote(boxedUnit);
+					this.getChildren().add(arc);
+					this.slurs.add(arc);
+				}
+			}
 			
 			double type = currentNote.getType() == 0 ? 0.5 : currentNote.getType();
 			currentDistance += boxedUnit.minWidth(0) + wholeNoteSpacing/type;
@@ -335,7 +373,7 @@ public class TabMeasure extends MusicMeasure {
 		// Set the correct spacing for each BoxedText number in "this.labels"
 		for (int i = 0; i < this.notes.size(); i++) {
 			// Get the ith textbox, and set the correct X position to put it
-			NoteUnit currLabel = (BoxedUnit) this.notes.get(i);
+			BoxedUnit currLabel = (BoxedUnit) this.notes.get(i);
 			currLabel.setTranslateX(current);
 			
 			// If the note is also not a "grace note", then we can also add the TabNoteStem under the staff
@@ -352,6 +390,10 @@ public class TabMeasure extends MusicMeasure {
 			 *    class or you can use the getBend() method on "currLabel" variable and check if the Bend is null.
 			 * 2. If this note does have a bend, then re-adjust its x-position using the "setBendPositionX()" method of the BoxedUnit class
 			 */
+			if(currLabel.getBend() != null) {
+				currLabel.getBend().adjustLength((this.wholeNoteSpacing * 1/currLabel.getSpacingType())/2);
+				currLabel.setBendPositionX();
+			}
 			
 			if (currLabel.getData().getNotation().getSlides().size() != 0) {
 				List<Slide> slides = currLabel.getData().getNotation().getSlides();
@@ -384,6 +426,10 @@ public class TabMeasure extends MusicMeasure {
 		
 		for (int i = 0; i < this.stems.size(); i++) {
 			this.stems.get(i).setPositionX();
+		}
+		
+		for (int i = 0; i < this.slurs.size(); i++) {
+			this.slurs.get(i).setPositionX();
 		}
 		
 		if (this.endRepeat != null) {
