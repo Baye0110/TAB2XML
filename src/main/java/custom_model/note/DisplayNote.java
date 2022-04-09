@@ -274,6 +274,7 @@ public class DisplayNote extends DisplayUnit{
 			int log_spacingType = 0;
 			if (this.grace) {
 				log_spacingType = 1;
+				height *= 0.8;
 			}
 			else {
 				for (; this.getSpacingType() > Math.pow(2, log_spacingType); log_spacingType++);

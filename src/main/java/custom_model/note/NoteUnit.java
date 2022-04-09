@@ -12,6 +12,7 @@ abstract public class NoteUnit extends Group{
 	protected int noteNum; // IMPORTANT
 	protected int measure; // IMPORTANT
 	protected Note data;
+	protected boolean isTied;
 	
 	public static NoteUnit pressed = null; // IMPORTANT
 	

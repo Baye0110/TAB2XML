@@ -55,6 +55,14 @@ public class PlaybackGUILinker extends Thread {
 			}
 		}
 		
+		if (sheet.isPlaying == true) {
+			if (NoteUnit.pressed != null && NoteUnit.pressed.getHighlighted()) {
+				NoteUnit.pressed.toggleHighlight();
+			}
+			NoteUnit.pressed = null;
+			sheet.isPlaying = false;
+		}
+		
 		this.sheet.threadKilled = true;		
 		
 	}	

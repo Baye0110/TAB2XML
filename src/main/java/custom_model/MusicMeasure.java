@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import custom_component_data.Measure;
+import custom_component_data.Note;
+import custom_component_data.Tied;
 import custom_model.note.NoteUnit;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -51,6 +53,9 @@ abstract public class MusicMeasure extends Pane {
 	
 	List<Node> endRepeat;
 	
+	// Does this measure end with a Tied that is starting??
+	boolean runOffTied;
+	
 	
 	/**
 	 * 
@@ -59,6 +64,8 @@ abstract public class MusicMeasure extends Pane {
 	 * @param start   Does this measure start on a new line on the sheet music?
 	 */
 	public MusicMeasure(double size, Measure m, boolean start) {
+		this.runOffTied = false;
+		
 		if (m.getNotes().size() == 0) {
 			this.currentDistance = 200;
 			this.minWidth = 200;
@@ -66,6 +73,17 @@ abstract public class MusicMeasure extends Pane {
 			this.notes = new ArrayList<>();
 		}
 		
+		// Set the runOffTieds boolean flag
+		if (m.getNotes().size() != 0) {
+			Note last = m.getNotes().get(m.getNotes().size()-1);
+			boolean hasEndTied = last.getNotation() != null && last.getNotation().getTieds().size() != 0;
+			if (hasEndTied) {
+				for (Tied tied: last.getNotation().getTieds()) {
+					if (tied.getType().equals("start"))
+						this.runOffTied = true;
+				}
+			}
+		}		
 		
 		// Set the initial distance to the start_distance constant.
 		this.currentDistance = START_DISTANCE;
@@ -286,5 +304,9 @@ abstract public class MusicMeasure extends Pane {
 	
 	public double getWholeNoteSpacing() {
 		return this.wholeNoteSpacing;
+	}
+	
+	public boolean getRunOffTied() {
+		return this.runOffTied;
 	}
 }

@@ -48,6 +48,7 @@ public class SheetScore extends VBox{
 		
 		// The length of all the measures in the above ArrayList.
 		double length = 0;
+		boolean tiedRunOffMeasure = false;
 		
 		// Create each ScoreLine of the music by iterating through each Measure XML parsed object.
 		for (Measure m: score.getParts().get(0).getMeasures()) {
@@ -60,23 +61,42 @@ public class SheetScore extends VBox{
 				mGUI = new StaffMeasure(lineSize, m, cumulated.isEmpty());
 			}
 			
-			/* If the length of the MusicMeasure (GUI Measures) in the cumulated array surpasses the page width
-			 * then create a horizontal line of measures (Create a ScoreLine with the MusicMeasures in 'cumulated' array
-			 */
-	        if (length >= pageWidth) {
-	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
-	        	this.lines.add(sl1);
-	        	// Reset the cumulated ArrayList with the newly 'mGUI' as its first element and initialize the length
-	        	cumulated = new ArrayList<>();
-	        	cumulated.add(mGUI);
-	        	length = mGUI.minWidth;
-	        	this.getChildren().add(sl1);
-	        }
+//			/* If the length of the MusicMeasure (GUI Measures) in the cumulated array surpasses the page width
+//			 * then create a horizontal line of measures (Create a ScoreLine with the MusicMeasures in 'cumulated' array
+//			 */
+//	        if (length >= pageWidth) {
+//	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+//	        	this.lines.add(sl1);
+//	        	// Reset the cumulated ArrayList with the newly 'mGUI' as its first element and initialize the length
+//	        	cumulated = new ArrayList<>();
+//	        	cumulated.add(mGUI);
+//	        	length = mGUI.minWidth;
+//	        	this.getChildren().add(sl1);
+//	        }
 	        /* If the length of the MusicMeasure in the 'cumulated' array will surpass the page width if we also add on
 	         * this new measure, then we create a horizontal line of measures (Create a ScoreLine with the MusicMeasures in
 	         * in 'cumulated' + mGUI)
 	         */
-	        else if (length + mGUI.minWidth >= pageWidth) {
+			if (tiedRunOffMeasure) {
+				cumulated.add(mGUI);
+	        	length += mGUI.minWidth;
+	        	tiedRunOffMeasure = mGUI.getRunOffTied();
+			}
+			else if (mGUI.getRunOffTied()) {
+				if (cumulated.size() > 0) {
+					ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+		        	this.lines.add(sl1);
+		        	this.getChildren().add(sl1);
+				}
+				
+	        	// reset the cumulated array, and set the length to new measure
+				cumulated = new ArrayList<>();
+	        	cumulated.add(mGUI);
+	        	length = mGUI.minWidth;
+	        	// set the runOffTied
+	        	tiedRunOffMeasure = true;
+			}
+			else if (length + mGUI.minWidth >= pageWidth) {
 	        	cumulated.add(mGUI);
 	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
 	        	this.lines.add(sl1);
