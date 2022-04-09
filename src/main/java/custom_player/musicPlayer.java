@@ -527,4 +527,12 @@ public class musicPlayer {
 		String s = string.toString();
 		musicXMLParttern = new Pattern(s);
 	}
+	
+	public void resetMusicToBeginning() {
+		this.sheet.stopHighLight();
+		if (NoteUnit.pressed != null) {
+			NoteUnit.pressed.toggleHighlight();
+			NoteUnit.pressed = null;
+		}
+	}
 }
