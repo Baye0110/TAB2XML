@@ -249,4 +249,9 @@ public class DisplayChord extends DisplayUnit{
 			arcs.get(arcs.size() - i).setEndNote(this);
 		}	
 	}
+
+	@Override
+	public void addTremolo(int numOfSlants) {
+		System.out.println("System does not support tremolo for chords!");
+	}
 }

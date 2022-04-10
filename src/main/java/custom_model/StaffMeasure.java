@@ -146,6 +146,13 @@ public class StaffMeasure extends MusicMeasure{
 			this.notes.add(currentUnit);
 		}
 		
+		/*
+		 * TODO: Tremolo Implementation
+		 * 
+		 * 	1. Check if this note has a tremolo using the ppt. The current note object can be accessed by: notes.get(i)
+		 *  2. Once you have a custom_component_data.Tremolo object you can find the number of slants using the "getNumber()" method
+		 *  3. Call the "addTremolo(int numOfSlants)" method of the DisplayUnit class. We currently have the variable "currentUnit" to call this method.
+		 */
 		
 		
 		MeasureBeamData mbd = new MeasureBeamData(this.notes, measure.getTimeSignature()[1]);
