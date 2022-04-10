@@ -19,7 +19,6 @@ import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_component_data.Tied;
-import custom_model.MusicMeasure;
 import custom_model.SheetScore;
 import custom_model.note.NoteUnit;
 import javafx.scene.control.Alert;
@@ -30,6 +29,7 @@ public class musicPlayer {
 
 	List<Note> noteList = new ArrayList<Note>();
 	Score score;
+	SheetScore sheet;
 	StaccatoParserListener listner = new StaccatoParserListener();
 	MusicXmlParser parser = new MusicXmlParser();
 	Player player = new Player();
@@ -39,20 +39,20 @@ public class musicPlayer {
 	String[] stepToNoteMap = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	int instrument_type = -1;
 	int tempoSpeed = 60;
-	SheetScore sheet;
 	
-	public musicPlayer(Score score, SheetScore sheet, String s) throws ParserConfigurationException, ValidityException, ParsingException, IOException {
+	public musicPlayer(Score score, SheetScore sheet, String musicXml) throws ParserConfigurationException, ValidityException, ParsingException, IOException {
 		this.score = score;
 		this.sheet = sheet;
-		listner = new StaccatoParserListener();
 		parser.addParserListener(listner); 
-		parser.parse(s);	
+		parser.parse(musicXml);
 		setNoteList();
 		SetInstrumentType();
 		setInstrument();
 		getRepeat();
 		this.sheet.generateBasePlayTimings(score);
+		resetMusicToBeginning();
 	}
+	
 	
 	public void setNoteList() {
 		for(Measure measures: score.getParts().get(0).getMeasures()) {
@@ -65,60 +65,70 @@ public class musicPlayer {
 		return this.tempoSpeed;
 	}
 	
-	public void play(String tempoInput) {
+	public void setTempo(String tempoInput) {
 		if(tempoSpeed != Integer.parseInt(tempoInput)) {
 			tempoSpeed = Integer.parseInt(tempoInput);
 		}
-		
 		if (tempoSpeed <= 0) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("The tempo should bigger than 0");
 			alert.setHeaderText(null);
 			alert.show();
 			System.out.println("please set valid tempo!");
-		}else {
-			musicXMLParttern.setTempo(tempoSpeed);
-			this.sheet.setTempoOnTimings(tempoSpeed);
-			if(instrument_type == 1) {
-				System.out.println("Bass is playing");
-			}else if(instrument_type == 2) {
-				System.out.println("Guitar is playing");
-			}else if(instrument_type == 3) {
-				System.out.println("Drum is playing");
+		}
+		musicXMLParttern.setTempo(tempoSpeed);
+		this.sheet.setTempoOnTimings(tempoSpeed);
+	}
+	
+	public void play(String tempoInput) {
+		setTempo(tempoInput);
+		
+		if(instrument_type == 1) {
+			System.out.println("Bass is playing");
+		}else if(instrument_type == 2) {
+			System.out.println("Guitar is playing");
+		}else if(instrument_type == 3) {
+			System.out.println("Drum is playing");
+		}
+//		while (!this.sheet.getThreadKilled() && !this.isPlaying()) {
+//			try {
+//				Thread.sleep(25);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
+//		if (isFinished()) {
+//			List<MusicMeasure> measures = sheet.getMeasureList();
+//			List<NoteUnit> last = measures.get(measures.size()-1).getNotes();
+//			if (NoteUnit.pressed == last.get(last.size()-1)) {
+//				NoteUnit.pressed.toggleHighlight();
+//				NoteUnit.pressed = null;
+//			}
+//		}	
+		if(isPaused()) {
+			resume();
+		}else if(isFinished()) {			
+			this.player = new Player();
+			if (NoteUnit.pressed == null) {
+				player.delayPlay(0, musicXMLParttern.toString());
 			}
-			
-			while (!this.sheet.getThreadKilled() && !this.isPlaying()) {
-				try {
-					Thread.sleep(25);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			if (this.isFinished()) {
-				List<MusicMeasure> measures = sheet.getMeasureList();
-				List<NoteUnit> last = measures.get(measures.size()-1).getNotes();
-				if (NoteUnit.pressed == last.get(last.size()-1)) {
-					NoteUnit.pressed.toggleHighlight();
-					NoteUnit.pressed = null;
-				}
-			}
-					
-			if(isPlaying()) {
-				System.out.println("Music is Playing");
-			}else {
+			else {
 				this.player = new Player();
-				System.out.println(NoteUnit.pressed);
-				if (NoteUnit.pressed == null) {
-					player.delayPlay(0, musicXMLParttern.toString());
-				}
-				else {
-					player.delayPlay(0, this.generateSpecificPattern());
-//					System.out.println(this.generateSpecificPattern());
-				}
-				this.sheet.startHighlight();
+				player.delayPlay(0, this.generateSpecificPattern());
+//				System.out.println(this.generateSpecificPattern());
 			}
+			this.sheet.startHighlight();
+		}else {
+			if (NoteUnit.pressed == null) {
+				player.delayPlay(0, musicXMLParttern.toString());
+			}
+			else {
+				this.player = new Player();
+				player.delayPlay(0, this.generateSpecificPattern());
+//				System.out.println(this.generateSpecificPattern());
+			}
+			this.sheet.startHighlight();
 		}
 	}
 	
@@ -133,7 +143,9 @@ public class musicPlayer {
 	
 	
 	public void resume() {
-		player.getManagedPlayer().resume();
+//		player.getManagedPlayer().resume();
+		player.delayPlay(0, this.generateSpecificPattern());
+		this.sheet.startHighlight();
 	}
 	
 	

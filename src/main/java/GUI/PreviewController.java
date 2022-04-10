@@ -115,7 +115,7 @@ public class PreviewController extends Application{
 				while(!player.isFinished()) {
 					try {
 						Thread.sleep(10);
-						System.out.println("music is playing");
+//						System.out.println("music is playing");
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
