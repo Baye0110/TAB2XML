@@ -27,6 +27,8 @@ public class PlaybackGUILinker extends Thread {
 		double diff = 0;
 		double current = System.currentTimeMillis();
 		for (int i = measureOfNote; i < measures.size() && sheet.isPlaying; i++) {
+			this.sheet.sp.setVvalue(sheet.getMeasurePosition(i + 1));
+			
 			MusicMeasure measure = measures.get(i);
 			diff = measureSum - (System.currentTimeMillis() - current);
 			current = System.currentTimeMillis();

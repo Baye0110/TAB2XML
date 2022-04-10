@@ -22,7 +22,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 
 // GUITARS, DRUMS, BASS
-abstract public class MusicMeasure extends Group {
+abstract public class MusicMeasure extends Pane {
 	// The amount of space before any element in a staff
 	public static final double START_DISTANCE = 30;
 	int numStaffLines;
@@ -65,7 +65,7 @@ abstract public class MusicMeasure extends Group {
 	boolean runOffTied;
 	
 	// Grouped Highlight Box
-	Rectangle box;
+	Group box;
 	
 	/**
 	 * 
@@ -329,25 +329,25 @@ abstract public class MusicMeasure extends Group {
 	}
 	
 	public void goToMeasureHighlightBox() {
-//		Rectangle box = this.box;
-//		Thread thread = new Thread() {
-//			public void run() {
-//				box.setOpacity(1);
-//				double time = 4000;
-//				for (int i = 0; i < time; i+=25) {
-//					try {
-//						Thread.sleep(25);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					box.setOpacity(1 - i/time);
-//				}
-//				box.setOpacity(0);
-//			}
-//		};
-//		
-//		thread.start();
+		Group box = this.box;
+		Thread thread = new Thread() {
+			public void run() {
+				box.setOpacity(1);
+				double time = 2500;
+				for (int i = 0; i < time; i+=100) {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					box.setOpacity(1 - i/time);
+				}
+				box.setOpacity(0);
+			}
+		};
+		
+		thread.start();
 		
 	}
 }

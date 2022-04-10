@@ -329,10 +329,13 @@ public class DisplayNote extends DisplayUnit{
 			right = new Line(this.getWidth(), 0, this.getWidth(), this.getHeight());
 		}
 		else {
-			left = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), 0 - this.preceding - 2, this.noteHeadWidth * 2);
-			top = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0));
-			bottom = new Line(0 - this.preceding - 2, this.noteHeadWidth * 2, this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
-			right = new Line(this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+			double topHeight = 0 - this.minHeight(0) + SheetScore.lineSize;
+			double botHeight = SheetScore.lineSize;
+			
+			left = new Line(0 - this.preceding - 2, topHeight, 0 - this.preceding - 2, botHeight);
+			top = new Line(0 - this.preceding - 2, topHeight, this.noteHeadWidth + this.trailing + 2, topHeight);
+			bottom = new Line(0 - this.preceding - 2, botHeight, this.noteHeadWidth + this.trailing + 2, botHeight);
+			right = new Line(this.noteHeadWidth + this.trailing + 2, topHeight, this.noteHeadWidth + this.trailing + 2, botHeight);
 		}
 		
 		left.setStroke(Color.DEEPSKYBLUE);

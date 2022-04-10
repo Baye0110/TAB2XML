@@ -12,6 +12,7 @@ import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.BoxedUnit;
 import custom_model.note.NoteUnit;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -43,20 +44,28 @@ public class TabMeasure extends MusicMeasure {
 		
 		this.numStaffLines = m.getStaffLines();
 		
-		this.box = new Rectangle();
+		this.box = new Group();
+		this.getChildren().add(this.box);
 		
 		if (m.getNotes().size() == 0) {
 			this.generateBarLines(size, m.getStaffLines());
 			this.maxHeight = size * (m.getStaffLines());
-			this.box.setTranslateX(0);
-			this.box.setTranslateY(0 - size * 0.5);
-			this.box.setHeight(this.maxHeight);
-			this.box.setWidth(this.minWidth);
-			this.box.setFill(Color.TRANSPARENT);
-			this.box.setStroke(Color.DEEPSKYBLUE);
-			this.box.setStrokeWidth(5);
-			this.box.setOpacity(0);
-			this.getChildren().add(box);
+			Rectangle dot = new Rectangle();
+			dot.setY(0 - 6 * size);
+			dot.setX(0);
+			dot.setHeight(2);
+			dot.setWidth(2);
+			dot.setFill(Color.TRANSPARENT);
+			this.getChildren().add(dot);
+//			this.box.setTranslateX(0);
+//			this.box.setTranslateY(0 - size * 0.5);
+//			this.box.setHeight(this.maxHeight);
+//			this.box.setWidth(this.minWidth);
+//			this.box.setFill(Color.TRANSPARENT);
+//			this.box.setStroke(Color.DEEPSKYBLUE);
+//			this.box.setStrokeWidth(5);
+//			this.box.setOpacity(0);
+//			this.getChildren().add(box);
 			return;
 		}
 		
@@ -368,15 +377,15 @@ public class TabMeasure extends MusicMeasure {
 			this.getChildren().add(stem);
 		}
 		
-		this.box.setTranslateX(0);
-		this.box.setTranslateY(0 - size);
-		this.box.setHeight(this.maxHeight);
-		this.box.setWidth(this.minWidth);
-		this.box.setFill(Color.TRANSPARENT);
-		this.box.setStroke(Color.DEEPSKYBLUE);
-		this.box.setStrokeWidth(5);
-		this.box.setOpacity(0);
-		this.getChildren().add(box);
+//		this.box.setTranslateX(0);
+//		this.box.setTranslateY(0 - size);
+//		this.box.setHeight(this.maxHeight);
+//		this.box.setWidth(this.minWidth);
+//		this.box.setFill(Color.TRANSPARENT);
+//		this.box.setStroke(Color.DEEPSKYBLUE);
+//		this.box.setStrokeWidth(5);
+//		this.box.setOpacity(0);
+//		this.getChildren().add(box);
 		
 		//this.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		
@@ -510,6 +519,17 @@ public class TabMeasure extends MusicMeasure {
 		this.minWidth = current;
 		
 		this.beamProcessor.generateGuitarBeams(this, this.numStaffLines);
+		
+		double topHeight = 0 - SheetScore.lineSize * 1;		double botHeight = this.maxHeight;
+		Line top = new Line(0, topHeight, this.minWidth, topHeight);
+		Line left = new Line(0, topHeight, 0, botHeight);
+		Line right = new Line(this.minWidth, topHeight, this.minWidth, botHeight);
+		Line bottom = new Line(0, botHeight, this.minWidth, botHeight);
+		this.box.getChildren().addAll(top, left, right, bottom);
+		this.box.setOpacity(0);
+		
+		top.setStroke(Color.DEEPSKYBLUE); top.setStrokeWidth(5);	bottom.setStroke(Color.DEEPSKYBLUE); bottom.setStrokeWidth(5);
+		left.setStroke(Color.DEEPSKYBLUE); left.setStrokeWidth(5);	right.setStroke(Color.DEEPSKYBLUE); right.setStrokeWidth(5);
 	}
 
 }

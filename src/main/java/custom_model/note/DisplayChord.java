@@ -187,10 +187,14 @@ public class DisplayChord extends DisplayUnit{
 	}
 	
 	public void generateBox() {
-		Line left = new Line(0 - 2, 0 - this.minHeight(0), 0 - 2, this.displayNotes.get(0).noteHeadWidth * 2);
-		Line top = new Line(0 - 2, 0 - this.minHeight(0), this.minWidth(0) + 2, 0 - this.minHeight(0));
-		Line bottom = new Line(0 - 2, this.displayNotes.get(0).noteHeadWidth * 2, this.minWidth(0) + 2, this.displayNotes.get(0).noteHeadWidth * 2);
-		Line right = new Line(this.minWidth(0) + 2, 0 - this.minHeight(0), this.minWidth(0) + 2, this.displayNotes.get(0).noteHeadWidth * 2);
+		double topHeight = 0.0;
+		topHeight -= this.getTranslateY() > 0 ? this.getTranslateY(): 0;
+		topHeight -= SheetScore.lineSize * 4;
+		
+		Line left = new Line(0 - 2, topHeight, 0 - 2, SheetScore.lineSize);
+		Line top = new Line(0 - 2, topHeight, this.minWidth(0) + 2, topHeight);
+		Line bottom = new Line(0 - 2, SheetScore.lineSize, this.minWidth(0) + 2, SheetScore.lineSize);
+		Line right = new Line(this.minWidth(0) + 2, topHeight, this.minWidth(0) + 2, SheetScore.lineSize);
 		left.setStroke(Color.DEEPSKYBLUE);
 		top.setStroke(Color.DEEPSKYBLUE);
 		bottom.setStroke(Color.DEEPSKYBLUE);
