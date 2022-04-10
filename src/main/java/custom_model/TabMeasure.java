@@ -7,6 +7,7 @@ import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Slide;
 import custom_component_data.Slur;
+import custom_component_data.Tied;
 import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.BoxedUnit;
@@ -54,6 +55,7 @@ public class TabMeasure extends MusicMeasure {
 		this.stems = new ArrayList<TabNoteStem>();
 		this.links = new ArrayList<NoteLinker>();
 		this.slurs = new ArrayList<ArcLine>();
+		this.setTieds(new ArrayList<ArcLine>());
 		
 		// initialize the height of the staff based on the number of lines
 		this.maxHeight = size * (m.getStaffLines());
@@ -210,6 +212,28 @@ public class TabMeasure extends MusicMeasure {
 				}
 			}
 			
+			if (currentNote.getNotation().getTieds().size() != 0) {
+				List<Tied> tieds = currentNote.getNotation().getTieds();
+				boolean init = false;
+				boolean end = false;
+				for (Tied tied: tieds) {
+					if (tied.getType().equals("start"))
+						init = i < notes.size() - 1;
+					if (tied.getType().equals("stop")) {
+						end = this.notes.size() != 1;
+					}
+						
+				}
+				
+				if (end) {
+					boxedUnit.setTiedEnd(this);
+				}
+				
+				if (init) {
+					boxedUnit.addTied(this, true);
+				}
+				
+			}
 			double type = currentNote.getType() == 0 ? 0.5 : currentNote.getType();
 			currentDistance += boxedUnit.minWidth(0) + wholeNoteSpacing/type;
 			this.spacing += wholeNoteSpacing/type;
@@ -429,7 +453,11 @@ public class TabMeasure extends MusicMeasure {
 		}
 		
 		for (int i = 0; i < this.slurs.size(); i++) {
-			this.slurs.get(i).setPositionX();
+			this.slurs.get(i).setPositionX(true);
+		}
+		
+		for (int i = 0; i < this.getTieds().size(); i++) {
+			this.getTieds().get(i).setPositionX(true);
 		}
 		
 		if (this.endRepeat != null) {

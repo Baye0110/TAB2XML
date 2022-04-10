@@ -34,6 +34,8 @@ abstract public class MusicMeasure extends Pane {
 	List<NoteUnit> notes;
 	// The connectors of notes: curved lines, slides, etc
 	List<NoteLinker> links;
+	// The tieds
+	private List<ArcLine> tieds;
 	
 	//font
 	public static String customizefont = "Calibri" ;
@@ -93,7 +95,7 @@ abstract public class MusicMeasure extends Pane {
 		
 		Text measureNum = new Text(Integer.toString(this.measureNum));
 		measureNum.setFont(Font.font(customizefont, FontPosture.ITALIC, size*1.5));
-		measureNum.setTranslateY(0 - size * 0.6);
+		measureNum.setTranslateY(0 - size * 0.1);
 		measureNum.setTranslateX(size * 0.2);
 		this.getChildren().add(measureNum);
 		
@@ -308,5 +310,13 @@ abstract public class MusicMeasure extends Pane {
 	
 	public boolean getRunOffTied() {
 		return this.runOffTied;
+	}
+
+	public List<ArcLine> getTieds() {
+		return tieds;
+	}
+
+	public void setTieds(List<ArcLine> tieds) {
+		this.tieds = tieds;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import custom_component_data.Note;
+import custom_model.ArcLine;
 import custom_model.MusicMeasure;
 import custom_model.SheetScore;
 import javafx.scene.Group;
@@ -209,5 +210,39 @@ public class DisplayChord extends DisplayUnit{
 				note.stem.setStartY(0 - note.getTranslateY() - SheetScore.lineSize * 4);
 		}
 		this.stem.setStartY(0 - this.getTranslateY() - SheetScore.lineSize * 4);
+	}
+	
+	public List<DisplayNote> getNotes() {
+		return this.displayNotes;
+	}
+
+	@Override
+	public List<ArcLine> addTied(MusicMeasure m, boolean withinMeasure) {
+		List<ArcLine> arcs = new ArrayList<>();
+		List<DisplayNote> chordNotes = this.getNotes();
+		for (int j = 0; j < chordNotes.size(); j++) {
+			ArcLine arc = new ArcLine(SheetScore.lineSize * 0.9, 5, j == chordNotes.size() - 1);
+			arc.setTranslateY(this.getTranslateY() + chordNotes.get(j).getTranslateY() + (j != chordNotes.size() - 1 ? SheetScore.lineSize  : 0));
+			arc.setStartNote(this);
+			if (withinMeasure)
+				m.getTieds().add(arc);
+			arcs.add(arc);
+			m.getChildren().add(arc);
+		}
+		return arcs;
+	}
+	
+	public void setTiedEnd(MusicMeasure m) {
+		List<DisplayNote> chordNotes = this.getNotes();
+		for (int j = 0; j < chordNotes.size(); j++) {
+			m.getTieds().get(m.getTieds().size() - chordNotes.size() + j).setEndNote(this);
+		}
+	}
+	
+	@Override
+	public void setInterTiedEnd(List<ArcLine> arcs) {
+		for (int i = this.getNotes().size(); i > 0; i--) {
+			arcs.get(arcs.size() - i).setEndNote(this);
+		}	
 	}
 }

@@ -6,6 +6,9 @@ import java.util.List;
 import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Slur;
+import custom_component_data.Tied;
+import custom_model.note.BoxedChord;
+import custom_model.note.BoxedText;
 import custom_model.note.DisplayChord;
 import custom_model.note.DisplayNote;
 import custom_model.note.DisplayUnit;
@@ -33,6 +36,7 @@ public class StaffMeasure extends MusicMeasure{
 		List<Note> notes = measure.getNotes();
 		this.notes = new ArrayList<NoteUnit>();
 		this.slurs = new ArrayList<ChordedSlur>();
+		this.setTieds(new ArrayList<ArcLine>());
 		measure.generatePositions();
 		
 		for (int i = 0; i < notes.size(); i++) {
@@ -97,9 +101,28 @@ public class StaffMeasure extends MusicMeasure{
 				}
 			}
 			
+			if (!notes.get(i).getRest() && notes.get(i).getNotation() != null && notes.get(i).getNotation().getTieds().size() != 0) {
+				List<Tied> tieds = notes.get(i).getNotation().getTieds();
+				boolean init = false;
+				boolean end = false;
+				for (Tied tied: tieds) {
+					if (tied.getType().equals("start"))
+						init = i < notes.size() - 1;
+					if (tied.getType().equals("stop")) 
+						end = this.notes.size() != 0;
+				}
+				
+				if (end) 
+					currentUnit.setTiedEnd(this);
+								
+				if (init) 
+					currentUnit.addTied(this, true);
+			}
 			
 			this.notes.add(currentUnit);
 		}
+		
+		
 		
 		MeasureBeamData mbd = new MeasureBeamData(this.notes, measure.getTimeSignature()[1]);
 		this.beamProcessor = new BeamInfoProcessor(mbd.getBeamNumbers() , mbd.beamInfos);
@@ -194,6 +217,10 @@ public class StaffMeasure extends MusicMeasure{
 		
 		for (int i = 0; i < this.slurs.size(); i++) {
 			this.slurs.get(i).setPositionX();
+		}
+		
+		for (int i = 0; i < this.getTieds().size(); i++) {
+			this.getTieds().get(i).setPositionX(false);
 		}
 		
 		if (this.endRepeat != null) {

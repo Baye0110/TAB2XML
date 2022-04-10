@@ -1,6 +1,10 @@
 package custom_model.note;
 
+import java.util.List;
+
 import custom_component_data.Note;
+import custom_model.ArcLine;
+import custom_model.MusicMeasure;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -12,11 +16,14 @@ abstract public class NoteUnit extends Group{
 	protected int noteNum; // IMPORTANT
 	protected int measure; // IMPORTANT
 	protected Note data;
-	protected boolean isTied;
+	protected boolean isTiedStart;
 	
 	public static NoteUnit pressed = null; // IMPORTANT
 	
 	abstract public void toggleHighlight();
+	abstract public List<ArcLine> addTied(MusicMeasure m, boolean withinMeasure);
+	abstract public void setTiedEnd(MusicMeasure m);
+	abstract public void setInterTiedEnd(List<ArcLine> arcs);
 	
 	public double getWidth() {
 		return this.width;

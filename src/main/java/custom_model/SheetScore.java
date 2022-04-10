@@ -1,6 +1,7 @@
 package custom_model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import custom_component_data.Measure;
@@ -16,11 +17,22 @@ public class SheetScore extends VBox{
 
 	List<ScoreLine> lines;
 	List<Double> noteTimings;
+	List<TiedPair> interMeasureTieds;
 	boolean isPlaying;
 	double songTempo;
 	public static double lineSize = 10.0; 
 	public static double pageWidth = 1045.0;
 	boolean threadKilled;
+	
+	private class TiedPair {
+		private int measureNum;
+		private ArcLine arc;
+		
+		private TiedPair(int measureNum, ArcLine arc) {
+			this.measureNum = measureNum;
+			this.arc = arc;
+		}
+	}
 	
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 
@@ -36,6 +48,8 @@ public class SheetScore extends VBox{
 		this.threadKilled = true;
 		
 		this.lines = new ArrayList<>();
+		this.interMeasureTieds = new ArrayList<>();
+		List<ArcLine> arcs = new ArrayList<ArcLine>();
 		
 		// Creates an invisible rectangle to add empty space to the top.
 		Rectangle topBuffer = new Rectangle(pageWidth, lineSize * 2.5);
@@ -51,7 +65,8 @@ public class SheetScore extends VBox{
 		boolean tiedRunOffMeasure = false;
 		
 		// Create each ScoreLine of the music by iterating through each Measure XML parsed object.
-		for (Measure m: score.getParts().get(0).getMeasures()) {
+		for (int i = 0; i < score.getParts().get(0).getMeasures().size(); i++ ) {
+			Measure m = score.getParts().get(0).getMeasures().get(i);
 			// The GUI Measure is stored in "mGUI" and is created based on the instrument of this score. (TAB OR PERCUSSION)
 			MusicMeasure mGUI = null;
 			if (score.getParts().get(0).getMeasures().get(0).getTab()) {
@@ -80,7 +95,20 @@ public class SheetScore extends VBox{
 			if (tiedRunOffMeasure) {
 				cumulated.add(mGUI);
 	        	length += mGUI.minWidth;
-	        	tiedRunOffMeasure = mGUI.getRunOffTied();
+	        	mGUI.getNotes().get(0).setInterTiedEnd(arcs);
+	        	this.interMeasureTieds.get(this.interMeasureTieds.size()-1).arc.setEndNote(mGUI.getNotes().get(0));
+	        	if (mGUI.getRunOffTied()) {
+	        		tiedRunOffMeasure = true;
+	        		List<ArcLine> tied = mGUI.getNotes().get(mGUI.getNotes().size()-1).addTied(mGUI, false);
+		        	for (ArcLine arc: tied) {
+		        		this.interMeasureTieds.add(new TiedPair(i, arc));
+		        		arcs.add(arc);
+		        	}
+	        	}
+	        	else {
+	        		tiedRunOffMeasure = false;
+	        	}
+	        	
 			}
 			else if (mGUI.getRunOffTied()) {
 				if (cumulated.size() > 0) {
@@ -95,6 +123,13 @@ public class SheetScore extends VBox{
 	        	length = mGUI.minWidth;
 	        	// set the runOffTied
 	        	tiedRunOffMeasure = true;
+	        	
+	        	List<ArcLine> tied = mGUI.getNotes().get(mGUI.getNotes().size()-1).addTied(mGUI, false);
+	        	for (ArcLine arc: tied) {
+	        		this.interMeasureTieds.add(new TiedPair(i, arc));
+	        		arcs.add(arc);
+	        	}
+	          	
 			}
 			else if (length + mGUI.minWidth >= pageWidth) {
 	        	cumulated.add(mGUI);
@@ -123,6 +158,8 @@ public class SheetScore extends VBox{
 			this.lines.add(sl1);
 			this.getChildren().add(sl1);
 		}
+		
+		this.setTiedSpacings(score.getParts().get(0).getMeasures().get(0).getPercussion());
 		
 		// Add an invisible rectangle at the bottom of the Score as a buffer.
 		Rectangle bottomBuffer = new Rectangle(pageWidth, lineSize * 5);
@@ -286,6 +323,13 @@ public class SheetScore extends VBox{
 	
 	public boolean getThreadKilled() {
 		return this.threadKilled;
+	}
+	
+	public void setTiedSpacings(boolean drums) {
+		List<MusicMeasure> measures = this.getMeasureList();
+		for (int i = 0; i < this.interMeasureTieds.size(); i++) {
+			this.interMeasureTieds.get(i).arc.setPositionXInterMeasure(measures.get(this.interMeasureTieds.get(i).measureNum).minWidth, drums);
+		}
 	}
 	
 }

@@ -1,6 +1,12 @@
 package custom_model.note;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import custom_component_data.Note;
+import custom_model.ArcLine;
+import custom_model.MusicMeasure;
+import custom_model.SheetScore;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -89,5 +95,27 @@ public class BoxedText extends BoxedUnit{
 			this.isHighlighted = false;
 		}
 		
+	}
+	
+	public List<ArcLine> addTied(MusicMeasure m, boolean withinMeasure) {
+		List<ArcLine> arcs = new ArrayList<>();
+		ArcLine arc = new ArcLine(SheetScore.lineSize * 0.9, 5, true);
+		arc.setTranslateY(this.getTranslateY() - SheetScore.lineSize);
+		arc.setStartNote(this);
+		if (withinMeasure)
+			m.getTieds().add(arc);
+		m.getChildren().add(arc);
+		arcs.add(arc);
+		return arcs;
+	}
+
+	@Override
+	public void setTiedEnd(MusicMeasure m) {
+		m.getTieds().get(m.getTieds().size()-1).setEndNote(this);
+	}
+	
+	@Override
+	public void setInterTiedEnd(List<ArcLine> arcs) {
+		arcs.get(arcs.size()-1).setEndNote(this);		
 	}
 }

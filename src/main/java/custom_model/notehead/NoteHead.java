@@ -17,7 +17,7 @@ public class NoteHead extends Group{
 		 */
 		if (notehead != null && notehead.equals("x")) { // Create the CrossNoteHead
 			CrossNoteHead x = null;
-			if (type < 2)
+			if (type <= 2)
 				x = new CrossNoteHead(height, Color.BLACK, 2);
 			else 
 				x = new CrossNoteHead(height, Color.BLACK, 1);
@@ -26,7 +26,7 @@ public class NoteHead extends Group{
 			this.stemPosition = x.stemPosition;
 			this.getChildren().add(x);
 			
-			if (type < 2) { // 
+			if (type <= 2) { // 
 				CrossNoteHead inner = new CrossNoteHead(height * 0.9, Color.WHITE, 1);
 				inner.setTranslateY(height * 0.05);
 				inner.setTranslateX(height * 0.06);
