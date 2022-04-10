@@ -168,8 +168,6 @@ public class SheetScore extends VBox{
 		 */
 		if (!cumulated.isEmpty()) {
 			ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
-			sl1.setTranslateY(currentY + (sl1.maxMeasureHeight - (cumulated.get(0).numStaffLines-1) * lineSize));
-			currentY += sl1.maxMeasureHeight;
 			this.lines.add(sl1);
 			this.getChildren().add(sl1);
 		}
