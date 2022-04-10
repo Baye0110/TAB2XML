@@ -3,10 +3,11 @@ package custom_model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.Group;
 import javafx.scene.layout.HBox;
 
 // FOR ALL INSTRUMENTS
-public class ScoreLine extends HBox{
+public class ScoreLine extends Group{
 	// Create a Line of TabMeasures or StaffMeasures given a List
 
 	// Stores the
@@ -37,7 +38,7 @@ public class ScoreLine extends HBox{
 			this.measures.add(m);
 			this.measureHorizontalPositions.add(current);
 			
-			this.maxMeasureHeight = m.minHeight(0) > this.maxMeasureHeight ? m.minHeight(0) : this.maxMeasureHeight;
+			this.maxMeasureHeight = m.maxHeight > this.maxMeasureHeight ? m.maxHeight : this.maxMeasureHeight;
 			current += m.minWidth;
 			spacing += m.spacing; 
 		}
@@ -52,9 +53,19 @@ public class ScoreLine extends HBox{
 			// Corrects the spacing between all the measures based on this new scale.
 			m.setSpacing(scale);
 		}
+		
+		current = 0;
+		for (int i = 0; i < this.measureHorizontalPositions.size(); i++) {
+			this.measures.get(i).setTranslateX(current);
+			current += this.measures.get(i).minWidth;
+		}
 	}
 	
 	public List<MusicMeasure> getMeasures() {
 		return this.measures;
+	}
+	
+	public double getMaxMeasureHeight() {
+		return this.maxMeasureHeight;
 	}
 }

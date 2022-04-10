@@ -1,6 +1,12 @@
 package custom_model.note;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import custom_component_data.Note;
+import custom_model.ArcLine;
+import custom_model.MusicMeasure;
+import custom_model.SheetScore;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -13,12 +19,13 @@ public class BoxedText extends BoxedUnit{
 	Text label;
 	Rectangle container;
 	public static String customizefont = "Calibri";
+	boolean isChord;
 	
 	public BoxedText(String text, double size, double type, boolean grace, boolean chord, int measure, Note data) {
 		// Create the actual textbox with the given number in "String text" argument
 		this.label = new Text(text);
 		this.data = data;
-		label.setFont(Font.font(customizefont,size*0.88));	// Set the font size 
+		label.setFont(Font.font(customizefont,size*1.25));	// Set the font size 
 		
 		// Set the position of text based on the padding on the top and on the sides of the box
 		label.setX((size + PADDING_LEFT - label.minWidth(0))/2.00);
@@ -74,7 +81,7 @@ public class BoxedText extends BoxedUnit{
 			this.container.setStroke(Color.DEEPSKYBLUE);
 			this.container.setStrokeWidth(1.0);
 			this.isHighlighted = true;
-			if (pressed != null) {
+			if (!this.getIsChord() && pressed != null) {
 				pressed.toggleHighlight();
 			}	
 			if (this.getNoteNum() > -1) {
@@ -88,5 +95,27 @@ public class BoxedText extends BoxedUnit{
 			this.isHighlighted = false;
 		}
 		
+	}
+	
+	public List<ArcLine> addTied(MusicMeasure m, boolean withinMeasure) {
+		List<ArcLine> arcs = new ArrayList<>();
+		ArcLine arc = new ArcLine(SheetScore.lineSize * 0.9, 5, true);
+		arc.setTranslateY(this.getTranslateY() - SheetScore.lineSize);
+		arc.setStartNote(this);
+		if (withinMeasure)
+			m.getTieds().add(arc);
+		m.getChildren().add(arc);
+		arcs.add(arc);
+		return arcs;
+	}
+
+	@Override
+	public void setTiedEnd(MusicMeasure m) {
+		m.getTieds().get(m.getTieds().size()-1).setEndNote(this);
+	}
+	
+	@Override
+	public void setInterTiedEnd(List<ArcLine> arcs) {
+		arcs.get(arcs.size()-1).setEndNote(this);		
 	}
 }

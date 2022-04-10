@@ -27,7 +27,7 @@ public class Tremolo extends Group{
 		return numlines;
 	}
 
-	public Tremolo(double slantLength, double slantWidth, double rotateDeg, boolean rotation, int numLines) {
+	public Tremolo(double slantLength, double slantWidth, double rotateDeg, boolean rotation, int numLines, double spacing) {
 		this.length = slantLength;
 		this.width = slantWidth;
 		this.rotateDeg = rotateDeg;
@@ -46,7 +46,7 @@ public class Tremolo extends Group{
 		this.getChildren().add(slant1);
 		
 		// 12.0 is the fixed distance between each slant, could be changed later
-		double shift = slantWidth + 12.0;
+		double shift = slantWidth + spacing;
 		for(int i = 0; i < numLines-1; i++) {
 			// create a copy of the original slant
 			Polygon slantCopy = new Polygon();
@@ -63,7 +63,7 @@ public class Tremolo extends Group{
 			 *  the original slant is always the starting point so each copy will be shifted further 
 			 *  => shift distance increases per copy
 			 */
-			shift += slantWidth + 12.0;
+			shift += slantWidth + spacing;
 		}
 	}
 	

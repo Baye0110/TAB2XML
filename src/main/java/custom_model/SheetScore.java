@@ -1,25 +1,41 @@
 package custom_model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_model.note.NoteUnit;
+import javafx.scene.Group;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 // For ALL INSTRUMENTS
-public class SheetScore extends VBox{
+public class SheetScore extends Group{
 
 	List<ScoreLine> lines;
 	List<Double> noteTimings;
+	List<TiedPair> interMeasureTieds;
 	boolean isPlaying;
 	double songTempo;
 	public static double lineSize = 10.0; 
 	public static double pageWidth = 1045.0;
+	public static double measureSpacing = 20.0;
+	boolean threadKilled;
+	double sheetHeight;
+	
+	private class TiedPair {
+		private int measureNum;
+		private ArcLine arc;
+		
+		private TiedPair(int measureNum, ArcLine arc) {
+			this.measureNum = measureNum;
+			this.arc = arc;
+		}
+	}
 	
 	// Puts together all the ScoreLine Objects (ScoreLine = All the measures belonging to 1 line)
 
@@ -32,11 +48,17 @@ public class SheetScore extends VBox{
 		MusicMeasure.measureCount = 0;
 		NoteUnit.pressed = null;
 		this.songTempo = 60;
+		this.threadKilled = true;
+		
+		double currentY = 0.0;
 		
 		this.lines = new ArrayList<>();
+		this.interMeasureTieds = new ArrayList<>();
+		List<ArcLine> arcs = new ArrayList<ArcLine>();
 		
 		// Creates an invisible rectangle to add empty space to the top.
 		Rectangle topBuffer = new Rectangle(pageWidth, lineSize * 2.5);
+		currentY += lineSize * 2.5;
 		topBuffer.setStroke(Color.WHITE);
 		topBuffer.setOpacity(0);
 		this.getChildren().add(topBuffer);
@@ -46,9 +68,11 @@ public class SheetScore extends VBox{
 		
 		// The length of all the measures in the above ArrayList.
 		double length = 0;
+		boolean tiedRunOffMeasure = false;
 		
 		// Create each ScoreLine of the music by iterating through each Measure XML parsed object.
-		for (Measure m: score.getParts().get(0).getMeasures()) {
+		for (int i = 0; i < score.getParts().get(0).getMeasures().size(); i++ ) {
+			Measure m = score.getParts().get(0).getMeasures().get(i);
 			// The GUI Measure is stored in "mGUI" and is created based on the instrument of this score. (TAB OR PERCUSSION)
 			MusicMeasure mGUI = null;
 			if (score.getParts().get(0).getMeasures().get(0).getTab()) {
@@ -58,25 +82,68 @@ public class SheetScore extends VBox{
 				mGUI = new StaffMeasure(lineSize, m, cumulated.isEmpty());
 			}
 			
-			/* If the length of the MusicMeasure (GUI Measures) in the cumulated array surpasses the page width
-			 * then create a horizontal line of measures (Create a ScoreLine with the MusicMeasures in 'cumulated' array
-			 */
-	        if (length >= pageWidth) {
-	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
-	        	this.lines.add(sl1);
-	        	// Reset the cumulated ArrayList with the newly 'mGUI' as its first element and initialize the length
-	        	cumulated = new ArrayList<>();
-	        	cumulated.add(mGUI);
-	        	length = mGUI.minWidth;
-	        	this.getChildren().add(sl1);
-	        }
+//			/* If the length of the MusicMeasure (GUI Measures) in the cumulated array surpasses the page width
+//			 * then create a horizontal line of measures (Create a ScoreLine with the MusicMeasures in 'cumulated' array
+//			 */
+//	        if (length >= pageWidth) {
+//	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+//	        	this.lines.add(sl1);
+//	        	// Reset the cumulated ArrayList with the newly 'mGUI' as its first element and initialize the length
+//	        	cumulated = new ArrayList<>();
+//	        	cumulated.add(mGUI);
+//	        	length = mGUI.minWidth;
+//	        	this.getChildren().add(sl1);
+//	        }
 	        /* If the length of the MusicMeasure in the 'cumulated' array will surpass the page width if we also add on
 	         * this new measure, then we create a horizontal line of measures (Create a ScoreLine with the MusicMeasures in
 	         * in 'cumulated' + mGUI)
 	         */
-	        else if (length + mGUI.minWidth >= pageWidth) {
+			if (tiedRunOffMeasure) {
+				cumulated.add(mGUI);
+	        	length += mGUI.minWidth;
+	        	mGUI.getNotes().get(0).setInterTiedEnd(arcs);
+	        	this.interMeasureTieds.get(this.interMeasureTieds.size()-1).arc.setEndNote(mGUI.getNotes().get(0));
+	        	if (mGUI.getRunOffTied()) {
+	        		tiedRunOffMeasure = true;
+	        		List<ArcLine> tied = mGUI.getNotes().get(mGUI.getNotes().size()-1).addTied(mGUI, false);
+		        	for (ArcLine arc: tied) {
+		        		this.interMeasureTieds.add(new TiedPair(i, arc));
+		        		arcs.add(arc);
+		        	}
+	        	}
+	        	else {
+	        		tiedRunOffMeasure = false;
+	        	}
+	        	
+			}
+			else if (mGUI.getRunOffTied()) {
+				if (cumulated.size() > 0) {
+					ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+					sl1.setTranslateY(currentY + (sl1.maxMeasureHeight - (mGUI.numStaffLines-1) * lineSize));
+					currentY += sl1.maxMeasureHeight + measureSpacing;
+		        	this.lines.add(sl1);
+		        	this.getChildren().add(sl1);
+				}
+				
+	        	// reset the cumulated array, and set the length to new measure
+				cumulated = new ArrayList<>();
+	        	cumulated.add(mGUI);
+	        	length = mGUI.minWidth;
+	        	// set the runOffTied
+	        	tiedRunOffMeasure = true;
+	        	
+	        	List<ArcLine> tied = mGUI.getNotes().get(mGUI.getNotes().size()-1).addTied(mGUI, false);
+	        	for (ArcLine arc: tied) {
+	        		this.interMeasureTieds.add(new TiedPair(i, arc));
+	        		arcs.add(arc);
+	        	}
+	          	
+			}
+			else if (length + mGUI.minWidth >= pageWidth) {
 	        	cumulated.add(mGUI);
 	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+	        	sl1.setTranslateY(currentY + (sl1.maxMeasureHeight - (mGUI.numStaffLines-1) * lineSize));
+				currentY += sl1.maxMeasureHeight + measureSpacing;
 	        	this.lines.add(sl1);
 	        	// reset the cumulated array, and set the length to 0
 	        	cumulated = new ArrayList<>();
@@ -98,34 +165,52 @@ public class SheetScore extends VBox{
 		 */
 		if (!cumulated.isEmpty()) {
 			ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
+			sl1.setTranslateY(currentY + (sl1.maxMeasureHeight - (cumulated.get(0).numStaffLines-1) * lineSize));
+			currentY += sl1.maxMeasureHeight;
 			this.lines.add(sl1);
 			this.getChildren().add(sl1);
 		}
 		
+		this.setTiedSpacings(score.getParts().get(0).getMeasures().get(0).getPercussion());
+		
 		// Add an invisible rectangle at the bottom of the Score as a buffer.
 		Rectangle bottomBuffer = new Rectangle(pageWidth, lineSize * 5);
+		bottomBuffer.setTranslateY(currentY);
+		currentY += lineSize * 5;
 		bottomBuffer.setStroke(Color.WHITE);
 		bottomBuffer.setOpacity(0);
 		this.getChildren().add(bottomBuffer);
 		
+		this.sheetHeight = currentY;
 		// Set the spacing between each line in the music.
-		this.setSpacing(lineSize * 2.5);
+		// this.setSpacing(lineSize * 2.5);
 	}
 	
 	
 	public double getMeasurePosition(int measureNum) {
 		double pos = 0;
 		
-		boolean measureFound = false;
-		for (int i = 0; i < this.lines.size() && !measureFound; i++) {
-			for (MusicMeasure m: this.lines.get(i).measures) {
-				if (m.measureNum == measureNum) {
-					measureFound = true;
-					break;
-				}
+//		boolean measureFound = false;
+//		for (int i = 0; i < this.lines.size() && !measureFound; i++) {
+//			for (MusicMeasure m: this.lines.get(i).measures) {
+//				if (m.measureNum == measureNum) {
+//					measureFound = true;
+//					break;
+//				}
+//			}
+//			if (!measureFound) {
+//				pos += this.lines.get(i).minHeight(0) + this.getSpacing();
+//			}
+//		}
+		
+		int measure = 0;
+		for (int i = 0; i < this.lines.size(); i++) {
+			measure += this.lines.get(i).getMeasures().size();
+			if (measure < measureNum) {
+				pos += this.lines.get(i).maxMeasureHeight + SheetScore.measureSpacing;
 			}
-			if (!measureFound) {
-				pos += this.lines.get(i).minHeight(0) + this.getSpacing();
+			else {
+				break;
 			}
 		}
 		
@@ -186,6 +271,7 @@ public class SheetScore extends VBox{
 	}
 	
 	public void startHighlight() {
+		this.threadKilled = false;
 		this.isPlaying = true;
 		
 		int notePressed; int measureOfNote;
@@ -251,4 +337,28 @@ public class SheetScore extends VBox{
 		NoteUnit.pressed = null;
 	}
 	
+	public void removeAllHighlight() {
+		List<MusicMeasure> measures = this.getMeasureList();
+		for (MusicMeasure m: measures) {
+			for (NoteUnit n: m.getNotes()) {
+				if (n.getHighlighted())
+					n.toggleHighlight();
+			}
+		} 
+	}
+	
+	public boolean getThreadKilled() {
+		return this.threadKilled;
+	}
+	
+	public void setTiedSpacings(boolean drums) {
+		List<MusicMeasure> measures = this.getMeasureList();
+		for (int i = 0; i < this.interMeasureTieds.size(); i++) {
+			this.interMeasureTieds.get(i).arc.setPositionXInterMeasure(measures.get(this.interMeasureTieds.get(i).measureNum).minWidth, drums);
+		}
+	}
+	
+	public double getSheetHeight() {
+		return this.sheetHeight;
+	}
 }

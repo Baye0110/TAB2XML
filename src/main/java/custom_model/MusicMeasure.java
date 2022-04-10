@@ -2,25 +2,37 @@ package custom_model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import custom_component_data.Measure;
+import custom_component_data.Note;
+import custom_component_data.Tied;
 import custom_model.note.NoteUnit;
+import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 
 // GUITARS, DRUMS, BASS
-abstract public class MusicMeasure extends Pane {
+abstract public class MusicMeasure extends Group {
 	// The amount of space before any element in a staff
 	public static final double START_DISTANCE = 30;
+	int numStaffLines;
 	
 	// Measure Number
 	public static int measureCount = 0;
 	int measureNum;
+	
+	// Beam Information/Generator
+	BeamInfoProcessor beamProcessor;
 	
 	// The barLines (the last one is always the barLine for the end of the staff)
 	List<Line> barLines;
@@ -28,6 +40,8 @@ abstract public class MusicMeasure extends Pane {
 	List<NoteUnit> notes;
 	// The connectors of notes: curved lines, slides, etc
 	List<NoteLinker> links;
+	// The tieds
+	private List<ArcLine> tieds;
 	
 	//font
 	public static String customizefont = "Calibri" ;
@@ -47,6 +61,11 @@ abstract public class MusicMeasure extends Pane {
 	
 	List<Node> endRepeat;
 	
+	// Does this measure end with a Tied that is starting??
+	boolean runOffTied;
+	
+	// Grouped Highlight Box
+	Rectangle box;
 	
 	/**
 	 * 
@@ -55,15 +74,26 @@ abstract public class MusicMeasure extends Pane {
 	 * @param start   Does this measure start on a new line on the sheet music?
 	 */
 	public MusicMeasure(double size, Measure m, boolean start) {
+		this.runOffTied = false;
+		
 		if (m.getNotes().size() == 0) {
 			this.currentDistance = 200;
 			this.minWidth = 200;
 			this.spacing = 200;
-			MusicMeasure.measureCount += 1;
-			this.measureNum = MusicMeasure.measureCount;
 			this.notes = new ArrayList<>();
 		}
 		
+		// Set the runOffTieds boolean flag
+		if (m.getNotes().size() != 0) {
+			Note last = m.getNotes().get(m.getNotes().size()-1);
+			boolean hasEndTied = last.getNotation() != null && last.getNotation().getTieds().size() != 0;
+			if (hasEndTied) {
+				for (Tied tied: last.getNotation().getTieds()) {
+					if (tied.getType().equals("start"))
+						this.runOffTied = true;
+				}
+			}
+		}		
 		
 		// Set the initial distance to the start_distance constant.
 		this.currentDistance = START_DISTANCE;
@@ -73,7 +103,7 @@ abstract public class MusicMeasure extends Pane {
 		
 		Text measureNum = new Text(Integer.toString(this.measureNum));
 		measureNum.setFont(Font.font(customizefont, FontPosture.ITALIC, size*1.5));
-		measureNum.setTranslateY(0 - size * 0.6);
+		measureNum.setTranslateY(0 - size * 0.1);
 		measureNum.setTranslateX(size * 0.2);
 		this.getChildren().add(measureNum);
 		
@@ -284,5 +314,40 @@ abstract public class MusicMeasure extends Pane {
 	
 	public double getWholeNoteSpacing() {
 		return this.wholeNoteSpacing;
+	}
+	
+	public boolean getRunOffTied() {
+		return this.runOffTied;
+	}
+
+	public List<ArcLine> getTieds() {
+		return tieds;
+	}
+
+	public void setTieds(List<ArcLine> tieds) {
+		this.tieds = tieds;
+	}
+	
+	public void goToMeasureHighlightBox() {
+//		Rectangle box = this.box;
+//		Thread thread = new Thread() {
+//			public void run() {
+//				box.setOpacity(1);
+//				double time = 4000;
+//				for (int i = 0; i < time; i+=25) {
+//					try {
+//						Thread.sleep(25);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					box.setOpacity(1 - i/time);
+//				}
+//				box.setOpacity(0);
+//			}
+//		};
+//		
+//		thread.start();
+		
 	}
 }

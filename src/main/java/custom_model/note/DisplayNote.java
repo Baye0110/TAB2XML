@@ -1,7 +1,12 @@
 package custom_model.note;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import custom_component_data.Note;
+import custom_model.ArcLine;
 import custom_model.MusicMeasure;
+import custom_model.SheetScore;
 import custom_model.notehead.NoteHead;
 import custom_model.rest.Rest;
 import javafx.scene.Group;
@@ -19,7 +24,6 @@ public class DisplayNote extends DisplayUnit{
 	boolean isChord; // IMPORTANT : true if chord
 	
 	double parenthesesDisplacement;
-	
 	
 	boolean isNormalSide;
 	static double dotScale = 3;
@@ -41,7 +45,7 @@ public class DisplayNote extends DisplayUnit{
 		
 		// The spacingType is (0.5 = breve, 1 = whole, 2 = half, 4 = quarter, 8 = 8th, ...)
 		if (note.getGrace()) {
-			this.setSpacingType(64);
+			this.setSpacingType(1024);
 			this.grace = true;
 		}
 		else {
@@ -77,9 +81,13 @@ public class DisplayNote extends DisplayUnit{
 				}
 			});
 			
+			this.setRest(true);
+			
 			// Don't do anything else for rest notes.
 			return;
 		}
+		
+		this.setRest(false);
 		
 		this.setWidth(0);
 		this.setHeight(0);
@@ -119,7 +127,7 @@ public class DisplayNote extends DisplayUnit{
 		if (stemType != null && !stemType.equals("none") && note.getType() != 0 && note.getType() != 1 &&  !hasFlip) {
 			// Creating the stem going up
 			if (stemType.equals("up")) {
-				Line stem = new Line(this.getWidth(), 0 - 3*height, this.getWidth(), head.getStemPosition());
+				this.stem = new Line(this.getWidth(), 0 - 3*height, this.getWidth(), head.getStemPosition());
 				stem.setStrokeWidth(height/15);
 				stem.setTranslateX(0 - stem.minWidth(0)*1.25);
 				this.setWidth(this.getWidth() + stem.minWidth(0));
@@ -127,7 +135,7 @@ public class DisplayNote extends DisplayUnit{
 			}
 			// Creating the stem going down
 			else if (stemType.equals("down")) {
-				Line stem = new Line(0, 4*height, 0, head.getStemPosition());
+				this.stem = new Line(0, 4*height, 0, head.getStemPosition());
 				stem.setStrokeWidth(height/15);
 				stem.setTranslateX(0 - stem.minWidth(0)*1.25);
 				this.setWidth(this.getWidth() + stem.minWidth(0));
@@ -270,6 +278,7 @@ public class DisplayNote extends DisplayUnit{
 			int log_spacingType = 0;
 			if (this.grace) {
 				log_spacingType = 1;
+				height *= 0.8;
 			}
 			else {
 				for (; this.getSpacingType() > Math.pow(2, log_spacingType); log_spacingType++);
@@ -312,10 +321,20 @@ public class DisplayNote extends DisplayUnit{
 	}
 	
 	public void generateBox() {
-		Line left = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), 0 - this.preceding - 2, this.noteHeadWidth * 2);
-		Line top = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0));
-		Line bottom = new Line(0 - this.preceding - 2, this.noteHeadWidth * 2, this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
-		Line right = new Line(this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+		Line top = null; Line bottom = null; Line right = null; Line left = null;
+		if (this.getRest()) {
+			top = new Line(0, 0, this.getWidth(), 0);
+			bottom = new Line(0, this.getHeight(), this.getWidth(), this.getHeight());
+			left = new Line(0, 0, 0, this.getHeight());
+			right = new Line(this.getWidth(), 0, this.getWidth(), this.getHeight());
+		}
+		else {
+			left = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), 0 - this.preceding - 2, this.noteHeadWidth * 2);
+			top = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0));
+			bottom = new Line(0 - this.preceding - 2, this.noteHeadWidth * 2, this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+			right = new Line(this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+		}
+		
 		left.setStroke(Color.DEEPSKYBLUE);
 		top.setStroke(Color.DEEPSKYBLUE);
 		bottom.setStroke(Color.DEEPSKYBLUE);
@@ -323,5 +342,31 @@ public class DisplayNote extends DisplayUnit{
 		
 		this.box = new Group(left, top, bottom, right);
 		this.box.setOpacity(0.0);
+	}
+	
+	public void extendStemForBeam() {
+		this.stem.setStartY(0 - this.getTranslateY() - SheetScore.lineSize * 4);
+	}
+
+	@Override
+	public List<ArcLine> addTied(MusicMeasure m, boolean withinMeasure) {
+		List<ArcLine> arcs = new ArrayList<>();
+		ArcLine arc = new ArcLine(SheetScore.lineSize * 0.9, 5, false);
+		arc.setTranslateY(this.getTranslateY() + SheetScore.lineSize);
+		arc.setStartNote(this);
+		if (withinMeasure)
+			m.getTieds().add(arc);
+		arcs.add(arc);
+		m.getChildren().add(arc);
+		return arcs;
+	}
+	
+	public void setTiedEnd(MusicMeasure m) {
+		m.getTieds().get(m.getTieds().size()-1).setEndNote(this);
+	}
+
+	@Override
+	public void setInterTiedEnd(List<ArcLine> arcs) {
+		arcs.get(arcs.size()-1).setEndNote(this);		
 	}
 }

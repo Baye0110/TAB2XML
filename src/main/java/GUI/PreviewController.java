@@ -58,10 +58,11 @@ public class PreviewController extends Application{
 	@FXML Button playButton;
 	@FXML Button pauseButton;
 	@FXML Button goButton;
-	@FXML Button exitButton;
+	@FXML Button stopButton;
 	@FXML Button displayButton;
 	@FXML Button exportButton;
 	List<BufferedImage> bufferedimage = new ArrayList<BufferedImage>();
+
 	
 	public PreviewController() {}
 	
@@ -70,14 +71,20 @@ public class PreviewController extends Application{
 	    }
 	 
 	 public void update() throws ValidityException, ParserConfigurationException, ParsingException, IOException {
+		 initialButton();
 		 tempoField.setText("60");
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score);
 		 sp.setContent(sheet);
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
 	 }
-	
-	private void getBufferimage() {
+	 
+	 private void initialButton() {
+		 playButton.setVisible(true);
+		 pauseButton.setVisible(false);
+	 }
+
+	 private void getBufferimage() {
 		SheetScore copy = new SheetScore(score);
 		
 		for (ScoreLine line: copy.getScoreLines()) {
@@ -96,29 +103,73 @@ public class PreviewController extends Application{
 
 	public void playHandler() {
 		System.out.println("Play Button Clicked!");
+		playButton.setVisible(false);
+		pauseButton.setVisible(true);
 		player.play(tempoField.getText());
 		System.out.println("The tempoSpeed is: " + player.getTempo());
+		System.out.println("IsPlaying: " + player.isPlaying());
+		System.out.println("IsPaused: " + player.isPaused());
+		System.out.println("IsFinished: " + player.isFinished());
+		Thread thread = new Thread() {
+			public void run() {
+				while(!player.isFinished()) {
+					try {
+						Thread.sleep(10);
+//						System.out.println("music is playing");
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				initialButton();
+				System.out.println("IsPlaying: " + player.isPlaying());
+				System.out.println("IsPaused: " + player.isPaused());
+				System.out.println("IsFinished: " + player.isFinished());
+				System.out.println("Music is Finished");
+			}
+		};
+		thread.start();
 	}
 	public void pauseHandler(){
 		System.out.println("Pause Button Clicked!");
 		player.pause();
+		playButton.setVisible(true);
+		pauseButton.setVisible(false);
+		System.out.println("IsPlaying: " + player.isPlaying());
+		System.out.println("IsPaused: " + player.isPaused());
+		System.out.println("IsFinished: " + player.isFinished());
 	}
-	public void exitHandler(){
-		System.out.println("Exit Button Clicked!");
-		exit();
+	public void stopHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
+		System.out.println("stop Button Clicked!");
+		playButton.setVisible(true);
+		pauseButton.setVisible(false);
+		player.resetMusicToBeginning();
+		player.finish();
+		System.out.println("IsPlaying: " + player.isPlaying());
+		System.out.println("IsPaused: " + player.isPaused());
+		System.out.println("IsFinished: " + player.isFinished());
+
 	}
 	
 	public void exit() {
 		player.exit();
 		initialValue();
-		mvc.convertWindow.hide();
+		System.out.println("preview windows exited");
+		System.out.println("IsPlaying: " + player.isPlaying());
+		System.out.println("IsPaused: " + player.isPaused());
+		System.out.println("IsFinished: " + player.isFinished());
 	}
 	
 	public void goHandler(){
 		System.out.println("Go Button Clicked!");
-		this.sp.setVmax(this.sheet.minHeight(0) + this.sp.minHeight(0));
-		double valToSet = sheet.getMeasurePosition(Integer.parseInt(gotoMeasureField.getText()));
+		this.sp.setVmax(this.sheet.getSheetHeight() - this.sheet.getScoreLines().get(this.sheet.getScoreLines().size()-1).getMaxMeasureHeight() - SheetScore.measureSpacing - SheetScore.lineSize * 3);
+		
+		int measureNum = Integer.parseInt(gotoMeasureField.getText());
+		
+		double valToSet = sheet.getMeasurePosition(measureNum);
 		sp.setVvalue(valToSet);
+		
+		this.sheet.getMeasureList().get(measureNum - 1).goToMeasureHighlightBox();
 	}
 	
 	public void displayHandler(){

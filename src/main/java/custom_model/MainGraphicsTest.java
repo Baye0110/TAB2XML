@@ -172,15 +172,15 @@ public class MainGraphicsTest extends Application {
         sl.setTranslateY(90);
         g1.getChildren().add(sl);*/
         
-        Tremolo t = new Tremolo(100, 14, 30.0, false, 3);
-        t.setTranslateX(400);
-        t.setTranslateY(19);
-        g1.getChildren().add(t);
-       
-        Bend b = new Bend(200, 200, "full");
-        b.setTranslateX(700);
-        b.setTranslateY(50);
-        g1.getChildren().add(b);
+//        Tremolo t = new Tremolo(100, 14, 30.0, false, 3);
+//        t.setTranslateX(400);
+//        t.setTranslateY(19);
+//        g1.getChildren().add(t);
+//       
+//        Bend b = new Bend(200, 200, "full");
+//        b.setTranslateX(700);
+//        b.setTranslateY(50);
+//        g1.getChildren().add(b);
         
   	}
 

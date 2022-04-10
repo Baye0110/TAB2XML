@@ -5,43 +5,70 @@ import java.util.List;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
+import custom_component_data.Slur;
+import custom_component_data.Tied;
+import custom_model.note.BoxedChord;
+import custom_model.note.BoxedText;
 import custom_model.note.DisplayChord;
 import custom_model.note.DisplayNote;
 import custom_model.note.DisplayUnit;
 import custom_model.note.NoteUnit;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class StaffMeasure extends MusicMeasure{
 	
 	public static final int UPPER_PADDING = 0;
+	List<ChordedSlur> slurs;
 	
 	public StaffMeasure(double height, Measure measure, boolean start) {
 		super(height, measure, start);
+		
+		this.numStaffLines = measure.getStaffLines();
+		
 		if (measure.getNotes().size() == 0) {
 			this.generateBarLines(height, measure.getStaffLines());
-			this.maxHeight = height * (measure.getStaffLines());
+			this.maxHeight = height * (measure.getStaffLines() + 1.5);
+			this.box.setTranslateX(0);
+			this.box.setTranslateY(0 - height * 0.5);
+			this.box.setHeight(this.maxHeight);
+			this.box.setWidth(this.minWidth);
+			this.box.setFill(Color.TRANSPARENT);
+			this.box.setStroke(Color.DEEPSKYBLUE);
+			this.box.setStrokeWidth(5);
+			this.box.setOpacity(0);
+			this.getChildren().add(box);
 			return;
 		}
+		
 		DisplayUnit.currMeasureNoteNum = 0;
 		
 		List<Note> notes = measure.getNotes();
-		this.notes = new ArrayList<>();
+		this.notes = new ArrayList<NoteUnit>();
+		this.slurs = new ArrayList<ChordedSlur>();
+		this.setTieds(new ArrayList<ArcLine>());
 		measure.generatePositions();
 		
 		for (int i = 0; i < notes.size(); i++) {
 			boolean isChord = i + 1 < notes.size() && notes.get(i+1).getChord();
 			
 			DisplayUnit currentUnit = null;
+			Note isSlurInChord = null;
 			
 			if (isChord) {
 				List<Note> chordNotes = new ArrayList<>();
 				chordNotes.add(notes.get(i));
+				boolean currIsSlur = isSlurInChord == null && (notes.get(i).getNotation() != null && notes.get(i).getNotation().getSlurs().size() != 0);
+				isSlurInChord = currIsSlur ? notes.get(i) : isSlurInChord;
 				
 				int noteNum = 1;
 				while (isChord) {
-					chordNotes.add(notes.get(i + 1));
+					chordNotes.add(notes.get(i + noteNum));
+					currIsSlur = isSlurInChord == null && (notes.get(i + noteNum).getNotation() != null && notes.get(i + noteNum).getNotation().getSlurs().size() != 0);
+					isSlurInChord = currIsSlur ? notes.get(i + noteNum) : isSlurInChord;
 					noteNum += 1;
-					isChord = i + noteNum < notes.size() && notes.get(i + noteNum).getChord();					
+					isChord = i + noteNum < notes.size() && notes.get(i + noteNum).getChord();	
+					
 				}
 				
 				i += chordNotes.size() - 1;
@@ -49,17 +76,13 @@ public class StaffMeasure extends MusicMeasure{
 				currentUnit = new DisplayChord(height, chordNotes);
 			}
 			else {
-				double noteHeight = notes.get(i).getGrace() ? height * 0.65 : height;
-				currentUnit = new DisplayNote(height, notes.get(i), false, false, false);	
-				currentUnit.addTails(height, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
-				currentUnit.generateBox();
-				currentUnit.getChildren().add(currentUnit.getBox());
+				double noteHeight = notes.get(i).getGrace() ? height * 0.8 : height;
+				currentUnit = new DisplayNote(noteHeight, notes.get(i), false, false, false);	
+				currentUnit.setTranslateY(notes.get(i).getGrace() ? height * 0.2 : 0);
+//				currentUnit.addTails(height, notes.get(i).getStem() != null && notes.get(i).getStem().equals("down"));
 			}
 			
-			
 			currentUnit.extendStaff((measure.getStaffLines()-1)*2, height);
-					
-			currentUnit.setTranslateX(currentDistance);
 			
 			double pos_y = height*(measure.getStaffLines() + UPPER_PADDING-1.5) - (height/2)*currentUnit.getPosition();
 			if (notes.get(i).getRest())
@@ -67,14 +90,66 @@ public class StaffMeasure extends MusicMeasure{
 			else 
 				currentUnit.setTranslateY(currentUnit.getTranslateY() + pos_y);
 			
-			//System.out.println(currentUnit.getPosition());
+			Note slurNote = isSlurInChord != null ? isSlurInChord : notes.get(i);
+			if (slurNote.getNotation() != null && slurNote.getNotation().getSlurs().size() != 0) {
+				List<Slur> slurs =  slurNote.getNotation().getSlurs();
+				boolean init = false;    
+				boolean end = false;
+				for (Slur slur: slurs) {
+					if (slur.getType().equals("start"))
+						init = true;
+					if (slur.getType().equals("stop"))
+						end = true;
+				}
+				if (end) {
+					this.slurs.get(this.slurs.size()-1).setPositionY(currentUnit);
+				}
+				if (init) {
+					ChordedSlur slur = new ChordedSlur(currentUnit); 
+					this.slurs.add(slur);
+					this.getChildren().add(slur);
+				}
+			}
 			
-			double spaceAdded = wholeNoteSpacing/currentUnit.getSpacingType();
-			currentDistance += currentUnit.getWidth() +  spaceAdded;
-			this.spacing += spaceAdded;
+			if (!notes.get(i).getRest() && notes.get(i).getNotation() != null && notes.get(i).getNotation().getTieds().size() != 0) {
+				List<Tied> tieds = notes.get(i).getNotation().getTieds();
+				boolean init = false;
+				boolean end = false;
+				for (Tied tied: tieds) {
+					if (tied.getType().equals("start"))
+						init = i < notes.size() - 1;
+					if (tied.getType().equals("stop")) 
+						end = this.notes.size() != 0;
+				}
+				
+				if (end) 
+					currentUnit.setTiedEnd(this);
+								
+				if (init) 
+					currentUnit.addTied(this, true);
+			}
+			
 			this.notes.add(currentUnit);
 		}
 		
+		
+		
+		MeasureBeamData mbd = new MeasureBeamData(this.notes, measure.getTimeSignature()[1]);
+		this.beamProcessor = new BeamInfoProcessor(mbd.getBeamNumbers() , mbd.beamInfos);
+		for (int i = 0; i < this.notes.size(); i++) {
+			List<Integer> beamNums = mbd.getBeamNumbers();
+			DisplayUnit thisNote = (DisplayUnit) this.notes.get(i);
+			if (!thisNote.getRest() && beamNums.get(i) == 0) {
+				thisNote.addTails(height, false);
+			}
+		}
+		
+		for (NoteUnit note: this.notes) {
+			note.setTranslateX(currentDistance);
+			double spaceAdded = wholeNoteSpacing/note.getSpacingType();
+			currentDistance += note.getWidth() +  spaceAdded;
+			this.spacing += spaceAdded;
+		}
 		
 		if (measure.getIsRepeatStop()) {
 			this.generateEndRepeat(height, measure.getStaffLines(), measure.getBarLineRight().getRepeatNum());
@@ -87,14 +162,28 @@ public class StaffMeasure extends MusicMeasure{
 				System.out.println("Invalid note!");
 			}
 		}
-
+		
 		for (NoteUnit noteUnit: this.notes) {
 			DisplayUnit note = (DisplayUnit) noteUnit;
+			note.generateBox();
+			note.getChildren().add(note.getBox());
 			this.maxHeight = note.getTranslateY() + note.getTop() > this.maxHeight ? note.getTranslateY() + note.getTop() : this.maxHeight;
 			this.getChildren().add(note);
 		}
 		
 		this.generateBarLines(height, measure.getStaffLines());
+		
+		this.maxHeight = height * (measure.getStaffLines() + 4.5);
+		
+		this.box.setTranslateX(0);
+		this.box.setTranslateY(0 - 3.5 * height);
+		this.box.setHeight(this.maxHeight);
+		this.box.setWidth(this.minWidth);
+		this.box.setFill(Color.TRANSPARENT);
+		this.box.setStroke(Color.DEEPSKYBLUE);
+		this.box.setStrokeWidth(5);
+		this.box.setOpacity(0);
+		this.getChildren().add(box);
 //		this.barLines = new ArrayList<Line>();
 //		for (int i = 0; i < measure.getStaffLines(); i++) {
 //			Line barLine = new Line();
@@ -146,6 +235,14 @@ public class StaffMeasure extends MusicMeasure{
 			this.spacing += this.wholeNoteSpacing/currNote.getSpacingType();
 		}
 		
+		for (int i = 0; i < this.slurs.size(); i++) {
+			this.slurs.get(i).setPositionX();
+		}
+		
+		for (int i = 0; i < this.getTieds().size(); i++) {
+			this.getTieds().get(i).setPositionX(false);
+		}
+		
 		if (this.endRepeat != null) {
 			this.endRepeat.get(0).setTranslateX(current);
 			this.endRepeat.get(1).setTranslateX(current);
@@ -171,9 +268,7 @@ public class StaffMeasure extends MusicMeasure{
 		}
 		this.minWidth = current;
 		
-		MeasureBeamData mbd = new MeasureBeamData(this.notes, 4);
-		BeamInfoProcessor bip = new BeamInfoProcessor(mbd.getBeamNumbers() , mbd.beamInfos);
-		System.out.println(bip.toString());
+		this.beamProcessor.generateDrumsBeams(this, this.numStaffLines);
 	}
 
 }

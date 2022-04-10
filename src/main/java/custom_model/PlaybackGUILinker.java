@@ -9,6 +9,7 @@ public class PlaybackGUILinker extends Thread {
 	int measureOfNote;
 	int notePressed;
 	
+	
 	public PlaybackGUILinker (SheetScore sheet, int measureOfNote, int notePressed) {
 		this.sheet = sheet;
 		this.measureOfNote = measureOfNote;
@@ -28,11 +29,18 @@ public class PlaybackGUILinker extends Thread {
 		for (int i = measureOfNote; i < measures.size() && sheet.isPlaying; i++) {
 			MusicMeasure measure = measures.get(i);
 			diff = measureSum - (System.currentTimeMillis() - current);
-			sheet.noteTimings.set(timingsNumber, sheet.noteTimings.get(timingsNumber) + diff);
+			current = System.currentTimeMillis();
+			if (sheet.noteTimings.get(timingsNumber) + diff <= 0) {
+				diff = 0 - sheet.noteTimings.get(timingsNumber);
+				sheet.noteTimings.set(timingsNumber, 0.0);
+			}
+			else {
+				sheet.noteTimings.set(timingsNumber, sheet.noteTimings.get(timingsNumber) + diff);
+			}
+			
+			int first = timingsNumber;
 			
 			measureSum = 0;
-			current = System.currentTimeMillis();
-			diff = 0;
 			
 			int j = (i == measureOfNote) ? notePressed : 0;
 			for (; j < measure.notes.size() && sheet.isPlaying; j++) {
@@ -42,17 +50,30 @@ public class PlaybackGUILinker extends Thread {
 //					diff = 0;
 //				}
 				try {
+					NoteUnit.pressed = measure.notes.get(j);
 					Thread.sleep((long) ((double) sheet.noteTimings.get(timingsNumber)));
 					measureSum += sheet.noteTimings.get(timingsNumber);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				NoteUnit.pressed = measure.notes.get(j);
+				
 				timingsNumber ++;
 			}
+			
+			sheet.noteTimings.set(first, sheet.noteTimings.get(first) - diff);
+			diff = 0;
 		}
 		
+		if (sheet.isPlaying == true) {
+			if (NoteUnit.pressed != null && NoteUnit.pressed.getHighlighted()) {
+				NoteUnit.pressed.toggleHighlight();
+			}
+			NoteUnit.pressed = null;
+			sheet.isPlaying = false;
+		}
+		
+		this.sheet.threadKilled = true;		
 		
 	}	
 	
