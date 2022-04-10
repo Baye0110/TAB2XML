@@ -74,6 +74,8 @@ public abstract class DisplayUnit extends NoteUnit{
 	
 	public abstract void extendStemForBeam();
 	
+	public abstract void addTremolo(int numOfSlants);
+	
 	public void setRest(boolean rest) {
 		this.rest = rest;
 	}

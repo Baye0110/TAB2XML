@@ -5,9 +5,11 @@ import java.util.List;
 
 import javafx.scene.Group;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 // FOR ALL INSTRUMENTS
-public class ScoreLine extends Group{
+public class ScoreLine extends HBox{
 	// Create a Line of TabMeasures or StaffMeasures given a List
 
 	// Stores the
@@ -54,11 +56,13 @@ public class ScoreLine extends Group{
 			m.setSpacing(scale);
 		}
 		
-		current = 0;
-		for (int i = 0; i < this.measureHorizontalPositions.size(); i++) {
-			this.measures.get(i).setTranslateX(current);
-			current += this.measures.get(i).minWidth;
-		}
+//		this.prefHeight(maxMeasureHeight);
+		
+//		current = 0;
+//		for (int i = 0; i < this.measureHorizontalPositions.size(); i++) {
+//			this.measures.get(i).setTranslateX(current);
+//			current += this.measures.get(i).minWidth;
+//		}
 	}
 	
 	public List<MusicMeasure> getMeasures() {

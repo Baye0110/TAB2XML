@@ -76,6 +76,7 @@ public class PreviewController extends Application{
 		 score = new Score(mvc.converter.getMusicXML());
 		 sheet = new SheetScore(score);
 		 sp.setContent(sheet);
+		 sheet.setScrollPane(sp);
 		 player = new musicPlayer(score, sheet, mvc.converter.getMusicXML());
 	 }
 	 
@@ -162,7 +163,8 @@ public class PreviewController extends Application{
 	
 	public void goHandler(){
 		System.out.println("Go Button Clicked!");
-		this.sp.setVmax(this.sheet.getSheetHeight() - this.sheet.getScoreLines().get(this.sheet.getScoreLines().size()-1).getMaxMeasureHeight() - SheetScore.measureSpacing - SheetScore.lineSize * 3);
+		
+		this.sp.setVmax(this.sheet.getSheetHeight() - SheetScore.lineSize * 3);
 		
 		int measureNum = Integer.parseInt(gotoMeasureField.getText());
 		

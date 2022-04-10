@@ -329,10 +329,13 @@ public class DisplayNote extends DisplayUnit{
 			right = new Line(this.getWidth(), 0, this.getWidth(), this.getHeight());
 		}
 		else {
-			left = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), 0 - this.preceding - 2, this.noteHeadWidth * 2);
-			top = new Line(0 - this.preceding - 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0));
-			bottom = new Line(0 - this.preceding - 2, this.noteHeadWidth * 2, this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
-			right = new Line(this.noteHeadWidth + this.trailing + 2, 0 - this.minHeight(0), this.noteHeadWidth + this.trailing + 2, this.noteHeadWidth * 2);
+			double topHeight = 0 - this.minHeight(0) + SheetScore.lineSize;
+			double botHeight = SheetScore.lineSize;
+			
+			left = new Line(0 - this.preceding - 2, topHeight, 0 - this.preceding - 2, botHeight);
+			top = new Line(0 - this.preceding - 2, topHeight, this.noteHeadWidth + this.trailing + 2, topHeight);
+			bottom = new Line(0 - this.preceding - 2, botHeight, this.noteHeadWidth + this.trailing + 2, botHeight);
+			right = new Line(this.noteHeadWidth + this.trailing + 2, topHeight, this.noteHeadWidth + this.trailing + 2, botHeight);
 		}
 		
 		left.setStroke(Color.DEEPSKYBLUE);
@@ -368,5 +371,47 @@ public class DisplayNote extends DisplayUnit{
 	@Override
 	public void setInterTiedEnd(List<ArcLine> arcs) {
 		arcs.get(arcs.size()-1).setEndNote(this);		
+	}
+
+	@Override
+	public void addTremolo(int numOfSlants) {
+		/*
+		 * TODO: Create the tremolo for single notes
+		 *  
+		 * 1. Create the Tremolo object with the following parameters:
+		 * 			slantLength: up to you, but must be some multiple of SheetScore.lineSize
+		 * 			slantWidth: also some multiple of SheetScore.lineSize
+		 * 			rotateDeg: also some multiple of SheetScore.lineSize 
+		 * 				Note: slantWidth + rotateDeg should equal SheetScore.lineSize (in other words one line)
+		 * 			rotation: false (always goes upwards from left to right)
+		 * 			numLines: this is the same as the parameter for the method "numOfSlants"
+		 * 			spacing: some multiple of SheetScore.lineSize  (up to you, but perferrably it is small)
+		 * 
+		 * 2. The stems of single notes have the 3x the height of a line:  SheetScore.lineSize * 3, 
+		 * 	  so you can call the method calculatePosition(double) with the argument as the above value.
+		 * 
+		 * 3. Y Positioning of the Tremolo:
+		 *  	 a) The base y-position of any object lies directly on the notehead (the ellipse or cross shape) of the note
+		 *  		so first we want to translate it up by SheetScore.lineSize * 3 which is the height of the stem
+		 *  	 b) Then we want to position the tremolo in the center of the stem so we have to push it back down
+		 *  	    by the amount returned from the method call in Step 2.
+		 *  	
+		 *  	Since JavaFX directions are inversed (up = negative, down = positive), the translateY value of the Tremolo
+		 *  	must be set to (-SheetScore.lineSize + calculationPosition(double)). Apply this translation.
+		 *  
+		 *  4. Shift the tremolo so that it attaches to the stem:
+		 *  	a) The base X value of the note is the start of the notehead (the ellipse or cross shape). To align it with the 
+		 *  	   note simply align it with the staff, and shift it back left half the tremolo length:
+		 *  		set translateX to: this.stem.getTranslateX() - slantLength/2
+		 *  		Note: slantLength is the value for the Tremolo argument in Step 1.
+		 *  
+		 *  5. Display the tremolo by adding it to the children of this note, since we are in the DisplayNote class,
+		 *  	we can access the note by "this" keyword.
+		 *  
+		 *  DONE !
+		 * 
+		 *  
+		 */
+		
 	}
 }

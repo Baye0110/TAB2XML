@@ -9,21 +9,23 @@ import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_model.note.NoteUnit;
 import javafx.scene.Group;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 // For ALL INSTRUMENTS
-public class SheetScore extends Group{
+public class SheetScore extends VBox{
 
 	List<ScoreLine> lines;
 	List<Double> noteTimings;
 	List<TiedPair> interMeasureTieds;
+	ScrollPane sp;
 	boolean isPlaying;
 	double songTempo;
 	public static double lineSize = 10.0; 
 	public static double pageWidth = 1045.0;
-	public static double measureSpacing = 20.0;
+	public static double measureSpacing = 0.0;
 	boolean threadKilled;
 	double sheetHeight;
 	
@@ -50,6 +52,7 @@ public class SheetScore extends Group{
 		this.songTempo = 60;
 		this.threadKilled = true;
 		
+		boolean isPercussion = score.getParts().get(0).getMeasures().get(0).getPercussion();
 		double currentY = 0.0;
 		
 		this.lines = new ArrayList<>();
@@ -57,7 +60,7 @@ public class SheetScore extends Group{
 		List<ArcLine> arcs = new ArrayList<ArcLine>();
 		
 		// Creates an invisible rectangle to add empty space to the top.
-		Rectangle topBuffer = new Rectangle(pageWidth, lineSize * 2.5);
+		Rectangle topBuffer = new Rectangle(pageWidth, isPercussion ?  lineSize * 6 : lineSize * 3);
 		currentY += lineSize * 2.5;
 		topBuffer.setStroke(Color.WHITE);
 		topBuffer.setOpacity(0);
@@ -119,8 +122,8 @@ public class SheetScore extends Group{
 			else if (mGUI.getRunOffTied()) {
 				if (cumulated.size() > 0) {
 					ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
-					sl1.setTranslateY(currentY + (sl1.maxMeasureHeight - (mGUI.numStaffLines-1) * lineSize));
-					currentY += sl1.maxMeasureHeight + measureSpacing;
+//					sl1.setTranslateY(currentY + (sl1.maxMeasureHeight - (mGUI.numStaffLines-1) * lineSize));
+//					currentY += sl1.maxMeasureHeight + measureSpacing;
 		        	this.lines.add(sl1);
 		        	this.getChildren().add(sl1);
 				}
@@ -142,8 +145,8 @@ public class SheetScore extends Group{
 			else if (length + mGUI.minWidth >= pageWidth) {
 	        	cumulated.add(mGUI);
 	        	ScoreLine sl1 = new ScoreLine(cumulated, pageWidth);
-	        	sl1.setTranslateY(currentY + (sl1.maxMeasureHeight - (mGUI.numStaffLines-1) * lineSize));
-				currentY += sl1.maxMeasureHeight + measureSpacing;
+//	        	sl1.setTranslateY(currentY + (sl1.maxMeasureHeight - (mGUI.numStaffLines-1) * lineSize));
+//				currentY += sl1.maxMeasureHeight + measureSpacing;
 	        	this.lines.add(sl1);
 	        	// reset the cumulated array, and set the length to 0
 	        	cumulated = new ArrayList<>();
@@ -183,7 +186,19 @@ public class SheetScore extends Group{
 		
 		this.sheetHeight = currentY;
 		// Set the spacing between each line in the music.
-		// this.setSpacing(lineSize * 2.5);
+		double minimumSpacing = 0.0;
+		if (isPercussion)
+			minimumSpacing = 0.0;
+		else 
+			minimumSpacing = 0.0;
+		minimumSpacing += measureSpacing;
+		
+		this.setSpacing(minimumSpacing);
+		
+		this.sheetHeight = 0.0;
+		for (int i = 0; i < this.getScoreLines().size() - 1; i++) {
+			sheetHeight += this.getScoreLines().get(i).prefHeight(0) + SheetScore.measureSpacing;
+		}
 	}
 	
 	
@@ -207,7 +222,7 @@ public class SheetScore extends Group{
 		for (int i = 0; i < this.lines.size(); i++) {
 			measure += this.lines.get(i).getMeasures().size();
 			if (measure < measureNum) {
-				pos += this.lines.get(i).maxMeasureHeight + SheetScore.measureSpacing;
+				pos += this.lines.get(i).prefHeight(0) + SheetScore.measureSpacing;
 			}
 			else {
 				break;
@@ -286,6 +301,7 @@ public class SheetScore extends Group{
 		
 		PlaybackGUILinker linkerThread = new PlaybackGUILinker(this, measureOfNote, notePressed);		
 		linkerThread.start();
+		
 //		List<MusicMeasure> measures = this.getMeasureList();
 //		int timingsNumber = this.getTimingOfNote(measureOfNote, notePressed, measures);
 //		for (int i = measureOfNote; i < measures.size(); i++) {
@@ -360,5 +376,14 @@ public class SheetScore extends Group{
 	
 	public double getSheetHeight() {
 		return this.sheetHeight;
+	}
+	
+	public void setScrollPane(ScrollPane sp) {
+		this.sp = sp;
+		this.sp.setVmax(this.getSheetHeight() - SheetScore.lineSize * 3);
+	}
+	
+	public ScrollPane getScrollPane() {
+		return this.sp;
 	}
 }
