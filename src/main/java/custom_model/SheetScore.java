@@ -188,12 +188,12 @@ public class SheetScore extends VBox{
 		// Set the spacing between each line in the music.
 		double minimumSpacing = 0.0;
 		if (isPercussion)
-			minimumSpacing = lineSize * 2.5;
+			minimumSpacing = 0.0;
 		else 
-			minimumSpacing = lineSize * 5.5;
-		measureSpacing += minimumSpacing;
+			minimumSpacing = 0.0;
+		minimumSpacing += measureSpacing;
 		
-		this.setSpacing(measureSpacing);
+		this.setSpacing(minimumSpacing);
 		
 		this.sheetHeight = 0.0;
 		for (int i = 0; i < this.getScoreLines().size() - 1; i++) {
