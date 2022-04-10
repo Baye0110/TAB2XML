@@ -90,13 +90,13 @@ public class musicPlayer {
 		}else if(instrument_type == 3) {
 			System.out.println("Drum is playing");
 		}
-//		while (!this.sheet.getThreadKilled() && !this.isPlaying()) {
-//			try {
-//				Thread.sleep(25);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		while (!this.sheet.getThreadKilled() && !this.isPlaying()) {
+			try {
+				Thread.sleep(25);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		
 //		if (isFinished()) {
 //			List<MusicMeasure> measures = sheet.getMeasureList();
