@@ -13,6 +13,7 @@ import custom_model.note.DisplayChord;
 import custom_model.note.DisplayNote;
 import custom_model.note.DisplayUnit;
 import custom_model.note.NoteUnit;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class StaffMeasure extends MusicMeasure{
@@ -27,7 +28,16 @@ public class StaffMeasure extends MusicMeasure{
 		
 		if (measure.getNotes().size() == 0) {
 			this.generateBarLines(height, measure.getStaffLines());
-			this.maxHeight = height * (measure.getStaffLines());
+			this.maxHeight = height * (measure.getStaffLines() + 1.5);
+			this.box.setTranslateX(0);
+			this.box.setTranslateY(0 - height * 0.5);
+			this.box.setHeight(this.maxHeight);
+			this.box.setWidth(this.minWidth);
+			this.box.setFill(Color.TRANSPARENT);
+			this.box.setStroke(Color.DEEPSKYBLUE);
+			this.box.setStrokeWidth(5);
+			this.box.setOpacity(0);
+			this.getChildren().add(box);
 			return;
 		}
 		
@@ -152,8 +162,6 @@ public class StaffMeasure extends MusicMeasure{
 				System.out.println("Invalid note!");
 			}
 		}
-
-		
 		
 		for (NoteUnit noteUnit: this.notes) {
 			DisplayUnit note = (DisplayUnit) noteUnit;
@@ -164,6 +172,18 @@ public class StaffMeasure extends MusicMeasure{
 		}
 		
 		this.generateBarLines(height, measure.getStaffLines());
+		
+		this.maxHeight = height * (measure.getStaffLines() + 4.5);
+		
+		this.box.setTranslateX(0);
+		this.box.setTranslateY(0 - 3.5 * height);
+		this.box.setHeight(this.maxHeight);
+		this.box.setWidth(this.minWidth);
+		this.box.setFill(Color.TRANSPARENT);
+		this.box.setStroke(Color.DEEPSKYBLUE);
+		this.box.setStrokeWidth(5);
+		this.box.setOpacity(0);
+		this.getChildren().add(box);
 //		this.barLines = new ArrayList<Line>();
 //		for (int i = 0; i < measure.getStaffLines(); i++) {
 //			Line barLine = new Line();

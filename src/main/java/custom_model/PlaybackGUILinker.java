@@ -29,11 +29,18 @@ public class PlaybackGUILinker extends Thread {
 		for (int i = measureOfNote; i < measures.size() && sheet.isPlaying; i++) {
 			MusicMeasure measure = measures.get(i);
 			diff = measureSum - (System.currentTimeMillis() - current);
-			sheet.noteTimings.set(timingsNumber, sheet.noteTimings.get(timingsNumber) + diff);
+			current = System.currentTimeMillis();
+			if (sheet.noteTimings.get(timingsNumber) + diff <= 0) {
+				diff = 0 - sheet.noteTimings.get(timingsNumber);
+				sheet.noteTimings.set(timingsNumber, 0.0);
+			}
+			else {
+				sheet.noteTimings.set(timingsNumber, sheet.noteTimings.get(timingsNumber) + diff);
+			}
+			
+			int first = timingsNumber;
 			
 			measureSum = 0;
-			current = System.currentTimeMillis();
-			diff = 0;
 			
 			int j = (i == measureOfNote) ? notePressed : 0;
 			for (; j < measure.notes.size() && sheet.isPlaying; j++) {
@@ -53,6 +60,9 @@ public class PlaybackGUILinker extends Thread {
 				
 				timingsNumber ++;
 			}
+			
+			sheet.noteTimings.set(first, sheet.noteTimings.get(first) - diff);
+			diff = 0;
 		}
 		
 		if (sheet.isPlaying == true) {

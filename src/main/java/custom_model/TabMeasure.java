@@ -12,7 +12,9 @@ import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.BoxedUnit;
 import custom_model.note.NoteUnit;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 
 // For GUITAR, BASS
 public class TabMeasure extends MusicMeasure {	
@@ -41,9 +43,20 @@ public class TabMeasure extends MusicMeasure {
 		
 		this.numStaffLines = m.getStaffLines();
 		
+		this.box = new Rectangle();
+		
 		if (m.getNotes().size() == 0) {
 			this.generateBarLines(size, m.getStaffLines());
 			this.maxHeight = size * (m.getStaffLines());
+			this.box.setTranslateX(0);
+			this.box.setTranslateY(0 - size * 0.5);
+			this.box.setHeight(this.maxHeight);
+			this.box.setWidth(this.minWidth);
+			this.box.setFill(Color.TRANSPARENT);
+			this.box.setStroke(Color.DEEPSKYBLUE);
+			this.box.setStrokeWidth(5);
+			this.box.setOpacity(0);
+			this.getChildren().add(box);
 			return;
 		}
 		
@@ -58,7 +71,7 @@ public class TabMeasure extends MusicMeasure {
 		this.setTieds(new ArrayList<ArcLine>());
 		
 		// initialize the height of the staff based on the number of lines
-		this.maxHeight = size * (m.getStaffLines());
+		this.maxHeight = size * (m.getStaffLines() + 4);
 		
 		// Reset the count of notes
 		BoxedUnit.noteCounter = 0;
@@ -355,10 +368,20 @@ public class TabMeasure extends MusicMeasure {
 			this.getChildren().add(stem);
 		}
 		
+		this.box.setTranslateX(0);
+		this.box.setTranslateY(0 - size);
+		this.box.setHeight(this.maxHeight);
+		this.box.setWidth(this.minWidth);
+		this.box.setFill(Color.TRANSPARENT);
+		this.box.setStroke(Color.DEEPSKYBLUE);
+		this.box.setStrokeWidth(5);
+		this.box.setOpacity(0);
+		this.getChildren().add(box);
+		
 		//this.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		
 		// Sets the correct height of the measure which takes into account the stems under the measure
-		this.setMinHeight(size * (2.5 + m.getStaffLines()));
+		//this.setMinHeight(size * (2.5 + m.getStaffLines()));
 	}
 	
 	

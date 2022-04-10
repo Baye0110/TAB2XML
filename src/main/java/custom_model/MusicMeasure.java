@@ -2,21 +2,27 @@ package custom_model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Tied;
 import custom_model.note.NoteUnit;
+import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 
 // GUITARS, DRUMS, BASS
-abstract public class MusicMeasure extends Pane {
+abstract public class MusicMeasure extends Group {
 	// The amount of space before any element in a staff
 	public static final double START_DISTANCE = 30;
 	int numStaffLines;
@@ -58,6 +64,8 @@ abstract public class MusicMeasure extends Pane {
 	// Does this measure end with a Tied that is starting??
 	boolean runOffTied;
 	
+	// Grouped Highlight Box
+	Rectangle box;
 	
 	/**
 	 * 
@@ -318,5 +326,28 @@ abstract public class MusicMeasure extends Pane {
 
 	public void setTieds(List<ArcLine> tieds) {
 		this.tieds = tieds;
+	}
+	
+	public void goToMeasureHighlightBox() {
+//		Rectangle box = this.box;
+//		Thread thread = new Thread() {
+//			public void run() {
+//				box.setOpacity(1);
+//				double time = 4000;
+//				for (int i = 0; i < time; i+=25) {
+//					try {
+//						Thread.sleep(25);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					box.setOpacity(1 - i/time);
+//				}
+//				box.setOpacity(0);
+//			}
+//		};
+//		
+//		thread.start();
+		
 	}
 }

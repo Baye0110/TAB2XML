@@ -92,7 +92,7 @@ public class musicPlayer {
 		}
 		while (!this.sheet.getThreadKilled() && !this.isPlaying()) {
 			try {
-				Thread.sleep(25);
+				Thread.sleep(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -144,6 +144,7 @@ public class musicPlayer {
 	
 	public void resume() {
 //		player.getManagedPlayer().resume();
+		this.player = new Player();
 		player.delayPlay(0, this.generateSpecificPattern());
 		this.sheet.startHighlight();
 	}
@@ -178,6 +179,8 @@ public class musicPlayer {
 	
 	public void finish() {
 		player.getManagedPlayer().finish();
+		if (this.isPaused())
+			player = new Player();		
 //		player = new Player();
 	}
 	
@@ -469,7 +472,7 @@ public class musicPlayer {
 			if (tieds.get(0).getType().equals("start") || (tieds.size() > 1 && tieds.get(1).getType().equals("start")) ) {
 				duration += "-";
 			}
-		if (tieds.get(0).getType().equals("stop") || (tieds.size() > 1 && tieds.get(1).getType().equals("stop")) ) {
+			if (tieds.get(0).getType().equals("stop") || (tieds.size() > 1 && tieds.get(1).getType().equals("stop")) ) {
 				duration = "-" + duration;
 			}
 		}

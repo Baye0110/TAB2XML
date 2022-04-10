@@ -132,9 +132,9 @@ public class PreviewController extends Application{
 	}
 	public void pauseHandler(){
 		System.out.println("Pause Button Clicked!");
+		player.pause();
 		playButton.setVisible(true);
 		pauseButton.setVisible(false);
-		player.pause();
 		System.out.println("IsPlaying: " + player.isPlaying());
 		System.out.println("IsPaused: " + player.isPaused());
 		System.out.println("IsFinished: " + player.isFinished());
@@ -162,9 +162,14 @@ public class PreviewController extends Application{
 	
 	public void goHandler(){
 		System.out.println("Go Button Clicked!");
-		this.sp.setVmax(this.sheet.minHeight(0) + this.sp.minHeight(0));
-		double valToSet = sheet.getMeasurePosition(Integer.parseInt(gotoMeasureField.getText()));
+		this.sp.setVmax(this.sheet.getSheetHeight() - this.sheet.getScoreLines().get(this.sheet.getScoreLines().size()-1).getMaxMeasureHeight() - SheetScore.measureSpacing - SheetScore.lineSize * 3);
+		
+		int measureNum = Integer.parseInt(gotoMeasureField.getText());
+		
+		double valToSet = sheet.getMeasurePosition(measureNum);
 		sp.setVvalue(valToSet);
+		
+		this.sheet.getMeasureList().get(measureNum - 1).goToMeasureHighlightBox();
 	}
 	
 	public void displayHandler(){
