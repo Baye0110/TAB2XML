@@ -1,4 +1,4 @@
-package custom_component_data_test;
+package Test_Coverage;
 
 import static org.junit.jupiter.api.Assertions.*;
 

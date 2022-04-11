@@ -23,7 +23,7 @@ public class Notation {
 	private List<Slur> slur;
 	private List<Tied> tied;
 	private List<Slide> slide;
-	private Ornament ornaments; // to be completed
+	private Ornament ornaments;  
 	private int string;
 	private int fret;
 	private Technical technical;	
