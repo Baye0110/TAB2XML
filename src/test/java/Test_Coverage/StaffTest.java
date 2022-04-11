@@ -1,19 +1,20 @@
-package custom_component_data_test;
+package Test_Coverage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Scanner;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import custom_component_data.Score;
+import custom_component_data.StaffTuning;
 
-class ScoreTest {
-	
-	private Score score = null;
+class StaffTest {
+
+	Score score = null;
 	
 	private void setUp(String location) {
 		 // Get the file
@@ -38,22 +39,28 @@ class ScoreTest {
         }
         
 	}
-
+	
 	@Test
-	public void scoreTest1() {
-		setUp("src/test/resources/system/demoTitleAuthorTest.musicxml");
-		Assertions.assertTrue(score.getAuthor().equals("Artist21"));
-		Assertions.assertTrue(score.getTitle().equals("Title21"));
-		Assertions.assertEquals(1, score.getParts().size());
+	void staffTest1() {
+		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
+		int staffLines = score.getParts().get(0).getMeasures().get(1).getStaffLines();
+		
+		assertTrue(staffLines == 6);
 	}
 	
 	@Test
-	public void scoreTest2() {
-		setUp("src/test/resources/system/demoTitleAuthorTest1.musicxml");
-		//Who is the Author
-		assertEquals("The Unforgiven", score.getAuthor());
-		//What is the size
-		assertEquals(1,score.getParts().size());
+	void staffTest2() {
+		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
+		
+		HashMap<Integer, StaffTuning> map = score.getParts().get(0).getMeasures().get(1).getTunings();
+		
+		char[] steps = {'D', 'A', 'D', 'G', 'B', 'E'};
+		int[] octave = {2, 2, 3, 3, 3, 4};
+		
+		for (int i = 0; i < 6; i++) {
+			assertTrue(steps[i] == map.get(Integer.valueOf(i+1)).getTuningStep(), (i+1)+"th step is incorrectly parsed.");
+			assertTrue(octave[i] == map.get(Integer.valueOf(i+1)).getTuningOctave(), (i+1)+"th octave is incorrectly parsed.");
+		}
 	}
 
 }
