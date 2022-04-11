@@ -40,27 +40,27 @@ public class Score {
 	 * First recieves input from and outputs each line to the console.
 	 * Then it outputs some values which can be checked in the Console to see if it is correct.
 	 */
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-		// Extracts the data from XML file and simply puts it in a String and outputs
-		// File in = new File("C://Users/pc/Desktop/demoComplex.musicxml");
-		File in = new File("src/test/resources/system/demoGuitarComplex1.musicxml");
-		String build = "";
-		Scanner input = new Scanner(in);
-		input.useDelimiter("\n");
-		while(input.hasNext()) {
-			build += input.next() + "\n";
-		}
-		System.out.println(build);
-		
-		// Perform the parsing by creating Score object and passing the String containing the XML file
-		Score test = new Score(build);
-		
-		// Testing: You can configure it however you like to test for certain values
-		System.out.println(test.partList.get(0).measures.get(0).clef.symbol);
-		for (Instrument e:  test.partList.get(0).instruments.values()) {
-			System.out.println(e);
-		}
-	}
+//	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+//		// Extracts the data from XML file and simply puts it in a String and outputs
+//		// File in = new File("C://Users/pc/Desktop/demoComplex.musicxml");
+//		File in = new File("src/test/resources/system/demoGuitarComplex1.musicxml");
+//		String build = "";
+//		Scanner input = new Scanner(in);
+//		input.useDelimiter("\n");
+//		while(input.hasNext()) {
+//			build += input.next() + "\n";
+//		}
+//		System.out.println(build);
+//		
+//		// Perform the parsing by creating Score object and passing the String containing the XML file
+//		Score test = new Score(build);
+//		
+//		// Testing: You can configure it however you like to test for certain values
+//		System.out.println(test.partList.get(0).measures.get(0).clef.symbol);
+//		for (Instrument e:  test.partList.get(0).instruments.values()) {
+//			System.out.println(e);
+//		}
+//	}
 	
 	/*
 	 * Constructor: Has 1 argument which is a String containing the whole XML file
