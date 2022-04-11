@@ -166,7 +166,7 @@ public class TabMeasure extends MusicMeasure {
 				currentNote = bentNote != null ? bentNote : currentNote;
 				double height = size * 1.5 + boxedUnit.getTranslateY();
 				double length = (boxedUnit.minWidth(0) + wholeNoteSpacing / currentNote.getType())/2;
-				String text = (currentNote.getNotation().getTechnical().getBend().getBendAlter() == 2) ? "full" : "BendAlter/2";
+				String text = (currentNote.getNotation().getTechnical().getBend().getBendAlter() == 2.0) ? "full" : String.valueOf(currentNote.getNotation().getTechnical().getBend().getBendAlter()/2.0);
 				custom_model.Bend modelBend = new Bend(height, length, text);
 				modelBend.setTranslateY(-1.5 * size);
 				boxedUnit.setBend(modelBend);
