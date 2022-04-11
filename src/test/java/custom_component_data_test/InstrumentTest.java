@@ -67,34 +67,24 @@ class InstrumentTest {
 		
 	}
 	
+	
 	@Test
-
 	public void InstrumentTest1() {
-		setUp("src/test/resources/system/demoBassSimple1.musicxml");
-		Instrument expected = null;
-		Instrument actual = score.getParts().get(0).getInstruments().get("");
-		assertEquals(expected, actual);
-	}
-	
-	
-	@Test
-	public void InstrumentTest2() {
 		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
 		int numInstrument = 0;
 		for(int i = 0; i < score.getParts().get(0).getInstruments().size(); i++) {
 			numInstrument++;
 		}
 		assertEquals(13, numInstrument);
-		Instrument expected1 = new Instrument("P1-I45", "Pedal Hi-hat");
+		Instrument expected1 = new Instrument("P1-I45", "Pedal Hi-Hat");
 		Instrument actual1 = score.getParts().get(0).getInstruments().get("P1-I45");
 		Assertions.assertTrue(expected1.getId().equals(actual1.getId()));
-		// the id test is correct but why is the name test wrong?
 		Assertions.assertTrue(expected1.getName().equals(actual1.getName()));
 	}
 	
 	
 	@Test
-	public void InstrumentTest3() {
+	public void InstrumentTest2() {
 		setUp("src/test/resources/system/demoGuitarSimple2.musicxml");
 		int numInstrument = 0;
 		for(int i = 0; i < score.getParts().get(0).getInstruments().size(); i++) {
@@ -106,18 +96,87 @@ class InstrumentTest {
 		Assertions.assertEquals(expected1, actual1);
 	}
 	
+	@Test
+	public void TestGetID() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		String actualID1 = score.getParts().get(0).getId();
+		String expectID1 = "P1";
+		Assertions.assertEquals(expectID1, actualID1);
+		
+		String actualID2 = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getInstrumentID();
+		String expectID2 = "P1-I50";
+		Assertions.assertEquals(expectID2, actualID2);
+	}
 	
 	@Test
-	public void InstrumentTest4() {
-		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
-		int numInstrument = 0;
-		for(int i = 0; i < score.getParts().get(0).getInstruments().size(); i++) {
-			numInstrument++;
-		}
-		assertEquals(0, numInstrument);
+	public void TestGetName() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		String actualName1 = score.getParts().get(0).getName();
+		String expectName1 = "Drumset";
+		Assertions.assertEquals(expectName1, actualName1);	
 	}
+	
 
+	@Test
+	public void TestgetMidiChannel() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		int actual = score.getParts().get(0).getInstruments().get("P1-I46").getMidiChannel();
+		int expect = 10;
+		Assertions.assertEquals(expect, actual);	
+	}
 	
+	@Test
+	public void TestgetMidiProgram() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		int actual = score.getParts().get(0).getInstruments().get("P1-I46").getMidiProgram();
+		int expect = 1;
+		Assertions.assertEquals(expect, actual);	
+	}
 	
+	@Test
+	public void TestgetMidiUnpitched() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		int actual = score.getParts().get(0).getInstruments().get("P1-I46").getMidiUnpitched();
+		int expect = 46;
+		Assertions.assertEquals(expect, actual);	
+	}
+	
+	@Test
+	public void TestgetVolume() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		double actual = score.getParts().get(0).getInstruments().get("P1-I46").getVolume();
+		double expect = 78.7402;
+		Assertions.assertEquals(expect, actual);	
+	}
+	
+	@Test
+	public void TestgetPan() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		double actual = score.getParts().get(0).getInstruments().get("P1-I46").getPan();
+		double expect = 0;
+		Assertions.assertEquals(expect, actual);
+	}
+	
+	@Test
+	public void TestAllSetter() {
+		Instrument actual = new Instrument("P1-I45", "Pedal Hi-Hat");
+		actual.setMidiChannel(10);
+		actual.setMidiProgram(1);
+		actual.setMidiUnpitched(44);
+		actual.setPan(0);
+		actual.setVolume(8.7402);
+		
+		int expectMidiChanel = 10;
+		int expectMidiProgram = 1;
+		int expectMidiUnipitched = 44;
+		double expectedPan = 0;
+		double expectedVolume = 8.7402;
+		
+		Assertions.assertEquals(expectMidiChanel, actual.getMidiChannel());
+		Assertions.assertEquals(expectMidiProgram, actual.getMidiProgram());
+		Assertions.assertEquals(expectMidiUnipitched, actual.getMidiUnpitched());
+		Assertions.assertEquals(expectedPan, actual.getPan());
+		Assertions.assertEquals(expectedVolume, actual.getVolume());
+	}
 
 }
