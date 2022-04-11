@@ -424,7 +424,7 @@ public class DisplayNote extends DisplayUnit{
 		
 		// adjusting position
 		double shiftPos = tremolo.calculatePosition(SheetScore.lineSize * 3);
-		tremolo.setTranslateY(-SheetScore.lineSize * 3 + shiftPos);
+		tremolo.setTranslateY(-(SheetScore.lineSize * 3) + shiftPos);
 		tremolo.setTranslateX(this.stem.getTranslateX() - slantLength/2);
 		
 		// adding to the interface
