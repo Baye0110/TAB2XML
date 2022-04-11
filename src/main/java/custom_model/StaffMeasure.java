@@ -159,6 +159,12 @@ public class StaffMeasure extends MusicMeasure{
 					timeModCumulated = new ArrayList<>();
 				}
 			}
+			
+			custom_component_data.Tremolo currTremolo = notes.get(i).getNotation().getOrnaments().getTremolo();
+			if(currTremolo != null) {
+				int numSlants = currTremolo.getNumber();
+				currentUnit.addTremolo(numSlants);
+			}
 		}
 		
 		/*
