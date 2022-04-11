@@ -9,10 +9,17 @@ import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_model.note.NoteUnit;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 // For ALL INSTRUMENTS
 public class SheetScore extends VBox{
@@ -28,6 +35,8 @@ public class SheetScore extends VBox{
 	public static double measureSpacing = 0.0;
 	boolean threadKilled;
 	double sheetHeight;
+	Pane naming;
+	List<Text> titles;
 	
 	private class TiedPair {
 		private int measureNum;
@@ -65,6 +74,13 @@ public class SheetScore extends VBox{
 		topBuffer.setStroke(Color.WHITE);
 		topBuffer.setOpacity(0);
 		this.getChildren().add(topBuffer);
+		
+		
+		// Set up for the Title and Artist Name
+		this.naming = new Pane();
+		this.getChildren().add(naming);
+		this.titles = new ArrayList<>();
+		this.titles.add(null);  this.titles.add(null);
 		
 		// This stores all the measures which will eventually be put into 1 line
 		List<MusicMeasure> cumulated = new ArrayList<>();
@@ -383,5 +399,48 @@ public class SheetScore extends VBox{
 	
 	public ScrollPane getScrollPane() {
 		return this.sp;
+	}
+	
+	public void setTitle(String title) {
+		Line placeholder = new Line(0,0,0,lineSize * 5); placeholder.setStroke(Color.TRANSPARENT);
+		this.naming.getChildren().add(placeholder);
+		
+		Text titleLabel = new Text();
+		titleLabel.setText(title);
+		titleLabel.setFont(Font.font(MusicMeasure.customizefont, FontWeight.EXTRA_BOLD, lineSize * 4.5));
+		titleLabel.setFill(Color.BLACK);
+		titleLabel.setWrappingWidth(titleLabel.minWidth(0) > pageWidth - 200 ? pageWidth - 200 : 0);
+		titleLabel.setTranslateX(pageWidth/2 - titleLabel.minWidth(0)/2);
+		titleLabel.setTranslateY(titleLabel.minHeight(0) + lineSize);
+		
+		if (this.titles.get(0) != null) {
+			this.naming.getChildren().remove(this.titles.get(0));
+		}
+		
+		this.titles.set(0, titleLabel);
+		this.naming.getChildren().add(titleLabel);
+	}
+	
+	public void setAuthor(String author) {
+		Line placeholder = new Line(0,0,0,lineSize * 2); placeholder.setStroke(Color.TRANSPARENT);
+		this.naming.getChildren().add(placeholder);
+		
+		Text authorLabel = new Text();
+		authorLabel.setText(author);
+		authorLabel.setFont(Font.font(MusicMeasure.customizefont, FontWeight.BOLD, FontPosture.ITALIC, lineSize * 1.7));
+		authorLabel.setFill(Color.BLACK);
+		authorLabel.setTranslateX(pageWidth - authorLabel.minWidth(0));
+		authorLabel.setTranslateY(authorLabel.minHeight(0));
+		
+		if (this.titles.get(1) != null) {
+			this.naming.getChildren().remove(this.titles.get(1));
+		}
+		
+		this.titles.set(1, authorLabel);
+		this.naming.getChildren().add(authorLabel);
+	}
+	
+	public Pane getNaming() {
+		return this.naming;
 	}
 }
