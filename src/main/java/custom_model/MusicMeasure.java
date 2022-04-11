@@ -69,6 +69,11 @@ abstract public class MusicMeasure extends Pane {
 	// Grouped Highlight Box
 	Group box;
 	
+	// repeaet information
+	boolean repeatStart;
+	boolean repeatEnd;
+	int repeatTimes;
+	
 	/**
 	 * 
 	 * @param size    The spacing between the lines of the staff
@@ -102,6 +107,10 @@ abstract public class MusicMeasure extends Pane {
 		
 		MusicMeasure.measureCount += 1;
 		this.measureNum = MusicMeasure.measureCount;
+		
+		this.repeatStart = m.getIsRepeatStart();
+		this.repeatEnd = m.getIsRepeatStop();
+		this.repeatTimes = m.getBarLineRight() != null ? m.getBarLineRight().getRepeatNum() : 0;
 		
 		Text measureNum = new Text(Integer.toString(this.measureNum));
 		measureNum.setFont(Font.font(customizefont, FontPosture.ITALIC, size*1.5));
@@ -287,8 +296,9 @@ abstract public class MusicMeasure extends Pane {
 		
 		Text times = new Text();
 		times.setText("x" + repeatNumber);
-		times.setFont(Font.font(customizefont, size));
+		times.setFont(Font.font(customizefont, size * 1.4));
 		times.setTranslateX(this.currentDistance);
+		times.setTranslateY(0 - size*2.0/3.0);
 		this.getChildren().add(times);
 		
 		RepeatBarLine repeat = new RepeatBarLine(size, staffLines);
@@ -351,5 +361,17 @@ abstract public class MusicMeasure extends Pane {
 		
 		thread.start();
 		
+	}
+	
+	public boolean getRepeatStart() {
+		return this.repeatStart;
+	}
+	
+	public boolean getRepeatEnd() {
+		return this.repeatEnd;
+	}
+	
+	public int getRepeatTimes() {
+		return this.repeatTimes;
 	}
 }

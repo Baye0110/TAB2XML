@@ -69,7 +69,7 @@ public class SheetScore extends VBox{
 		List<ArcLine> arcs = new ArrayList<ArcLine>();
 		
 		// Creates an invisible rectangle to add empty space to the top.
-		Rectangle topBuffer = new Rectangle(pageWidth, isPercussion ?  lineSize * 6 : lineSize * 3);
+		Rectangle topBuffer = new Rectangle(pageWidth, lineSize * 6);
 		currentY += lineSize * 2.5;
 		topBuffer.setStroke(Color.WHITE);
 		topBuffer.setOpacity(0);

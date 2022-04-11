@@ -465,6 +465,14 @@ public class TabMeasure extends MusicMeasure {
 			if(currLabel.getBend() != null) {
 				currLabel.getBend().adjustLength((this.wholeNoteSpacing * 1/currLabel.getSpacingType())/2);
 				currLabel.setBendPositionX();
+				Rectangle dot = new Rectangle();
+				dot.setY(0 - 6 * SheetScore.lineSize);
+				dot.setX(0);
+				dot.setHeight(2);
+				dot.setWidth(2);
+				dot.setFill(Color.TRANSPARENT);
+				this.getChildren().add(dot);
+				
 			}
 			
 			if (currLabel.getData().getNotation().getSlides().size() != 0) {
