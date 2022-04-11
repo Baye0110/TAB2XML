@@ -153,7 +153,11 @@ public class StaffMeasure extends MusicMeasure{
 		 *  2. Once you have a custom_component_data.Tremolo object you can find the number of slants using the "getNumber()" method
 		 *  3. Call the "addTremolo(int numOfSlants)" method of the DisplayUnit class. We currently have the variable "currentUnit" to call this method.
 		 */
-		
+		for(int i = 0; i < notes.size(); i++) {
+			if(true) {
+				
+			}
+		}
 		
 		MeasureBeamData mbd = new MeasureBeamData(this.notes, measure.getTimeSignature()[1]);
 		this.beamProcessor = new BeamInfoProcessor(mbd.getBeamNumbers() , mbd.beamInfos);

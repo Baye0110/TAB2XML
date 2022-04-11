@@ -182,6 +182,8 @@ public class MainGraphicsTest extends Application {
 //        b.setTranslateY(50);
 //        g1.getChildren().add(b);
         
+       
+        
   	}
 
 	/*public static void main(String[] args) {
