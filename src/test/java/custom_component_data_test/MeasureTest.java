@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import org.junit.jupiter.api.Test;
 
+import custom_component_data.Clef;
 import custom_component_data.Measure;
 import custom_component_data.Score;
 
@@ -86,5 +87,109 @@ class MeasureTest {
 		
 		int f = m.getFifths(); //<fifths>0</fifths>
 		assertEquals(0,f);
+	}
+	
+	@Test
+	public void TestgetIsRepeatStart() {
+		setUp("src/test/resources/system/money.musicxml");
+		boolean actual = score.getParts().get(0).getMeasures().get(0).getIsRepeatStart();
+		assertTrue(actual);
+	}
+	@Test
+	public void TestgetIsRepeatStop() {
+		setUp("src/test/resources/system/money.musicxml");
+		boolean actual = score.getParts().get(0).getMeasures().get(0).getIsRepeatStop();
+		assertTrue(actual);
+	}
+	
+	@Test
+	public void TestgetBarLine() {
+		setUp("src/test/resources/system/money.musicxml");
+		String acturalStyle1 = score.getParts().get(0).getMeasures().get(0).getBarLineLeft().getStyle();
+		String expectStyle1 = "heavy-light";
+		assertEquals(acturalStyle1,expectStyle1);
+		
+		String actualRepeatType1 = score.getParts().get(0).getMeasures().get(0).getBarLineLeft().getRepeatType();
+		String expectRepeatType1 = "forward";
+		assertEquals(actualRepeatType1,expectRepeatType1);
+		
+		assertNull(score.getParts().get(0).getMeasures().get(0).getBarLineLeft().getRepeatNum());
+		
+		String acturalStyle2 = score.getParts().get(0).getMeasures().get(0).getBarLineRight().getStyle();
+		String expectStyle2 = "light-heavy";
+		assertEquals(acturalStyle2,expectStyle2);
+		
+		String actualRepeatType2 = score.getParts().get(0).getMeasures().get(0).getBarLineRight().getRepeatType();
+		String expectRepeatType2 = "backward";
+		assertEquals(actualRepeatType2,expectRepeatType2);
+		
+		int actualRepeaNumber2 = score.getParts().get(0).getMeasures().get(0).getBarLineRight().getRepeatNum();
+		int expectRepeaNumber2 = 8;
+		assertEquals(actualRepeaNumber2,expectRepeaNumber2);
+	}
+	
+	@Test
+	public void TestgetDirections() {
+		setUp("src/test/resources/system/money.musicxml");
+		String actual1 = score.getParts().get(0).getMeasures().get(0).getDirections().get(0).getPlacement();
+		String expect1 = "above";
+		assertEquals(actual1,expect1);
+		
+		String actual2 = score.getParts().get(0).getMeasures().get(0).getDirections().get(0).getWords();
+		String expect2 = "x8";
+		assertEquals(actual2,expect2);
+		
+		Double[] actual3 = score.getParts().get(0).getMeasures().get(0).getDirections().get(0).getPosition();
+		Double[] expect3 = {0.0,0.0};
+		assertEquals(actual3[0],expect3[0]);
+		assertEquals(actual3[1],expect3[1]);
+	}
+	
+	@Test
+	public void TestgetTimeSignature() {
+		setUp("src/test/resources/system/money.musicxml");
+		int[] actual = score.getParts().get(0).getMeasures().get(0).getTimeSignature();
+		int[] expect = {7,4};
+		assertEquals(actual[0],expect[0]);
+		assertEquals(actual[1],expect[1]);
+		assertTrue(score.getParts().get(0).getMeasures().get(0).getTimeDisplay());
+		
+	}
+	
+	@Test
+	public void TestgetClef() {
+		setUp("src/test/resources/system/demoDrumsSimple3.musicxml");
+		Clef expect = new Clef('G',2);
+		Clef actual = score.getParts().get(0).getMeasures().get(0).getClef();
+		assertEquals(actual.getLine(),expect.getLine());
+		assertEquals(actual.getSymbol(),expect.getSymbol());
+		assertFalse(score.getParts().get(0).getMeasures().get(0).getTunedMeasure());
+	}
+	
+	@Test
+	public void TestgetStaffLines() {
+		setUp("src/test/resources/system/money.musicxml");
+		int actual = score.getParts().get(0).getMeasures().get(0).getStaffLines();
+		int expect = 4;
+		assertEquals(actual,expect);
+	}
+	
+	@Test
+	public void TestgetPercussion() {
+		setUp("src/test/resources/system/demoDrumsSimple3.musicxml");
+		assertTrue(score.getParts().get(0).getMeasures().get(0).getPercussion());
+		
+		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
+		assertFalse(score.getParts().get(0).getMeasures().get(0).getPercussion());
+	}
+	
+	@Test
+	public void TestgetTab() {
+		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
+		assertTrue(score.getParts().get(0).getMeasures().get(0).getTab());
+		
+		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
+		assertFalse(score.getParts().get(0).getMeasures().get(0).getTab());
+		
 	}
 }
