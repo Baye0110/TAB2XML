@@ -7,7 +7,6 @@ import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Slur;
 import custom_component_data.Tied;
-import custom_component_data.TimeModificationLabel;
 import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.DisplayChord;
