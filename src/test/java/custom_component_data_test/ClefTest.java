@@ -63,8 +63,27 @@ class ClefTest {
 	
 	
 	@Test
-	public void clefTest2() {
-		
+	public void TestgetSymbol() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		char expect = 'G';
+		char actual = score.getParts().get(0).getMeasures().get(0).getClef().getSymbol();
+		Assertions.assertEquals(expect,actual);
+	}
+	
+	@Test
+	public void TestgetLine() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		int expect = 2;
+		int actual = score.getParts().get(0).getMeasures().get(0).getClef().getLine();
+		Assertions.assertEquals(expect,actual);
+	}
+
+	@Test
+	public void Testequals() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		Clef clef1 = score.getParts().get(0).getMeasures().get(0).getClef();
+		Clef clef2 = new Clef('G',2);
+		Assertions.assertTrue(clef1.equals(clef2));
 	}
 	
 }
