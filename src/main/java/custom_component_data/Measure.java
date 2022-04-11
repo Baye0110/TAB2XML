@@ -29,6 +29,32 @@ public class Measure {
 	boolean percussion; // Is this a percussion instrument?
 	boolean tab; // Is this a TAB clef (for guitar/string instruments)?
 	
+	boolean isRepeatStart;
+	boolean isRepeatStop;
+	BarLine barLineLeft;
+	BarLine barLineRight;
+	List<Direction> directions;
+	
+	public boolean getIsRepeatStart() {
+		return this.isRepeatStart;
+	}
+	
+	public boolean getIsRepeatStop() {
+		return this.isRepeatStop;
+	}
+	
+	public BarLine getBarLineLeft() {
+		return this.barLineLeft;
+	}
+	
+	public BarLine getBarLineRight() {
+		return this.barLineRight;
+	}
+	
+	public List<Direction> getDirections() {
+		return this.directions;
+	}
+	
 	public int getDivisions() {
 		return this.divisions;
 	}
@@ -148,7 +174,7 @@ public class Measure {
 				this.tunings = new HashMap<Integer, StaffTuning>();
 				for (int i = 0; i < tuningList.getLength(); i++) {
 					this.tunedMeasure = true;
-					Element tuningEl = (Element) tuningList.item(0);
+					Element tuningEl = (Element) tuningList.item(i);
 					Character step = tuningEl.getElementsByTagName("tuning-step").item(0).getTextContent().charAt(0);
 					Integer octave = Integer.valueOf(tuningEl.getElementsByTagName("tuning-octave").item(0).getTextContent());
 					this.tunings.put(Integer.valueOf(tuningEl.getAttribute("line")), new StaffTuning(step, octave));
@@ -161,6 +187,27 @@ public class Measure {
 			for (int i = 0; i < noteList.getLength(); i++) {
 				Note toAdd = new Note((Element) noteList.item(i));
 				this.notes.add(toAdd);
+			}
+			
+			NodeList barLines = measure.getElementsByTagName("barline");
+			this.isRepeatStart = this.isRepeatStop = false;
+			for (int i = 0; i < barLines.getLength(); i++) {
+				Element barLine = (Element) barLines.item(i);
+				if (barLine.getAttribute("location").equals("left")) {
+					this.barLineLeft = new BarLine(barLine);
+					this.isRepeatStart = true;
+					
+				}
+				else if (barLine.getAttribute("location").equals("right")) {
+					this.barLineRight = new BarLine(barLine);
+					this.isRepeatStop = true;
+				}
+			}
+			
+			NodeList directionList = measure.getElementsByTagName("direction");
+			this.directions = new ArrayList<>();
+			for (int i = 0; i < directionList.getLength(); i++) {
+				this.directions.add(new Direction( (Element)directionList.item(i) ));
 			}
 			
 		} catch (ClassCastException e) {

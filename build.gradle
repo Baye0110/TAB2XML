@@ -16,6 +16,7 @@ repositories {
 
 jacoco {
     toolVersion = "0.8.7"
+    reportsDirectory = file("$buildDir/customJacocoReportDir")
 }
 
 jacocoTestReport {
@@ -34,8 +35,13 @@ dependencies {
 
     testImplementation "org.testfx:testfx-core:4.0.16-alpha"
     testImplementation "org.testfx:testfx-junit5:4.0.16-alpha"
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.1'
 
     implementation 'com.github.JensPiegsa:jfugue:5.0.9'
+    
+    implementation 'com.itextpdf:itext7-core:7.1.7'
+    
+    implementation group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-9.1.2'
 }
 
 task debug {
@@ -71,7 +77,7 @@ task testDebug {
 
 javafx {
     version = "17.0.1"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = [ 'javafx.controls', 'javafx.fxml' , 'javafx.swing']
 }
 
 run {

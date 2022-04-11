@@ -1,4 +1,4 @@
-package custom_model;
+package custom_model.note;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class NoteTail extends Group {
 			}
 			
 			// Set the correct width
-			this.width = this.minWidth(0);
+			this.width = height * 2;
 		}
 		// This exception happens if we can't find the image file, so nothing will display
 		catch (IOException e) {

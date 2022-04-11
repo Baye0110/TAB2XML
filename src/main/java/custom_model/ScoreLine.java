@@ -3,17 +3,20 @@ package custom_model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.Group;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Line;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 // FOR ALL INSTRUMENTS
 public class ScoreLine extends HBox{
 	// Create a Line of TabMeasures or StaffMeasures given a List
 
 	// Stores the
-	List<Double> measureDistances;
+	List<Double> measureHorizontalPositions;
+	List<MusicMeasure> measures;
 	// Stores the tallest measure in the List
-	double maxHeight;
+	double maxMeasureHeight;
 	
 	/** Create a ScoreLine with the given List of MusicMeasures and the width of the pagee
 	 * 
@@ -21,17 +24,23 @@ public class ScoreLine extends HBox{
 	 * @param pageWidth		The width of the page.
 	 */
 	public ScoreLine(List<? extends MusicMeasure> measures, double pageWidth) {
-		this.measureDistances = new ArrayList<>();
+		this.measureHorizontalPositions = new ArrayList<>();
+		this.measures = new ArrayList<>();
 		
 		// This variable tracks the length of all the measures combined
 		double current = 0;
 		// This variable tracks the AMOUNT OF SPACE BETWEEN NOTES ONLY
 		double spacing = 0;
 		
+		this.maxMeasureHeight = 0;
+		
 		// For each MusicMeasure, add it to the ScoreLine, and increment the 2 variables above
 		for (MusicMeasure m: measures) {
 			this.getChildren().add(m);
-			this.measureDistances.add(current);
+			this.measures.add(m);
+			this.measureHorizontalPositions.add(current);
+			
+			this.maxMeasureHeight = m.maxHeight > this.maxMeasureHeight ? m.maxHeight : this.maxMeasureHeight;
 			current += m.minWidth;
 			spacing += m.spacing; 
 		}
@@ -46,5 +55,21 @@ public class ScoreLine extends HBox{
 			// Corrects the spacing between all the measures based on this new scale.
 			m.setSpacing(scale);
 		}
+		
+//		this.prefHeight(maxMeasureHeight);
+		
+//		current = 0;
+//		for (int i = 0; i < this.measureHorizontalPositions.size(); i++) {
+//			this.measures.get(i).setTranslateX(current);
+//			current += this.measures.get(i).minWidth;
+//		}
+	}
+	
+	public List<MusicMeasure> getMeasures() {
+		return this.measures;
+	}
+	
+	public double getMaxMeasureHeight() {
+		return this.maxMeasureHeight;
 	}
 }

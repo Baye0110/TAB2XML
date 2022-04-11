@@ -20,13 +20,13 @@ import org.w3c.dom.NodeList;
  */
 
 public class Notation {
-	List<Slur> slur;
-	List<Tied> tied;
-	List<Slide> slide;
-	Ornament ornaments; // to be completed
-	int string;
-	int fret;
-	Technical technical;	
+	private List<Slur> slur;
+	private List<Tied> tied;
+	private List<Slide> slide;
+	private Ornament ornaments;  
+	private int string;
+	private int fret;
+	private Technical technical;	
 	
 	public Notation(Element notation) {
 		NodeList slurList = notation.getElementsByTagName("slur");
@@ -90,4 +90,7 @@ public class Notation {
 		return this.ornaments;
 	}
 
+	public Technical getTechnical() {
+		return this.technical;
+	}
 }

@@ -1,4 +1,4 @@
-package custom_component_data_test;
+package Test_Coverage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,15 +7,11 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import org.junit.jupiter.api.Assertions;
-//import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
-import custom_component_data.Clef;
 import custom_component_data.Score;
 
-//Testing Clef.java 
-
-class ClefTest {
+class ScoreTest {
 	
 	private Score score = null;
 	
@@ -42,31 +38,22 @@ class ClefTest {
         }
         
 	}
-	
-	@Test
-	public void cleftConstructorTest1() {
-		Clef c1 = new Clef('G',1);
-		assertNotNull(c1);
-	}
-	
 
-	
 	@Test
-	public void clefTest1() {
-		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
-		Clef expected = new Clef('G', 2);
-		Clef actual = score.getParts().get(0).getMeasures().get(0).getClef();
-		assertNotNull(actual);
-		Assertions.assertTrue(expected.getSymbol() == actual.getSymbol(), "The expected symbol of clef is " + expected.getLine() + "while the actual symbol is " + actual.getLine());
-		Assertions.assertTrue(expected.getLine() == actual.getLine(), "The expected line of clef is " + expected.getLine() + "while the actual line is " + actual.getLine()); 
+	public void scoreTest1() {
+		setUp("src/test/resources/system/demoTitleAuthorTest.musicxml");
+		Assertions.assertTrue(score.getAuthor().equals("Artist21"));
+		Assertions.assertTrue(score.getTitle().equals("Title21"));
+		Assertions.assertEquals(1, score.getParts().size());
 	}
 	
-	
 	@Test
-	public void clefTest2() {
-		
+	public void scoreTest2() {
+		setUp("src/test/resources/system/demoTitleAuthorTest1.musicxml");
+		//Who is the Author
+		assertEquals("The Unforgiven", score.getAuthor());
+		//What is the size
+		assertEquals(1,score.getParts().size());
 	}
-	
+
 }
-
-

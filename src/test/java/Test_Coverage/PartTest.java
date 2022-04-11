@@ -1,4 +1,4 @@
-package custom_component_data_test;
+package Test_Coverage;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
@@ -93,7 +93,7 @@ class PartTest {
 		setUp("src/test/resources/system/demoDrumsSimple2.musicxml");
 		assertNotNull(score.getParts());
 		assertEquals("P1",score.getParts().get(0).getId());
-		assertEquals("Guitar",score.getParts().get(0).getName());
+		assertEquals("Drumset",score.getParts().get(0).getName());
 	}
 	
 	@Test
@@ -103,6 +103,22 @@ class PartTest {
 		assertNotNull(score.getParts());
 		assertEquals("Drumset",score.getParts().get(0).getName());
 		assertEquals("P1",score.getParts().get(0).getId());
+	}
+	
+	@Test
+	void TestgetInstruments() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		int actualNumOfInstrument =score.getParts().get(0).getInstruments().size();
+		int expectNumberOfInstrument = 13;
+		assertEquals(actualNumOfInstrument,expectNumberOfInstrument);
+	}
+	
+	@Test
+	void TestgetMeasures() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		int actualNumOfMeasures =score.getParts().get(0).getMeasures().size();
+		int expectNumberOfMeasures = 126;
+		assertEquals(actualNumOfMeasures,expectNumberOfMeasures);
 	}
 
 }

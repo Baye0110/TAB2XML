@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -39,27 +40,27 @@ public class Score {
 	 * First recieves input from and outputs each line to the console.
 	 * Then it outputs some values which can be checked in the Console to see if it is correct.
 	 */
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-		// Extracts the data from XML file and simply puts it in a String and outputs
-		// File in = new File("C://Users/pc/Desktop/demoComplex.musicxml");
-		File in = new File("src/test/resources/system/demoGuitarComplex1.musicxml");
-		String build = "";
-		Scanner input = new Scanner(in);
-		input.useDelimiter("\n");
-		while(input.hasNext()) {
-			build += input.next() + "\n";
-		}
-		System.out.println(build);
-		
-		// Perform the parsing by creating Score object and passing the String containing the XML file
-		Score test = new Score(build);
-		
-		// Testing: You can configure it however you like to test for certain values
-		System.out.println(test.partList.get(0).measures.get(0).clef.symbol);
-		for (Instrument e:  test.partList.get(0).instruments.values()) {
-			System.out.println(e);
-		}
-	}
+//	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+//		// Extracts the data from XML file and simply puts it in a String and outputs
+//		// File in = new File("C://Users/pc/Desktop/demoComplex.musicxml");
+//		File in = new File("src/test/resources/system/demoGuitarComplex1.musicxml");
+//		String build = "";
+//		Scanner input = new Scanner(in);
+//		input.useDelimiter("\n");
+//		while(input.hasNext()) {
+//			build += input.next() + "\n";
+//		}
+//		System.out.println(build);
+//		
+//		// Perform the parsing by creating Score object and passing the String containing the XML file
+//		Score test = new Score(build);
+//		
+//		// Testing: You can configure it however you like to test for certain values
+//		System.out.println(test.partList.get(0).measures.get(0).clef.symbol);
+//		for (Instrument e:  test.partList.get(0).instruments.values()) {
+//			System.out.println(e);
+//		}
+//	}
 	
 	/*
 	 * Constructor: Has 1 argument which is a String containing the whole XML file
@@ -78,6 +79,18 @@ public class Score {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(new InputSource(new StringReader(xmlDocument)));
 			doc.getDocumentElement().normalize();
+			
+			// Get the name of the piece
+			NodeList scoreName = doc.getElementsByTagName("movement-title");
+			if (scoreName.getLength() != 0) {
+				this.title = ((Element) scoreName.item(0)).getTextContent();
+			}
+			
+			// Get the name of the author
+			NodeList authorName = doc.getElementsByTagName("creator");
+			if (authorName.getLength() != 0) {
+				this.author = ((Element) authorName.item(0)).getTextContent();
+			}
 			
 			// Selects and makes a list of the "score-part" elements and "part" elements
 			NodeList partsMetaData = doc.getElementsByTagName("score-part");
