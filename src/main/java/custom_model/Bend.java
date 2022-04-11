@@ -70,7 +70,7 @@ public class Bend extends Group{
 		
 		// add Text
 		Text t = new Text(length - 8.0, -20.0, text);
-		t.setFont(Font.font(MusicMeasure.customizefont, SheetScore.lineSize));
+		t.setFont(Font.font(MusicMeasure.customizefont, SheetScore.lineSize * 2));
 		this.text = t;
 		this.getChildren().add(t);
 	}
