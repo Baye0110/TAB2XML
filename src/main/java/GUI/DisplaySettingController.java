@@ -100,7 +100,7 @@ public class DisplaySettingController{
 		taleWidthValue.setValue("1045");
 		noteSpaceValue.setValue("400");
 		ApplyHandler();
-		System.out.println("Rest Complete!");
+		System.out.println("Reset Complete!");
 	}
 
 	public void applyandexitHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{

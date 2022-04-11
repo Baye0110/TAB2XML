@@ -42,6 +42,8 @@ abstract public class MusicMeasure extends Pane {
 	List<NoteLinker> links;
 	// The tieds
 	private List<ArcLine> tieds;
+	// List of the timeModificationLabels
+	List<TimeModificationLabel> timeMods;
 	
 	//font
 	public static String customizefont = "Calibri" ;

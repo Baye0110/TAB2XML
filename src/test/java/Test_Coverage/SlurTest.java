@@ -1,15 +1,17 @@
-package custom_component_data_test;
+package Test_Coverage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Score;
 import custom_component_data.Slur;
@@ -73,7 +75,7 @@ class SlurTest {
 		 *  already exists another type of list (tied, slide) at a specific index => the slur list for 
 		 *  this note will be removed???
 		 */
-		Assertions.assertThrows(NullPointerException.class, () ->{
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () ->{
 			Slur note12test = score.getParts().get(0).getMeasures().get(0).getNotes().get(11).getNotation().getSlurs().get(0);
 		});
 	}
@@ -95,6 +97,63 @@ class SlurTest {
 		Assertions.assertTrue(note2.getPlacement().equals(""));
 	}
 	
+	@Test
+	public void slurTest3() {
+		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
+		List<List<Integer>> slurStarts = new ArrayList<>();
+		List<List<Integer>> slurEnds = new ArrayList<>();
+		slurStarts.add(generateList(3, 17));  	slurEnds.add(generateList(3, 18));
+		slurStarts.add(generateList(7, 17));	slurEnds.add(generateList(7, 18));
+		slurStarts.add(generateList(23, 2));   slurEnds.add(generateList(23, 3));
+		slurStarts.add(generateList(23, 6));   slurEnds.add(generateList(23, 7));
+		slurStarts.add(generateList(23, 10));   slurEnds.add(generateList(23, 11));
+		slurStarts.add(generateList(23, 14));   slurEnds.add(generateList(23, 15));
+		slurStarts.add(generateList(23, 18));   slurEnds.add(generateList(23, 19));
+		slurStarts.add(generateList(31, 0));   slurEnds.add(generateList(31, 1));
+		slurStarts.add(generateList(31, 9));   slurEnds.add(generateList(31, 10));
+		slurStarts.add(generateList(45, 6));   slurEnds.add(generateList(45, 7));
+		slurStarts.add(generateList(45, 18));   slurEnds.add(generateList(45, 19));
+		slurStarts.add(generateList(46, 6));   slurEnds.add(generateList(46, 7));
+		slurStarts.add(generateList(47, 6));   slurEnds.add(generateList(47, 7));
+		slurStarts.add(generateList(47, 18));   slurEnds.add(generateList(47, 19));
+		slurStarts.add(generateList(48, 6));   slurEnds.add(generateList(48, 7));
+		slurStarts.add(generateList(48, 16));   slurEnds.add(generateList(48, 17));
+		
+		int start = 0;
+		int end = 0;
+		for (int i = 0; i < 49; i++) {
+			Measure m = score.getParts().get(0).getMeasures().get(i);
+			for (int j = 0; j < m.getNotes().size(); j++) {
+				Note n = m.getNotes().get(j);
+				if (n.getNotation() != null && n.getNotation().getSlurs().size() != 0) {
+					for (Slur t: n.getNotation().getSlurs()) {
+						if (t.getType().equals("start")) {
+							List<Integer> startLocation = slurStarts.get(start);
+							assertTrue(startLocation.get(0) == i && startLocation.get(1) == j, "i: " + i + ", j:" + j);
+							start++;
+						}
+						else if (t.getType().equals("stop")) {
+							List<Integer> endLocation = slurEnds.get(end);
+							assertTrue(endLocation.get(0) == i && endLocation.get(1) == j);
+							end++;
+						}
+						else {
+							fail("Slur is neither of type start nor of type stop.");
+						}
+					}
+				}
+			}
+		}
+		
+		assertTrue(start == end && start == slurStarts.size() && end == slurEnds.size());
+	}
+	
+	private List<Integer> generateList(int measure, int note) { 
+		List<Integer> arr = new ArrayList<>();
+		arr.add(measure);
+		arr.add(note);
+		return arr;
+	}
 	
 
 }

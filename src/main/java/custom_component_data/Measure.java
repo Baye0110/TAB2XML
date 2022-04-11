@@ -174,7 +174,7 @@ public class Measure {
 				this.tunings = new HashMap<Integer, StaffTuning>();
 				for (int i = 0; i < tuningList.getLength(); i++) {
 					this.tunedMeasure = true;
-					Element tuningEl = (Element) tuningList.item(0);
+					Element tuningEl = (Element) tuningList.item(i);
 					Character step = tuningEl.getElementsByTagName("tuning-step").item(0).getTextContent().charAt(0);
 					Integer octave = Integer.valueOf(tuningEl.getElementsByTagName("tuning-octave").item(0).getTextContent());
 					this.tunings.put(Integer.valueOf(tuningEl.getAttribute("line")), new StaffTuning(step, octave));
