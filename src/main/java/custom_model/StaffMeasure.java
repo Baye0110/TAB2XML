@@ -7,6 +7,7 @@ import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Slur;
 import custom_component_data.Tied;
+import custom_component_data.TimeModificationLabel;
 import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.DisplayChord;
@@ -29,6 +30,8 @@ public class StaffMeasure extends MusicMeasure{
 		
 		this.box = new Group();
 		this.getChildren().add(this.box);
+		
+		List<Note> timeModCumulated = new ArrayList<>();
 		
 		this.numStaffLines = measure.getStaffLines();
 		
@@ -61,6 +64,7 @@ public class StaffMeasure extends MusicMeasure{
 		this.notes = new ArrayList<NoteUnit>();
 		this.slurs = new ArrayList<ChordedSlur>();
 		this.setTieds(new ArrayList<ArcLine>());
+		this.timeMods = new ArrayList<TimeModificationLabel>();
 		measure.generatePositions();
 		
 		for (int i = 0; i < notes.size(); i++) {
@@ -143,7 +147,20 @@ public class StaffMeasure extends MusicMeasure{
 					currentUnit.addTied(this, true);
 			}
 			
+			
 			this.notes.add(currentUnit);
+			
+			if (notes.get(i).getTimeModification() != null) {
+				timeModCumulated.add(notes.get(i));
+				if (TimeModificationLabel.isTimeModComplete(timeModCumulated)) {
+					TimeModificationLabel tml = new TimeModificationLabel(this.notes.get(this.notes.size() - timeModCumulated.size()), 
+							this.notes.get(this.notes.size()-1), 
+							notes.get(i).getTimeModification().get("actual"));
+					this.timeMods.add(tml);
+					this.getChildren().add(tml);
+					timeModCumulated = new ArrayList<>();
+				}
+			}
 		}
 		
 		/*
@@ -264,6 +281,10 @@ public class StaffMeasure extends MusicMeasure{
 			this.getTieds().get(i).setPositionX(false);
 		}
 		
+		for (int i = 0; i < this.timeMods.size(); i++) {
+			this.timeMods.get(i).generateLabel(this.numStaffLines, true);
+		}
+		
 		if (this.endRepeat != null) {
 			this.endRepeat.get(0).setTranslateX(current);
 			this.endRepeat.get(1).setTranslateX(current);
@@ -291,7 +312,7 @@ public class StaffMeasure extends MusicMeasure{
 		
 		this.beamProcessor.generateDrumsBeams(this, this.numStaffLines);
 		
-		double topHeight = 0 - SheetScore.lineSize * 6;
+		double topHeight = 0 - SheetScore.lineSize * 6 - (this.timeMods.size() != 0 ? SheetScore.lineSize * 1.5: 0);
 		Line top = new Line(0, topHeight, this.minWidth, topHeight);
 		Line left = new Line(0, topHeight, 0, SheetScore.lineSize * this.numStaffLines);
 		Line right = new Line(this.minWidth, topHeight, this.minWidth, SheetScore.lineSize * this.numStaffLines);

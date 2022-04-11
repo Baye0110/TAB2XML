@@ -8,6 +8,7 @@ import custom_component_data.Note;
 import custom_component_data.Slide;
 import custom_component_data.Slur;
 import custom_component_data.Tied;
+import custom_component_data.TimeModificationLabel;
 import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.BoxedUnit;
@@ -47,6 +48,8 @@ public class TabMeasure extends MusicMeasure {
 		this.box = new Group();
 		this.getChildren().add(this.box);
 		
+		List<Note> timeMod = new ArrayList<>();
+		
 		if (m.getNotes().size() == 0) {
 			this.generateBarLines(size, m.getStaffLines());
 			this.maxHeight = size * (m.getStaffLines());
@@ -78,6 +81,7 @@ public class TabMeasure extends MusicMeasure {
 		this.links = new ArrayList<NoteLinker>();
 		this.slurs = new ArrayList<ArcLine>();
 		this.setTieds(new ArrayList<ArcLine>());
+		this.timeMods = new ArrayList<>();
 		
 		// initialize the height of the staff based on the number of lines
 		this.maxHeight = size * (m.getStaffLines() + 4);
@@ -256,6 +260,19 @@ public class TabMeasure extends MusicMeasure {
 				}
 				
 			}
+			
+			if (currentNote.getTimeModification() != null) {
+				timeMod.add(currentNote);
+				if (TimeModificationLabel.isTimeModComplete(timeMod)) {
+					TimeModificationLabel tml = new TimeModificationLabel(this.notes.get(this.notes.size() - timeMod.size()), 
+																			this.notes.get(this.notes.size()-1), 
+																			currentNote.getTimeModification().get("actual"));
+					this.timeMods.add(tml);
+					this.getChildren().add(tml);
+					timeMod = new ArrayList<>();
+				}
+			}
+			
 			double type = currentNote.getType() == 0 ? 0.5 : currentNote.getType();
 			currentDistance += boxedUnit.minWidth(0) + wholeNoteSpacing/type;
 			this.spacing += wholeNoteSpacing/type;
@@ -492,6 +509,10 @@ public class TabMeasure extends MusicMeasure {
 			this.getTieds().get(i).setPositionX(true);
 		}
 		
+		for (int i = 0; i < this.timeMods.size(); i++) {
+			this.timeMods.get(i).generateLabel(this.numStaffLines, false);
+		}
+		
 		if (this.endRepeat != null) {
 			this.endRepeat.get(0).setTranslateX(current);
 			this.endRepeat.get(1).setTranslateX(current);
@@ -520,6 +541,8 @@ public class TabMeasure extends MusicMeasure {
 		
 		this.beamProcessor.generateGuitarBeams(this, this.numStaffLines);
 		
+		if (this.timeMods.size() != 0)
+			maxHeight += SheetScore.lineSize * 1.5;
 		double topHeight = 0 - SheetScore.lineSize * 1;		double botHeight = this.maxHeight;
 		Line top = new Line(0, topHeight, this.minWidth, topHeight);
 		Line left = new Line(0, topHeight, 0, botHeight);

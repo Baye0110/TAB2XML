@@ -7,6 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import custom_component_data.Measure;
 import custom_component_data.Note;
 import custom_component_data.Tied;
+import custom_component_data.TimeModificationLabel;
 import custom_model.note.NoteUnit;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -42,6 +43,8 @@ abstract public class MusicMeasure extends Pane {
 	List<NoteLinker> links;
 	// The tieds
 	private List<ArcLine> tieds;
+	// List of the timeModificationLabels
+	List<TimeModificationLabel> timeMods;
 	
 	//font
 	public static String customizefont = "Calibri" ;
