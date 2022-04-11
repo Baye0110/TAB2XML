@@ -61,6 +61,7 @@ public class PreviewController extends Application{
 	@FXML Button stopButton;
 	@FXML Button displayButton;
 	@FXML Button exportButton;
+	@FXML Button namesButton;
 	List<BufferedImage> bufferedimage = new ArrayList<BufferedImage>();
 
 	
@@ -86,6 +87,8 @@ public class PreviewController extends Application{
 	 }
 
 	 private void getBufferimage() {
+		bufferedimage.add(SwingFXUtils.fromFXImage(sheet.getNaming().snapshot(new SnapshotParameters(), null), null)); 
+		 
 		SheetScore copy = new SheetScore(score);
 		
 		for (ScoreLine line: copy.getScoreLines()) {
@@ -223,6 +226,24 @@ public class PreviewController extends Application{
 		        	System.out.println("PDF saved failed");
 		        }
 	      }
+	}
+	
+	public void namesHandler() {
+		System.out.println("Title Settings Window Opened!");
+		Parent root;
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("GUI/nameChoosing.fxml"));
+			root = loader.load();
+			NameChoosingController controller = loader.getController();
+			controller.setPreviewController(this);
+			displayWindow = this.openNewWindow(root, "Title Settings");
+			displayWindow.setOnHidden(e->{
+				System.out.println("Title Settings Window Closed!");
+			});
+		} catch (Exception e) {
+			Logger logger = Logger.getLogger(getClass().getName());
+			logger.log(Level.SEVERE, "Failed to create new Window.", e);
+		}
 	}
 	
 	private void initialValue() {

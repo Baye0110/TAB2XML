@@ -490,13 +490,29 @@ public class musicPlayer {
 		int measure = 1;
 		int note = 1;
 		
+		int targetMeasure = NoteUnit.pressed.getMeasure();
+		int targetNote = NoteUnit.pressed.getNoteNum();
+		int repeated = 0;
+		boolean normalMeasure = true;
+		for (int i = 0; i < NoteUnit.pressed.getMeasure() - 1; i++) {
+			Measure m = score.getParts().get(0).getMeasures().get(i);
+			if (m.getIsRepeatStart() || !normalMeasure) {
+				repeated += 1;
+				normalMeasure = false;
+			}
+			if (m.getIsRepeatStop()) {
+				targetMeasure += repeated * m.getBarLineRight().getRepeatNum() - 1;
+				repeated = 0;
+			}
+		}
+		
 		Scanner tokens = new Scanner(this.musicXMLParttern.toString());
 //		System.out.println(this.musicXMLParttern.toString());
 		
 		while (tokens.hasNext()) {
 			String token = tokens.next();
-			if (measure == NoteUnit.pressed.getMeasure()) {
-				if (note == NoteUnit.pressed.getNoteNum()) {
+			if (measure == targetMeasure) {
+				if (note == targetNote) {
 					str.append(token.toString() + " ");
 				}
 				else if (!token.equals("|") && token.charAt(0) != 'V' && token.charAt(0) != 'I' && token.charAt(0) != 'T') {
@@ -537,10 +553,9 @@ public class musicPlayer {
 	
 		for(int i = 0; i < measures.size(); i++) {
 			
-			if(measures.get(i).getIsRepeatStart()) {
+			if(measures.get(i).getIsRepeatStart() || !sameMeasure) {
 				repeat.append(scan2.get(i));
 				sameMeasure = false;
-
 			}
 			if(sameMeasure) {
 				string.append(scan2.get(i));

@@ -8,12 +8,14 @@ public class PlaybackGUILinker extends Thread {
 	SheetScore sheet;
 	int measureOfNote;
 	int notePressed;
+	boolean firstPlay;
 	
 	
 	public PlaybackGUILinker (SheetScore sheet, int measureOfNote, int notePressed) {
 		this.sheet = sheet;
 		this.measureOfNote = measureOfNote;
 		this.notePressed = notePressed;
+		this.firstPlay = true;
 	}
 	
 	@Override
@@ -25,6 +27,9 @@ public class PlaybackGUILinker extends Thread {
 		
 		double measureSum = 0;
 		double diff = 0;
+		int repeats = 0;
+		int measuresRepeated = 0;
+		int initialNoteNum = 0;
 		double current = System.currentTimeMillis();
 		for (int i = measureOfNote; i < measures.size() && sheet.isPlaying; i++) {
 			this.sheet.sp.setVvalue(sheet.getMeasurePosition(i + 1));
@@ -40,11 +45,22 @@ public class PlaybackGUILinker extends Thread {
 				sheet.noteTimings.set(timingsNumber, sheet.noteTimings.get(timingsNumber) + diff);
 			}
 			
+			if (measure.getRepeatStart() && repeats == 0) {
+				repeats = 1;
+			}
+			
 			int first = timingsNumber;
 			
 			measureSum = 0;
 			
-			int j = (i == measureOfNote) ? notePressed : 0;
+			int j = 0;
+			if (this.firstPlay) {
+				j = notePressed;
+				this.firstPlay = false;
+			}
+			
+			System.out.println(i);
+			
 			for (; j < measure.notes.size() && sheet.isPlaying; j++) {
 				measure.notes.get(j).toggleHighlight();
 //				if (j == ((i == measureOfNote) ? notePressed : 0)) {
@@ -65,6 +81,24 @@ public class PlaybackGUILinker extends Thread {
 			
 			sheet.noteTimings.set(first, sheet.noteTimings.get(first) - diff);
 			diff = 0;
+			
+			if (measure.getRepeatEnd()) {
+				if (repeats == measure.getRepeatTimes()) {
+					repeats = 0;
+				}
+				else {
+					if (repeats == 0)
+						repeats = 1;
+					repeats += 1;
+					MusicMeasure curr = measures.get(i);
+					timingsNumber -= curr.getNotes().size();
+					i -= 1;
+					while(!measures.get(i+1).getRepeatStart()) {
+						timingsNumber -= measures.get(i).getNotes().size();
+						i -= 1;
+					}
+				}
+			}
 		}
 		
 		if (sheet.isPlaying == true) {

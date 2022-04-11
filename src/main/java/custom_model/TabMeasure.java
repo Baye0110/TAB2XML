@@ -8,7 +8,6 @@ import custom_component_data.Note;
 import custom_component_data.Slide;
 import custom_component_data.Slur;
 import custom_component_data.Tied;
-import custom_component_data.TimeModificationLabel;
 import custom_model.note.BoxedChord;
 import custom_model.note.BoxedText;
 import custom_model.note.BoxedUnit;
@@ -167,7 +166,7 @@ public class TabMeasure extends MusicMeasure {
 				currentNote = bentNote != null ? bentNote : currentNote;
 				double height = size * 1.5 + boxedUnit.getTranslateY();
 				double length = (boxedUnit.minWidth(0) + wholeNoteSpacing / currentNote.getType())/2;
-				String text = (currentNote.getNotation().getTechnical().getBend().getBendAlter() == 2) ? "full" : "BendAlter/2";
+				String text = (currentNote.getNotation().getTechnical().getBend().getBendAlter() == 2.0) ? "full" : String.valueOf((int)Math.round(currentNote.getNotation().getTechnical().getBend().getBendAlter())) + "/2";
 				custom_model.Bend modelBend = new Bend(height, length, text);
 				modelBend.setTranslateY(-1.5 * size);
 				boxedUnit.setBend(modelBend);
@@ -466,6 +465,14 @@ public class TabMeasure extends MusicMeasure {
 			if(currLabel.getBend() != null) {
 				currLabel.getBend().adjustLength((this.wholeNoteSpacing * 1/currLabel.getSpacingType())/2);
 				currLabel.setBendPositionX();
+				Rectangle dot = new Rectangle();
+				dot.setY(0 - 6 * SheetScore.lineSize);
+				dot.setX(0);
+				dot.setHeight(2);
+				dot.setWidth(2);
+				dot.setFill(Color.TRANSPARENT);
+				this.getChildren().add(dot);
+				
 			}
 			
 			if (currLabel.getData().getNotation().getSlides().size() != 0) {

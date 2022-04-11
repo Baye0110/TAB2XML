@@ -1,9 +1,8 @@
-package custom_component_data;
+package custom_model;
 
 import java.util.List;
 
-import custom_model.MusicMeasure;
-import custom_model.SheetScore;
+import custom_component_data.Note;
 import custom_model.note.NoteUnit;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;

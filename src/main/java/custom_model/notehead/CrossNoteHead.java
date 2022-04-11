@@ -3,6 +3,7 @@ package custom_model.notehead;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 
 public class CrossNoteHead extends Group{
@@ -26,6 +27,16 @@ public class CrossNoteHead extends Group{
 		l2.setStrokeWidth(height/9 * strokeScale);
 		l2.setStroke(color);
 		l2.setStrokeLineCap(StrokeLineCap.ROUND);
+		
+		// Make it easier to click a cross notehead
+		Rectangle clickableBackground = new Rectangle();
+		clickableBackground.setX(0); clickableBackground.setY(0);
+		clickableBackground.setWidth(this.width);
+		clickableBackground.setHeight(height / 1.05);
+		clickableBackground.setFill(Color.TRANSPARENT);
+		this.getChildren().add(clickableBackground);
+		
+		// Add the lines on top of the background
 		this.getChildren().add(l1);
 		this.getChildren().add(l2);
 		

@@ -7,6 +7,7 @@ import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Bend extends Group{
@@ -69,7 +70,7 @@ public class Bend extends Group{
 		
 		// add Text
 		Text t = new Text(length - 8.0, -20.0, text);
-		t.setStyle("-fx-font: 20 arial");
+		t.setFont(Font.font(MusicMeasure.customizefont, SheetScore.lineSize * 2));
 		this.text = t;
 		this.getChildren().add(t);
 	}

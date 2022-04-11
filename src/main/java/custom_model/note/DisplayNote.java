@@ -7,6 +7,7 @@ import custom_component_data.Note;
 import custom_model.ArcLine;
 import custom_model.MusicMeasure;
 import custom_model.SheetScore;
+import custom_model.Tremolo;
 import custom_model.notehead.NoteHead;
 import custom_model.rest.Rest;
 import javafx.scene.Group;
@@ -412,6 +413,25 @@ public class DisplayNote extends DisplayUnit{
 		 * 
 		 *  
 		 */
+		
+		// create the Tremolo model
+		double slantLength = SheetScore.lineSize * 1.5;
+		double slantWidth = SheetScore.lineSize * 0.6;
+		double rotateDeg = SheetScore.lineSize * -0.5;
+		boolean rotation = false;
+		double spacing = SheetScore.lineSize * 0.25;
+		Tremolo tremolo = new Tremolo(slantLength, slantWidth, rotateDeg, rotation, numOfSlants, spacing);
+		
+		// adjusting position
+		double shiftPos = tremolo.calculatePosition(SheetScore.lineSize * 2.5);
+		tremolo.setTranslateY(-(SheetScore.lineSize * 2.5) + shiftPos);
+		tremolo.setTranslateX(this.stem.getStartX() - slantLength/2);
+		
+		// adding to the interface
+		this.getChildren().add(tremolo);
+		
+		
+		
 		
 	}
 }
