@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -78,6 +79,18 @@ public class Score {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(new InputSource(new StringReader(xmlDocument)));
 			doc.getDocumentElement().normalize();
+			
+			// Get the name of the piece
+			NodeList scoreName = doc.getElementsByTagName("movement-title");
+			if (scoreName.getLength() != 0) {
+				this.title = ((Element) scoreName.item(0)).getTextContent();
+			}
+			
+			// Get the name of the author
+			NodeList authorName = doc.getElementsByTagName("creator");
+			if (authorName.getLength() != 0) {
+				this.author = ((Element) authorName.item(0)).getTextContent();
+			}
 			
 			// Selects and makes a list of the "score-part" elements and "part" elements
 			NodeList partsMetaData = doc.getElementsByTagName("score-part");

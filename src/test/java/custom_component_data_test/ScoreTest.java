@@ -41,36 +41,19 @@ class ScoreTest {
 
 	@Test
 	public void scoreTest1() {
-		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
-		Assertions.assertTrue(score.getAuthor().equals("composer"));
-		Assertions.assertTrue(score.getTitle().equals("composer"));
-		int partCount = 0;
-		for(int i = 0; i < score.getParts().size(); i++) {
-			partCount++;
-		}
-		Assertions.assertEquals(1, partCount);
+		setUp("src/test/resources/system/demoTitleAuthorTest.musicxml");
+		Assertions.assertTrue(score.getAuthor().equals("Artist21"));
+		Assertions.assertTrue(score.getTitle().equals("Title21"));
+		Assertions.assertEquals(1, score.getParts().size());
 	}
 	
 	@Test
 	public void scoreTest2() {
-		setUp("src/test/resources/system/demoDrumsSimple2.musicxml");
+		setUp("src/test/resources/system/demoTitleAuthorTest1.musicxml");
 		//Who is the Author
-		assertEquals("composer", score.getAuthor());
+		assertEquals("The Unforgiven", score.getAuthor());
 		//What is the size
 		assertEquals(1,score.getParts().size());
-	}
-	
-	@Test
-	public void scoreTest3() {
-		setUp("src/test/resources/system/demoDrumsSimple3.musicxml");
-		assertEquals("composer",score.getAuthor());
-		assertEquals(1,score.getParts().size());
-	}
-	
-	@Test
-	public void scoreTest4() {
-		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
-		assertEquals("composer",score.getAuthor());
 	}
 
 }
