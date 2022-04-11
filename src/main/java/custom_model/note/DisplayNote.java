@@ -415,17 +415,17 @@ public class DisplayNote extends DisplayUnit{
 		 */
 		
 		// create the Tremolo model
-		double slantLength = SheetScore.lineSize * 7;
-		double slantWidth = SheetScore.lineSize * 1.2;
-		double rotateDeg = SheetScore.lineSize * -3;
+		double slantLength = SheetScore.lineSize * 1.5;
+		double slantWidth = SheetScore.lineSize * 0.6;
+		double rotateDeg = SheetScore.lineSize * -0.5;
 		boolean rotation = false;
-		double spacing = SheetScore.lineSize;
+		double spacing = SheetScore.lineSize * 0.25;
 		Tremolo tremolo = new Tremolo(slantLength, slantWidth, rotateDeg, rotation, numOfSlants, spacing);
 		
 		// adjusting position
-		double shiftPos = tremolo.calculatePosition(SheetScore.lineSize * 3);
-		tremolo.setTranslateY(-(SheetScore.lineSize * 3) + shiftPos);
-		tremolo.setTranslateX(this.stem.getTranslateX() - slantLength/2);
+		double shiftPos = tremolo.calculatePosition(SheetScore.lineSize * 2.5);
+		tremolo.setTranslateY(-(SheetScore.lineSize * 2.5) + shiftPos);
+		tremolo.setTranslateX(this.stem.getStartX() - slantLength/2);
 		
 		// adding to the interface
 		this.getChildren().add(tremolo);

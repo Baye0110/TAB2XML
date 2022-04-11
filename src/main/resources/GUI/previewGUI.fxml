@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" minWidth="640.0" prefHeight="700.0" prefWidth="1100.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PreviewController">
+<BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" minWidth="640.0" prefHeight="700.0" prefWidth="1125.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PreviewController">
     <center>
-        <AnchorPane prefHeight="649.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
+        <AnchorPane prefHeight="649.0" prefWidth="1125.0" BorderPane.alignment="CENTER">
             <children>
-            <ScrollPane fx:id="sp" layoutX="25.0" layoutY="51.0" prefHeight="577.0" prefWidth="1080.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <ScrollPane fx:id="sp" layoutX="25.0" layoutY="51.0" prefHeight="577.0" prefWidth="1105.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                <content> 
                </content>
                </ScrollPane>
@@ -22,7 +22,7 @@
         </AnchorPane>
     </center>
    <bottom>
-   		<AnchorPane prefHeight="46.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
+   		<AnchorPane prefHeight="46.0" prefWidth="1125.0" BorderPane.alignment="CENTER">
         	<children>
             	<HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="52.0" prefHeight="28.0" prefWidth="679.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0">
                		<children>

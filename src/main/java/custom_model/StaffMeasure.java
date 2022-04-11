@@ -160,7 +160,7 @@ public class StaffMeasure extends MusicMeasure{
 				}
 			}
 			
-			custom_component_data.Tremolo currTremolo = notes.get(i).getNotation().getOrnaments().getTremolo();
+			custom_component_data.Tremolo currTremolo = notes.get(i).getNotation() != null && notes.get(i).getNotation().getOrnaments() != null ? notes.get(i).getNotation().getOrnaments().getTremolo() : null;
 			if(currTremolo != null) {
 				int numSlants = currTremolo.getNumber();
 				currentUnit.addTremolo(numSlants);
