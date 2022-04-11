@@ -80,9 +80,7 @@ public class musicPlayer {
 		this.sheet.setTempoOnTimings(tempoSpeed);
 	}
 	
-	public void play(String tempoInput) {
-		setTempo(tempoInput);
-		
+	public void getPlayType() {
 		if(instrument_type == 1) {
 			System.out.println("Bass is playing");
 		}else if(instrument_type == 2) {
@@ -90,6 +88,11 @@ public class musicPlayer {
 		}else if(instrument_type == 3) {
 			System.out.println("Drum is playing");
 		}
+	}
+	
+	public void play(String tempoInput) {
+		setTempo(tempoInput);
+		getPlayType();
 		while (!this.sheet.getThreadKilled() && !this.isPlaying()) {
 			try {
 				Thread.sleep(2);
@@ -98,14 +101,6 @@ public class musicPlayer {
 			}
 		}
 		
-//		if (isFinished()) {
-//			List<MusicMeasure> measures = sheet.getMeasureList();
-//			List<NoteUnit> last = measures.get(measures.size()-1).getNotes();
-//			if (NoteUnit.pressed == last.get(last.size()-1)) {
-//				NoteUnit.pressed.toggleHighlight();
-//				NoteUnit.pressed = null;
-//			}
-//		}	
 		if(isPaused()) {
 			resume();
 		}else if(isFinished()) {			
@@ -116,7 +111,6 @@ public class musicPlayer {
 			else {
 				this.player = new Player();
 				player.delayPlay(0, this.generateSpecificPattern());
-//				System.out.println(this.generateSpecificPattern());
 			}
 			this.sheet.startHighlight();
 		}else {
@@ -126,7 +120,6 @@ public class musicPlayer {
 			else {
 				this.player = new Player();
 				player.delayPlay(0, this.generateSpecificPattern());
-//				System.out.println(this.generateSpecificPattern());
 			}
 			this.sheet.startHighlight();
 		}
@@ -143,7 +136,6 @@ public class musicPlayer {
 	
 	
 	public void resume() {
-//		player.getManagedPlayer().resume();
 		this.player = new Player();
 		player.delayPlay(0, this.generateSpecificPattern());
 		this.sheet.startHighlight();
@@ -181,7 +173,6 @@ public class musicPlayer {
 		player.getManagedPlayer().finish();
 		if (this.isPaused())
 			player = new Player();		
-//		player = new Player();
 	}
 	
 	//1:BASS 2:GUITAR 3:DRUMS
@@ -262,13 +253,6 @@ public class musicPlayer {
 					}
 					stringInstrument += developSlideString(current, noteList.get(countAfterSlide));
 
-						
-//						if (slides.get(0).getType().equals("start")) {
-//							slideStart += " :CE(65,127) :CE(5,64)";
-//						}
-//						else if (slides.get(0).getType().equals("stop")) {
-//							slideStop += " :CE(65,0)";
-//						}
 					count++;
 					continue;
 				}
@@ -507,7 +491,6 @@ public class musicPlayer {
 		}
 		
 		Scanner tokens = new Scanner(this.musicXMLParttern.toString());
-//		System.out.println(this.musicXMLParttern.toString());
 		
 		while (tokens.hasNext()) {
 			String token = tokens.next();
@@ -523,8 +506,6 @@ public class musicPlayer {
 				measure ++;
 			}
 		}
-		
-//		System.out.println(measure + ": " + note);
 		return str.toString();
 	}
 	
@@ -532,7 +513,6 @@ public class musicPlayer {
 		Boolean sameMeasure = true;
 		List<Measure> measures = new ArrayList<>();
 		Scanner scan = new Scanner(musicXMLParttern.toString());
-//		System.out.println("xml: " + musicXMLParttern.toString());
 		List<String> scan2 = new ArrayList<String>();
 		String scan1 = "";
 		while(scan.hasNext()) {
