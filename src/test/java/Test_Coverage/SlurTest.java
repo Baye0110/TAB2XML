@@ -80,25 +80,8 @@ class SlurTest {
 		});
 	}
 	
-	
 	@Test
 	public void slurTest2() {
-		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
-		Slur note1 = score.getParts().get(0).getMeasures().get(1).getNotes().get(0).getNotation().getSlurs().get(0);
-		Assertions.assertTrue(note1.getType().equals("start"));
-		Assertions.assertTrue(note1.getPlacement().equals("above"));
-		Assertions.assertTrue(note1.getNumber() == 2);
-		
-		
-		Slur note2 = score.getParts().get(0).getMeasures().get(1).getNotes().get(1).getNotation().getSlurs().get(0);
-		Assertions.assertTrue(note2.getType().equals("stop"));
-		Assertions.assertFalse(note2.getNumber() == 0);
-		Assertions.assertTrue(note2.getNumber() == 2);
-		Assertions.assertTrue(note2.getPlacement().equals(""));
-	}
-	
-	@Test
-	public void slurTest3() {
 		setUp("src/test/resources/system/demoDrumsComplex1.musicxml");
 		List<List<Integer>> slurStarts = new ArrayList<>();
 		List<List<Integer>> slurEnds = new ArrayList<>();

@@ -48,40 +48,6 @@ class SlideTest {
 	}
 	
 	@Test
-	public void slideTest1() {
-		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
-		int string = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getNotation().getString(); //<string>3</string>
-		assertEquals(3,string);
-	}
-	
-	@Test
-	public void slideTest2() {
-		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
-		int string = score.getParts().get(0).getMeasures().get(1).getNotes().get(0).getNotation().getString(); //<string>2</string>
-		assertEquals(2,string);
-	}
-	
-	@Test
-	public void slideTest3() {
-		setUp("src/test/resources/system/demoGuitarSimple2.musicxml");
-		int string = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getNotation().getString(); //<string>1</string>
-		assertEquals(1,string);
-		
-		int fret = score.getParts().get(0).getMeasures().get(0).getNotes().get(0).getNotation().getFret(); //<fret>5</fret>
-		assertEquals(5,fret);
-	}
-	
-	@Test
-	public void slideTest4() {
-		setUp("src/test/resources/system/demoGuitarSimple2.musicxml");
-		int string = score.getParts().get(0).getMeasures().get(0).getNotes().get(1).getNotation().getString(); //<string>2</string>
-		assertEquals(2,string);
-		
-		int fret = score.getParts().get(0).getMeasures().get(0).getNotes().get(1).getNotation().getFret(); //<fret>7</fret>
-		assertEquals(7,fret);
-	}
-	
-	@Test
 	public void slideTest5() {
 		setUp("src/test/resources/system/demoDrumsSimple1.musicxml");
 		int noteCountM1 = 0;
@@ -140,24 +106,8 @@ class SlideTest {
 		});
 	}
 	
-	
 	@Test
 	public void slideTest7() {
-		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
-		Slide note2 = score.getParts().get(0).getMeasures().get(9).getNotes().get(1).getNotation().getSlides().get(0);
-		Assertions.assertTrue(note2.getType().equals("start"));
-		Assertions.assertTrue(note2.getNumber() == 2);
-		
-		
-		Slide note3 = score.getParts().get(0).getMeasures().get(9).getNotes().get(2).getNotation().getSlides().get(0);
-		Assertions.assertTrue(note3.getType().equals("stop"));
-		Assertions.assertFalse(note3.getNumber() == 0);
-		Assertions.assertTrue(note3.getNumber() == 2);
-		
-	}
-	
-	@Test
-	public void slideTest8() {
 		setUp("src/test/resources/system/demoGuitarComplex1.musicxml");
 		List<List<Integer>> slideStarts = new ArrayList<>();
 		List<List<Integer>> slideEnds = new ArrayList<>();

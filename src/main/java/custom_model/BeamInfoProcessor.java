@@ -15,7 +15,7 @@ public class BeamInfoProcessor {
 	List<BeamCreationData> beamData;
 	
 	
-	class BeamCreationData {
+	public class BeamCreationData {
 		boolean isTail;
 		int numFull;
 		int numHalf;
@@ -34,6 +34,14 @@ public class BeamInfoProcessor {
 		
 		private void setOther(NoteUnit other) {
 			this.other = other;
+		}
+		
+		public int getNumFull() {
+			return this.numFull;
+		}
+		
+		public int getNumHalf() {
+			return this.numHalf;
 		}
 	}
 	
@@ -207,5 +215,9 @@ public class BeamInfoProcessor {
 			}
 		}
 		
+	}
+	
+	public List<BeamCreationData> getBeamData() {
+		return this.beamData;
 	}
 }
