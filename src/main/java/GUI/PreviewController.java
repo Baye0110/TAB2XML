@@ -111,9 +111,6 @@ public class PreviewController extends Application{
 		pauseButton.setVisible(true);
 		player.play(tempoField.getText());
 		System.out.println("The tempoSpeed is: " + player.getTempo());
-		System.out.println("IsPlaying: " + player.isPlaying());
-		System.out.println("IsPaused: " + player.isPaused());
-		System.out.println("IsFinished: " + player.isFinished());
 		Thread thread = new Thread() {
 			public void run() {
 				while(!player.isFinished()) {
@@ -126,9 +123,6 @@ public class PreviewController extends Application{
 					}
 				}
 				initialButton();
-				System.out.println("IsPlaying: " + player.isPlaying());
-				System.out.println("IsPaused: " + player.isPaused());
-				System.out.println("IsFinished: " + player.isFinished());
 				System.out.println("Music is Finished");
 			}
 		};
@@ -139,9 +133,6 @@ public class PreviewController extends Application{
 		player.pause();
 		playButton.setVisible(true);
 		pauseButton.setVisible(false);
-		System.out.println("IsPlaying: " + player.isPlaying());
-		System.out.println("IsPaused: " + player.isPaused());
-		System.out.println("IsFinished: " + player.isFinished());
 	}
 	public void stopHandler() throws ValidityException, ParserConfigurationException, ParsingException, IOException{
 		System.out.println("stop Button Clicked!");
@@ -149,19 +140,11 @@ public class PreviewController extends Application{
 		pauseButton.setVisible(false);
 		player.resetMusicToBeginning();
 		player.finish();
-		System.out.println("IsPlaying: " + player.isPlaying());
-		System.out.println("IsPaused: " + player.isPaused());
-		System.out.println("IsFinished: " + player.isFinished());
-
 	}
 	
 	public void exit() {
 		player.exit();
 		initialValue();
-		System.out.println("preview windows exited");
-		System.out.println("IsPlaying: " + player.isPlaying());
-		System.out.println("IsPaused: " + player.isPaused());
-		System.out.println("IsFinished: " + player.isFinished());
 	}
 	
 	public void goHandler(){

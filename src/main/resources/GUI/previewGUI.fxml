@@ -47,7 +47,10 @@
                         		<FontAwesomeIconView glyphName="DOWNLOAD" selectionFill="BLACK" />
                      		</graphic>
                   		</Button>
-                  		<Button fx:id="namesButton" mnemonicParsing="false" onAction="#namesHandler" prefHeight="25.0" prefWidth="104.0" translateX="70.0" text="Set Title"></Button>
+                  		<Button fx:id="namesButton" mnemonicParsing="false" onAction="#namesHandler" prefHeight="25.0" prefWidth="78.0" text="Set Title">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="EDIT" />
+                     </graphic></Button>
                		</children>
             	</HBox>
             	<HBox alignment="CENTER_RIGHT" layoutX="795.0" prefHeight="27.0" prefWidth="266.0" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="10.0">
