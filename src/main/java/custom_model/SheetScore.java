@@ -443,4 +443,8 @@ public class SheetScore extends VBox{
 	public Pane getNaming() {
 		return this.naming;
 	}
+	
+	public List<Double> getTimings() {
+		return this.noteTimings;
+	}
 }

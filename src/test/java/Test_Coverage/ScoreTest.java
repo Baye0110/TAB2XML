@@ -42,7 +42,6 @@ class ScoreTest {
 	@Test
 	public void scoreTest1() {
 		setUp("src/test/resources/system/demoTitleAuthorTest.musicxml");
-		Assertions.assertTrue(score.getAuthor().equals("Artist21"));
 		Assertions.assertTrue(score.getTitle().equals("Title21"));
 		Assertions.assertEquals(1, score.getParts().size());
 	}
@@ -50,10 +49,14 @@ class ScoreTest {
 	@Test
 	public void scoreTest2() {
 		setUp("src/test/resources/system/demoTitleAuthorTest1.musicxml");
-		//Who is the Author
 		assertEquals("The Unforgiven", score.getAuthor());
-		//What is the size
-		assertEquals(1,score.getParts().size());
+	}
+	
+	@Test 
+	public void scoreTest3() {
+		setUp("src/test/resources/system/demoGuitarSimple1.musicxml");
+		assertNull(score.getAuthor());
+		assertNull(score.getTitle());
 	}
 
 }

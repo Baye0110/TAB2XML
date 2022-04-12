@@ -193,6 +193,10 @@ public class MeasureBeamData {
     public List<Integer> getBeamNumbers() {
         return this.beamNumbers;
     }
+    
+    public List<BeamInfo> getBeamInfos() {
+    	return this.beamInfos;
+    }
 
     public String getBeamStyle() {
         return this.beamStyle;

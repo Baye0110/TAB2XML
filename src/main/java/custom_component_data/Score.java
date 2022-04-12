@@ -89,7 +89,7 @@ public class Score {
 			// Get the name of the author
 			NodeList authorName = doc.getElementsByTagName("creator");
 			if (authorName.getLength() != 0) {
-				this.author = ((Element) authorName.item(0)).getTextContent();
+				this.author = ((Element) authorName.item(0)).getTextContent().equals("") ? null : ((Element) authorName.item(0)).getTextContent();
 			}
 			
 			// Selects and makes a list of the "score-part" elements and "part" elements
